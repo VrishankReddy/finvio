@@ -91,6 +91,9 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 .btn-save:hover{background:var(--green-dark);}
 .chat-wrap{display:flex;flex-direction:column;height:100%;}
 .chat-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;}
+.back-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;flex-shrink:0;align-items:center;justify-content:center;}
+.back-btn:hover{background:var(--bg);}
+@media(max-width:768px){.back-btn{display:flex;}}
 .finny-av{width:38px;height:38px;border-radius:11px;overflow:hidden;flex-shrink:0;background:var(--green);}
 .finny-av img{width:38px;height:38px;object-fit:cover;display:block;}
 .msgs{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;background:var(--bg);}
@@ -250,6 +253,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 
   <div id="s-finny" class="screen">
     <div class="chat-hdr">
+      <button class="back-btn" onclick="goTab('home')" aria-label="Go back"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M19 12H5M12 5l-7 7 7 7" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="finny-av"><img src="./finny-logo.png" alt="Finny"/></div>
       <div>
         <div style="font-size:15px;font-weight:800;color:#111827">Finny</div>
@@ -485,6 +489,9 @@ function runFinny(q){
   if(t.match(/top|most|categor|breakdown|where.*spend/)){if(!sorted.length)return{type:'plain',text:"No expenses yet!"};return{type:'ranking',text:'Your spending breakdown:',items:sorted.slice(0,5).map((c,i)=>({rank:i+1,cat:c[0],amt:fmt(c[1]),pct:exp>0?((c[1]/exp)*100).toFixed(1):0}))};}
   if(t.match(/saving|save|saved/)){if(inc===0)return{type:'plain',text:"Add your income first!"};const r=parseFloat(rate);return{type:'summary',text:'Your savings snapshot:',cards:[{l:'Saved',v:fmt(Math.max(sav,0)),c:'#16a34a',b:'#f0fdf4'},{l:'Rate',v:rate+'%',c:'#6ab04c',b:'#f0fdf4'}],insight:r>=30?'Exceptional! 🚀':r>=20?'Solid rate.':r>=10?'Decent. Aim for 20%.':r>0?'Low rate. Cut top categories.':'Spending more than earning!'};}
   if(t.match(/recommend|advice|tip|improve|help me|suggest/)){const tips=[];if(sorted.length>0)tips.push(`${sorted[0][0]} is your biggest expense at ${fmt(sorted[0][1])}.`);if(parseFloat(rate)<20&&inc>0)tips.push(`Savings rate ${rate}% — aim for 20%.`);tips.push('Set a weekly 10-min money review.');tips.push('50/30/20: 50% needs, 30% wants, 20% savings.');return{type:'tips',text:'Recommendations based on your data:',items:tips};}
+  if(t.match(/founder|ceo|who made|who built|who created|who is behind|who are you|vrishank/)){
+    return{type:'founder',text:"Finvio was founded by <strong>Vrishank Reddy</strong> — a student entrepreneur building the future of personal finance in India.",links:[{label:'Instagram',url:'https://www.instagram.com/vrishank.reddy/',icon:'📸'},{label:'LinkedIn',url:'https://www.linkedin.com/in/vrishank-reddy-03a71936b/',icon:'💼'}]};
+  }
   if(t.match(/^(hi|hello|hey|namaste)[\s!?]*$/))return{type:'list',text:'Hey! What would you like to know?',items:['📊 Summary','🏆 Top categories','💰 Savings','💡 Recommendations','🎓 Finance questions']};
   if(t.match(/thank|thanks|great|awesome/))return{type:'plain',text:'Happy to help! 😊'};
   for(const e of KB)if(e.k.some(k=>t.includes(k)))return{type:'plain',text:e.a};
@@ -496,6 +503,7 @@ function renderBot(r){
   if(r.type==='summary'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:8px;font-weight:500">${r.text}</div>`;if(r.cards)h+=`<div class="mc">${r.cards.map(c=>`<div class="mci" style="background:${c.b};border-color:${c.c}22"><div class="mcl">${c.l}</div><div class="mcv" style="color:${c.c}">${c.v}</div>${c.n?`<div style="font-size:9px;color:${c.c};margin-top:1px;font-weight:700">${c.n}</div>`:''}</div>`).join('')}</div>`;if(r.insight)h+=`<div class="ins">${r.insight}</div>`;return h;}
   if(r.type==='alert'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:7px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="alert-row"><div style="font-size:13px;font-weight:700;color:#374151">${i.cat}</div><div style="text-align:right"><div style="font-size:13px;font-weight:700;color:#ef4444">${i.amt}</div><div style="font-size:11px;color:#f87171">${i.pct}%</div></div></div>`;});return h;}
   if(r.type==='ranking'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:7px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="rank-row"><div style="width:22px;height:22px;border-radius:5px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#6b7280;flex-shrink:0">#${i.rank}</div><div style="flex:1;font-size:13px;color:#374151;font-weight:600">${i.cat}</div><div style="text-align:right"><div style="font-size:13px;font-weight:700">${i.amt}</div><div style="font-size:11px;color:#9ca3af">${i.pct}%</div></div></div>`;});return h;}
+  if(r.type==='founder'){let h=`<div style="font-size:13px;color:#374151;line-height:1.65;font-weight:500;margin-bottom:10px">${r.text}</div><div style="display:flex;gap:8px;flex-wrap:wrap">`;r.links.forEach(l=>{h+=`<a href="${l.url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f0fdf4;border:1.5px solid #6ab04c;border-radius:10px;text-decoration:none;font-size:12px;color:#166534;font-weight:700;font-family:inherit">${l.icon} ${l.label}</a>`;});h+=`</div>`;return h;}
   if(r.type==='tips'||r.type==='list'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:8px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="list-item">${i}</div>`;});return h;}
   return`<div style="font-size:13px">${r.text||''}</div>`;
 }
