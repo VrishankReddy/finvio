@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Finvio — Personal Finance Tracker</title>
+<link rel="icon" href="./finvio-logo.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --green:#6ab04c; --green-dark:#5a9e3e; --green-light:#f0fdf4; --green-text:#166534;
+  --red:#ef4444; --red-light:#fef2f2; --blue:#3b82f6;
+  --bg:#f5f6fa; --white:#ffffff; --border:#e5e7eb;
+  --text:#111827; --text-sub:#374151; --text-muted:#6b7280; --text-faint:#9ca3af;
+  --shadow:0 1px 6px rgba(0,0,0,0.07); --radius:14px; --sidebar:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);}
+.layout{display:flex;height:100vh;overflow:hidden;}
+.sidebar{width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100vh;transition:transform .3s ease;z-index:300;}
+.sidebar-brand{padding:20px 16px 16px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;gap:10px;}
+.brand-logo{width:42px;height:42px;border-radius:12px;overflow:hidden;flex-shrink:0;}
+.brand-logo img{width:42px;height:42px;object-fit:cover;border-radius:12px;display:block;}
+.brand-name{font-size:20px;font-weight:800;color:var(--text);}
+.brand-sub{font-size:10px;color:var(--text-faint);font-weight:600;margin-top:1px;}
+.nav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:background .15s;}
+.nav-item:hover{background:var(--bg);}
+.nav-item.active{background:var(--green-light);}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;}
+.nav-label{font-size:13px;font-weight:600;color:var(--text-sub);}
+.nav-item.active .nav-label{color:var(--green);}
+.nav-finny{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;border:none;background:var(--green);width:100%;text-align:left;margin-top:6px;}
+.nav-finny:hover{background:var(--green-dark);}
+.nav-finny-icon{width:28px;height:28px;border-radius:8px;overflow:hidden;flex-shrink:0;background:var(--green-dark);}
+.nav-finny-icon img{width:28px;height:28px;object-fit:cover;display:block;}
+.nav-finny-label{font-size:13px;font-weight:700;color:#fff;}
+.sidebar-footer{padding:14px 16px;border-top:1px solid #f3f4f6;}
+.play-btn{display:flex;align-items:center;gap:8px;background:#111827;border-radius:10px;padding:9px 12px;cursor:pointer;border:none;text-decoration:none;width:100%;}
+.play-btn:hover{background:#1f2937;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.topbar{padding:14px 20px;border-bottom:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px;}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-title{font-size:20px;font-weight:800;color:var(--text);}
+.topbar-logo{width:30px;height:30px;border-radius:8px;object-fit:cover;}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;flex-shrink:0;align-items:center;justify-content:center;}
+.menu-btn:hover{background:var(--bg);}
+.finny-topbtn{display:flex;align-items:center;gap:7px;padding:8px 14px;border:1.5px solid var(--green);border-radius:10px;background:var(--green-light);color:var(--green);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;}
+.finny-topbtn:hover{background:#dcfce7;}
+.finny-topbtn img{width:20px;height:20px;border-radius:6px;object-fit:cover;}
+.add-btn{display:flex;align-items:center;gap:6px;padding:9px 16px;border:none;border-radius:10px;background:var(--green);color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;}
+.add-btn:hover{background:var(--green-dark);}
+.content{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.card{background:var(--white);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);border:0.5px solid #f3f4f6;}
+.card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.stat-card{background:var(--white);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border:0.5px solid #f3f4f6;}
+.stat-label{font-size:11px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;}
+.stat-val{font-size:22px;font-weight:800;}
+.charts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.g{color:#16a34a;} .r{color:var(--red);} .b{color:var(--blue);}
+.entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.entry{background:var(--white);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);border:0.5px solid #f3f4f6;position:relative;overflow:hidden;}
+.entry-tag{position:absolute;top:0;right:0;font-size:10px;font-weight:700;padding:4px 11px;border-radius:0 12px 0 9px;color:#fff;}
+.entry-tag-g{background:var(--green);} .entry-tag-r{background:var(--red);}
+.entry-row{display:flex;gap:6px;margin-bottom:5px;flex-wrap:wrap;}
+.entry-key{font-size:12px;font-weight:700;color:var(--text-muted);min-width:100px;}
+.entry-val{font-size:12px;color:var(--text-sub);font-weight:500;}
+.entry-btns{display:flex;gap:6px;margin-top:10px;}
+.btn-edit{flex:1;padding:7px;border:1.5px solid var(--green);border-radius:7px;background:var(--white);font-size:12px;color:var(--green);cursor:pointer;font-weight:700;font-family:inherit;}
+.btn-edit:hover{background:var(--green-light);}
+.btn-del{flex:1;padding:7px;border:1.5px solid var(--red);border-radius:7px;background:var(--white);font-size:12px;color:var(--red);cursor:pointer;font-weight:700;font-family:inherit;}
+.btn-del:hover{background:var(--red-light);}
+.count-row{font-size:13px;color:var(--text-muted);font-weight:600;margin-bottom:12px;}
+.count-row span{color:var(--text);font-weight:700;}
+.empty{text-align:center;padding:50px 20px;color:var(--text-faint);font-size:14px;font-weight:600;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:500;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--white);border-radius:18px;padding:24px 24px 28px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;}
+.modal-box::-webkit-scrollbar{display:none;}
+.modal-box h3{font-size:16px;font-weight:800;color:var(--text);margin-bottom:16px;}
+.field{margin-bottom:10px;}
+.field label{font-size:12px;color:var(--text-muted);font-weight:600;display:block;margin-bottom:4px;}
+.field input,.field select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;color:var(--text);background:var(--white);font-family:'Nunito',sans-serif;font-weight:500;}
+.field input:focus,.field select:focus{outline:none;border-color:var(--green);}
+.btn-row{display:flex;gap:8px;margin-top:14px;}
+.btn-cancel{flex:1;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--white);font-size:13px;color:var(--text-muted);cursor:pointer;font-weight:600;font-family:inherit;}
+.btn-save{flex:1;padding:10px;border:none;border-radius:9px;background:var(--green);font-size:13px;color:#fff;cursor:pointer;font-weight:700;font-family:inherit;}
+.btn-save:hover{background:var(--green-dark);}
+.chat-wrap{display:flex;flex-direction:column;height:100%;}
+.chat-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white);flex-shrink:0;}
+.finny-av{width:38px;height:38px;border-radius:11px;overflow:hidden;flex-shrink:0;background:var(--green);}
+.finny-av img{width:38px;height:38px;object-fit:cover;display:block;}
+.msgs{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;background:var(--bg);}
+.msgs::-webkit-scrollbar{width:4px;}
+.msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.bot-row{display:flex;gap:8px;align-items:flex-start;}
+.bav{width:28px;height:28px;border-radius:8px;overflow:hidden;flex-shrink:0;margin-top:1px;background:var(--green);}
+.bav img{width:28px;height:28px;object-fit:cover;display:block;}
+.bb{background:var(--white);border:0.5px solid var(--border);border-radius:12px 12px 12px 3px;padding:11px 14px;max-width:75%;font-size:13px;color:var(--text-sub);line-height:1.6;font-weight:500;}
+.user-row{display:flex;justify-content:flex-end;}
+.ub{background:var(--green);border-radius:14px 14px 3px 14px;padding:10px 14px;max-width:70%;font-size:13px;color:#fff;line-height:1.5;font-weight:600;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 20px;border-top:0.5px solid var(--border);background:var(--white);}
+.chip{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:5px 12px;font-size:12px;color:var(--text-muted);cursor:pointer;font-weight:600;font-family:inherit;}
+.chip:hover{background:var(--green-light);border-color:var(--green);color:var(--green-text);}
+.inp-row{display:flex;gap:8px;padding:10px 20px 16px;align-items:flex-end;border-top:0.5px solid var(--border);background:var(--white);}
+.inp-box{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:10px 14px;font-size:13px;color:var(--text);resize:none;line-height:1.4;max-height:80px;font-weight:500;font-family:'Nunito',sans-serif;}
+.inp-box:focus{outline:none;border-color:var(--green);}
+.snd-btn{width:36px;height:36px;border-radius:10px;background:var(--green);border:none;cursor:pointer;color:#fff;font-size:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.snd-btn:disabled{background:var(--border);}
+.chat-ft{text-align:center;font-size:10px;color:#d1d5db;padding:3px 0 8px;background:var(--white);}
+.mc{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.mci{flex:1;min-width:70px;border-radius:8px;padding:7px 9px;border:0.5px solid var(--border);}
+.mcl{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;font-weight:700;}
+.mcv{font-size:13px;font-weight:700;}
+.ins{margin-top:8px;padding:8px 11px;border-left:3px solid var(--green);font-size:12px;color:var(--green-text);line-height:1.55;background:var(--green-light);font-weight:600;}
+.alert-row{background:var(--red-light);border:0.5px solid #fecaca;border-radius:9px;padding:9px 12px;display:flex;justify-content:space-between;margin-bottom:5px;}
+.rank-row{background:#f9fafb;border:0.5px solid var(--border);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.list-item{background:#f9fafb;border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text-sub);line-height:1.5;margin-bottom:4px;font-weight:500;}
+.typing{display:flex;gap:4px;align-items:center;padding:10px 14px;background:var(--white);border:0.5px solid var(--border);border-radius:12px 12px 12px 3px;width:fit-content;}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.2s ease infinite;}
+.typing span:nth-child(2){animation-delay:.18s;}
+.typing span:nth-child(3){animation-delay:.36s;}
+.bottom-nav{display:none;background:var(--white);border-top:1px solid var(--border);flex-shrink:0;z-index:10;}
+.bottom-nav-inner{display:flex;padding:6px 0 max(env(safe-area-inset-bottom,0px),10px);}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;padding:4px 0;font-family:inherit;}
+.bnav-item svg{width:22px;height:22px;}
+.bnav-label{font-size:9px;color:var(--text-faint);font-weight:600;}
+.bnav-item.active .bnav-label{color:var(--green);}
+.bnav-finny{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;border:none;background:none;cursor:pointer;padding:3px 0;font-family:inherit;}
+.bnav-finny-icon{width:32px;height:32px;border-radius:10px;overflow:hidden;background:var(--green);}
+.bnav-finny-icon img{width:32px;height:32px;object-fit:cover;display:block;}
+.bnav-finny-label{font-size:9px;color:var(--green);font-weight:700;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;}
+.sidebar-overlay.show{display:block;}
+.screen{display:none;flex-direction:column;height:100%;}
+.screen.active{display:flex;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeUp .2s ease;}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,0.15);}
+  .bottom-nav{display:block;}
+  .menu-btn{display:flex;}
+  .content{padding:14px;gap:12px;}
+  .topbar{padding:12px 14px;}
+  .topbar-title{font-size:18px;}
+  .topbar-logo{display:none;}
+  .finny-topbtn{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .charts-grid{grid-template-columns:1fr;}
+  .entry-grid{grid-template-columns:1fr;}
+  .stat-val{font-size:18px;}
+  .bb{max-width:88%;font-size:12.5px;}
+  .ub{max-width:85%;}
+  .msgs{padding:12px 14px;}
+  .chat-hdr{padding:12px 14px;}
+  .inp-row{padding:8px 14px 12px;}
+  .chips{padding:8px 14px;gap:5px;}
+  .chip{font-size:11px;padding:5px 10px;}
+}
+@media(min-width:769px) and (max-width:1024px){
+  :root{--sidebar:190px;}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .entry-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo"><img src="./finvio-logo.png" alt="Finvio"/></div>
+    <div><div class="brand-name">Finvio</div><div class="brand-sub">Personal Finance</div></div>
+  </div>
+  <div class="nav">
+    <button class="nav-item active" id="nav-home" onclick="goTab('home')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#6ab04c" stroke-width="2"/></svg>
+      <span class="nav-label" style="color:#6ab04c">Dashboard</span>
+    </button>
+    <button class="nav-item" id="nav-income" onclick="goTab('income')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M7 16l-4-4m0 0l4-4m-4 4h18" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">Income</span>
+    </button>
+    <button class="nav-item" id="nav-expense" onclick="goTab('expense')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">Expense</span>
+    </button>
+    <button class="nav-finny" onclick="goTab('finny')">
+      <div class="nav-finny-icon"><img src="./finny-logo.png" alt="Finny"/></div>
+      <span class="nav-finny-label">Ask Finny</span>
+    </button>
+    <button class="nav-item" id="nav-profile" onclick="goTab('profile')" style="margin-top:4px">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" stroke="#9ca3af" stroke-width="2"/></svg>
+      <span class="nav-label">Profile</span>
+    </button>
+  </div>
+  <div class="sidebar-footer">
+    <a href="https://play.google.com/store/apps/details?id=com.finvio" class="play-btn" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5c.5.28.5 1.22 0 1.5L4.5 21c-.5.33-1.5.33-1.5-.5z" fill="white"/></svg>
+      <div><span style="font-size:9px;color:rgba(255,255,255,0.7);font-weight:600;display:block">Get it on</span><span style="font-size:12px;color:#fff;font-weight:800;display:block">Google Play</span></div>
+    </a>
+  </div>
+</div>
+
+<div class="main">
+  <div id="s-home" class="screen active">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <img class="topbar-logo" src="./finvio-logo.png" alt="Finvio"/>
+        <span class="topbar-title">Dashboard</span>
+      </div>
+      <button class="finny-topbtn" onclick="goTab('finny')">
+        <img src="./finny-logo.png" alt="Finny"/> Ask Finny
+      </button>
+    </div>
+    <div class="content" id="home-body"></div>
+  </div>
+
+  <div id="s-income" class="screen">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <span class="topbar-title">Income</span>
+      </div>
+      <button class="add-btn" onclick="openModal('income',null)">
+        <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>Add Income
+      </button>
+    </div>
+    <div class="content" id="income-body"></div>
+  </div>
+
+  <div id="s-expense" class="screen">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <span class="topbar-title">Expense</span>
+      </div>
+      <button class="add-btn" onclick="openModal('expense',null)">
+        <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>Add Expense
+      </button>
+    </div>
+    <div class="content" id="expense-body"></div>
+  </div>
+
+  <div id="s-finny" class="screen">
+    <div class="chat-hdr">
+      <div class="finny-av"><img src="./finny-logo.png" alt="Finny"/></div>
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#111827">Finny</div>
+        <div style="font-size:11px;color:#9ca3af;font-weight:500">by Finvio · AI Finance Assistant</div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:5px">
+        <div style="width:7px;height:7px;border-radius:50%;background:#22c55e"></div>
+        <span style="font-size:12px;color:#9ca3af;font-weight:600">Free AI</span>
+      </div>
+    </div>
+    <div class="msgs" id="chat-msgs"></div>
+    <div class="chips" id="chat-chips"></div>
+    <div class="inp-row">
+      <textarea class="inp-box" id="chat-inp" rows="1" placeholder="Ask anything — 'Give me a summary', 'What is a SIP?'..."></textarea>
+      <button class="snd-btn" id="chat-snd" onclick="chatSend()">↑</button>
+    </div>
+    <div class="chat-ft">Finny · Free tier · Rule-based AI · Premium AI coming soon</div>
+  </div>
+
+  <div id="s-profile" class="screen">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <span class="topbar-title">Profile & Settings</span>
+      </div>
+    </div>
+    <div class="content">
+      <div class="card" style="display:flex;align-items:center;gap:14px;max-width:500px">
+        <img src="./finvio-logo.png" alt="Finvio" style="width:56px;height:56px;border-radius:16px;object-fit:cover;flex-shrink:0"/>
+        <div>
+          <div style="font-size:18px;font-weight:800;color:#111827">Your Dashboard</div>
+          <div style="font-size:13px;color:#9ca3af;margin-top:2px">Finvio · Web version · No login required</div>
+        </div>
+      </div>
+      <div class="card" style="max-width:500px">
+        <div style="font-size:13px;color:#6b7280;font-weight:600;margin-bottom:10px">Download the full Finvio app</div>
+        <a href="https://play.google.com/store/apps/details?id=com.finvio" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#6ab04c;border-radius:12px;padding:12px 18px;text-decoration:none">
+          <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5c.5.28.5 1.22 0 1.5L4.5 21c-.5.33-1.5.33-1.5-.5z" fill="white"/></svg>
+          <div><div style="font-size:10px;color:rgba(255,255,255,0.8);font-weight:600">Get it on</div><div style="font-size:15px;color:#fff;font-weight:800">Google Play Store</div></div>
+        </a>
+        <div style="font-size:12px;color:#9ca3af;margin-top:10px;font-weight:500">Family codes, full sync & more — exclusively in the app</div>
+      </div>
+      <div class="card" style="max-width:500px;opacity:.5">
+        <div style="display:flex;align-items:center;gap:10px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/></svg>
+          <div><div style="font-size:14px;font-weight:700;color:#374151">Family Code</div><div style="font-size:12px;color:#9ca3af">Connect your family's finances</div></div>
+          <span style="margin-left:auto;font-size:11px;background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:8px;font-weight:700">App only</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="bnav-item active" id="bnav-home" onclick="goTab('home')">
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#6ab04c" stroke-width="2"/></svg>
+        <span class="bnav-label" style="color:#6ab04c">Home</span>
+      </button>
+      <button class="bnav-item" id="bnav-income" onclick="goTab('income')">
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M7 16l-4-4m0 0l4-4m-4 4h18" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="bnav-label">Income</span>
+      </button>
+      <button class="bnav-item" id="bnav-expense" onclick="goTab('expense')">
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="bnav-label">Expense</span>
+      </button>
+      <button class="bnav-finny" onclick="goTab('finny')">
+        <div class="bnav-finny-icon"><img src="./finny-logo.png" alt="Finny"/></div>
+        <span class="bnav-finny-label">Finny</span>
+      </button>
+      <button class="bnav-item" id="bnav-profile" onclick="goTab('profile')">
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" stroke="#9ca3af" stroke-width="2"/></svg>
+        <span class="bnav-label">Profile</span>
+      </button>
+    </div>
+  </nav>
+</div>
+</div>
+
+<div class="modal-overlay" id="modal-income">
+  <div class="modal-box">
+    <h3 id="inc-modal-title">Add income</h3>
+    <div class="field"><label>Source</label><select id="inc-src"><option>Monthly Salary</option><option>Part Time Wages</option><option>Bank Interest</option><option>Dividends</option><option>Rental Income</option><option>Freelance Income</option><option>Business Income</option><option>Commission</option><option>Pension</option><option>Annuity Income</option><option>Bonus</option><option>Overtime Pay</option><option>Investment Returns</option><option>Royalties</option><option>Side Business</option><option>Other</option></select></div>
+    <div class="field"><label>Amount (₹)</label><input type="number" id="inc-amt" placeholder="Enter amount"/></div>
+    <div class="field"><label>Payment method</label><select id="inc-pay"><option>Bank Transfer</option><option>UPI</option><option>Cash</option><option>Cheque</option><option>NEFT</option><option>RTGS</option><option>IMPS</option><option>Credit Card</option><option>Debit Card</option><option>Wallet (Paytm/PhonePe)</option><option>Demand Draft</option><option>Cryptocurrency</option><option>Other</option></select></div>
+    <div class="field"><label>Description</label><input type="text" id="inc-desc" placeholder="Optional note"/></div>
+    <input type="hidden" id="inc-edit-id" value=""/>
+    <div class="btn-row"><button class="btn-cancel" onclick="closeModal('income')">Cancel</button><button class="btn-save" onclick="saveIncome()">Save</button></div>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-expense">
+  <div class="modal-box">
+    <h3 id="exp-modal-title">Add expense</h3>
+    <div class="field"><label>Expense title</label><input type="text" id="exp-title" placeholder="e.g. Lunch, Netflix, Petrol"/></div>
+    <div class="field"><label>Category</label><select id="exp-cat"><option>Food &amp; Dining</option><option>House Rent</option><option>Transport</option><option>Utilities - Electricity, Water</option><option>Entertainment</option><option>Shopping</option><option>Health &amp; Medical</option><option>Education</option><option>Groceries</option><option>Personal Care</option><option>Fitness &amp; Sports</option><option>Travel</option><option>Insurance Premium</option><option>EMI / Loan Repayment</option><option>Subscriptions</option><option>Clothing</option><option>Gifts &amp; Donations</option><option>Household Supplies</option><option>Vehicle Maintenance</option><option>Mobile &amp; Internet</option><option>Other</option></select></div>
+    <div class="field"><label>Date</label><input type="date" id="exp-date"/></div>
+    <div class="field"><label>Amount (₹)</label><input type="number" id="exp-amt" placeholder="Enter amount"/></div>
+    <input type="hidden" id="exp-edit-id" value=""/>
+    <div class="btn-row"><button class="btn-cancel" onclick="closeModal('expense')">Cancel</button><button class="btn-save" onclick="saveExpense()">Save</button></div>
+  </div>
+</div>
+
+<script>
+const state={income:[],expense:[]};
+let nextId=1,currentTab='home',chatReady=false;
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarOverlay').classList.add('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('show');}
+function goTab(id){
+  currentTab=id;closeSidebar();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  ['home','income','expense','profile'].forEach(t=>{
+    const active=t===id;
+    const n=document.getElementById('nav-'+t);
+    const bn=document.getElementById('bnav-'+t);
+    if(n){n.classList.toggle('active',active);const l=n.querySelector('.nav-label');if(l)l.style.color=active?'#6ab04c':'#374151';n.querySelectorAll('path').forEach(p=>{if(p.getAttribute('stroke'))p.setAttribute('stroke',active?'#6ab04c':'#9ca3af');});}
+    if(bn){bn.classList.toggle('active',active);const l=bn.querySelector('.bnav-label');if(l)l.style.color=active?'#6ab04c':'#9ca3af';bn.querySelectorAll('path').forEach(p=>{if(p.getAttribute('stroke'))p.setAttribute('stroke',active?'#6ab04c':'#9ca3af');});}
+  });
+  if(id==='home')renderHome();
+  if(id==='income')renderIncome();
+  if(id==='expense')renderExpense();
+  if(id==='finny')initChat();
+}
+function fmt(n){return '₹'+Math.round(n).toLocaleString('en-IN');}
+function drawPie(cats,total,colors,msg){
+  if(!cats.length)return`<div style="text-align:center;padding:28px 0;color:#9ca3af;font-size:13px;font-weight:600">${msg}</div>`;
+  let off=0;
+  const arcs=cats.map((c,i)=>{const p=(c[1]/total)*100;const a=`<circle cx="18" cy="18" r="14" fill="none" stroke="${colors[i%colors.length]}" stroke-width="5" stroke-dasharray="${p.toFixed(2)} ${(100-p).toFixed(2)}" stroke-dashoffset="${(-off+25).toFixed(2)}" transform="rotate(-90 18 18)"/>`;off+=p;return a;}).join('');
+  const leg=cats.slice(0,5).map((c,i)=>`<div style="display:flex;align-items:center;gap:7px;margin-bottom:5px"><div style="width:10px;height:10px;border-radius:3px;background:${colors[i%colors.length]};flex-shrink:0"></div><span style="font-size:12px;color:#374151;flex:1;font-weight:600">${c[0]}</span><span style="font-size:12px;font-weight:700;color:#111827">${fmt(c[1])}</span></div>`).join('');
+  return`<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><div style="position:relative;width:110px;height:110px;flex-shrink:0"><svg viewBox="0 0 36 36" width="110" height="110"><circle cx="18" cy="18" r="14" fill="none" stroke="#f3f4f6" stroke-width="5"/>${arcs}</svg><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center"><div style="font-size:14px;font-weight:800;color:#111827">${cats.length}</div><div style="font-size:9px;color:#9ca3af;font-weight:600">categories</div></div></div><div style="flex:1;min-width:120px">${leg}</div></div>`;
+}
+const EC=['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'];
+const IC=['#16a34a','#0ea5e9','#8b5cf6','#f97316','#14b8a6','#6366f1','#eab308','#22c55e'];
+function renderHome(){
+  const inc=state.income.reduce((s,i)=>s+i.amount,0),exp=state.expense.reduce((s,e)=>s+e.amount,0),net=inc-exp;
+  const byE={},byI={};
+  state.expense.forEach(e=>{byE[e.category]=(byE[e.category]||0)+e.amount;});
+  state.income.forEach(i=>{byI[i.source]=(byI[i.source]||0)+i.amount;});
+  const expC=Object.entries(byE).sort((a,b)=>b[1]-a[1]),incC=Object.entries(byI).sort((a,b)=>b[1]-a[1]);
+  const rec=[...state.income.map(i=>({...i,type:'income'})),...state.expense.map(e=>({...e,type:'expense'}))].sort((a,b)=>b.id-a.id).slice(0,6);
+  document.getElementById('home-body').innerHTML=`
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Net balance</div><div class="stat-val ${net>=0?'b':'r'}">${fmt(net)}</div></div>
+      <div class="stat-card"><div class="stat-label">Total income</div><div class="stat-val g">${fmt(inc)}</div></div>
+      <div class="stat-card"><div class="stat-label">Total expenses</div><div class="stat-val r">${fmt(exp)}</div></div>
+    </div>
+    <div class="charts-grid">
+      <div class="card"><div class="card-title">Expenses by category</div>${drawPie(expC,exp,EC,'No expenses yet')}</div>
+      <div class="card"><div class="card-title">Income by source</div>${drawPie(incC,inc,IC,'No income yet')}</div>
+    </div>
+    ${rec.length?`<div class="card"><div class="card-title">Recent transactions</div><div>${rec.map(t=>t.type==='income'?`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #f3f4f6"><div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:#16a34a;flex-shrink:0"></div><div><div style="font-size:13px;font-weight:700;color:#374151">${t.source}</div><div style="font-size:11px;color:#9ca3af">${t.desc||''}</div></div></div><div style="font-size:14px;font-weight:700;color:#16a34a">+${fmt(t.amount)}</div></div>`:`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #f3f4f6"><div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0"></div><div><div style="font-size:13px;font-weight:700;color:#374151">${t.title||t.category}</div><div style="font-size:11px;color:#9ca3af">${t.category}</div></div></div><div style="font-size:14px;font-weight:700;color:#ef4444">-${fmt(t.amount)}</div></div>`).join('')}</div></div>`:''}
+    <div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px"><div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:2px">Get the full Finvio experience</div><div style="font-size:12px;color:#9ca3af">Family codes, sync & more on the app</div></div>
+      <a href="https://play.google.com/store/apps/details?id=com.finvio" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#6ab04c;border-radius:10px;padding:9px 14px;text-decoration:none;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5c.5.28.5 1.22 0 1.5L4.5 21c-.5.33-1.5.33-1.5-.5z" fill="white"/></svg><span style="font-size:13px;color:#fff;font-weight:700">Google Play</span></a>
+    </div>`;
+}
+function renderIncome(){
+  const ib=document.getElementById('income-body'),tot=state.income.reduce((s,i)=>s+i.amount,0);
+  if(!state.income.length){ib.innerHTML=`<div class="empty">No income added yet.<br><span style="font-size:13px;color:#d1d5db">Click "Add Income" to get started</span></div>`;return;}
+  ib.innerHTML=`<div class="count-row">Total count: <span>${state.income.length}</span> &nbsp;|&nbsp; Total amount: <span>${fmt(tot)}</span></div><div class="entry-grid">`+[...state.income].reverse().map(i=>`<div class="entry"><div class="entry-tag entry-tag-g">${i.date||'Today'}</div><div style="padding-top:6px"><div class="entry-row"><span class="entry-key">Source :</span><span class="entry-val">${i.source}</span></div><div class="entry-row"><span class="entry-key">Amount :</span><span class="entry-val g" style="font-weight:700">${fmt(i.amount)}</span></div><div class="entry-row"><span class="entry-key">Payment :</span><span class="entry-val">${i.paymethod}</span></div>${i.desc?`<div class="entry-row"><span class="entry-key">Description :</span><span class="entry-val">${i.desc}</span></div>`:''}</div><div class="entry-btns"><button class="btn-edit" onclick="openModal('income',${i.id})">Edit</button><button class="btn-del" onclick="deleteEntry('income',${i.id})">Delete</button></div></div>`).join('')+`</div>`;
+}
+function renderExpense(){
+  const eb=document.getElementById('expense-body'),tot=state.expense.reduce((s,e)=>s+e.amount,0);
+  if(!state.expense.length){eb.innerHTML=`<div class="empty">No expenses added yet.<br><span style="font-size:13px;color:#d1d5db">Click "Add Expense" to get started</span></div>`;return;}
+  eb.innerHTML=`<div class="count-row">Total count: <span>${state.expense.length}</span> &nbsp;|&nbsp; Total amount: <span>${fmt(tot)}</span></div><div class="entry-grid">`+[...state.expense].reverse().map(e=>`<div class="entry"><div class="entry-tag entry-tag-r">${e.date||'Today'}</div><div style="padding-top:6px"><div class="entry-row"><span class="entry-key">Title :</span><span class="entry-val">${e.title}</span></div><div class="entry-row"><span class="entry-key">Category :</span><span class="entry-val">${e.category}</span></div><div class="entry-row"><span class="entry-key">Amount :</span><span class="entry-val r" style="font-weight:700">-${fmt(e.amount)}</span></div><div class="entry-row"><span class="entry-key">Date :</span><span class="entry-val">${e.date||'—'}</span></div></div><div class="entry-btns"><button class="btn-edit" onclick="openModal('expense',${e.id})">Edit</button><button class="btn-del" onclick="deleteEntry('expense',${e.id})">Delete</button></div></div>`).join('')+`</div>`;
+}
+function openModal(type,id){
+  if(type==='income'){
+    if(id!=null){const item=state.income.find(i=>i.id===id);if(!item)return;document.getElementById('inc-modal-title').textContent='Edit income';document.getElementById('inc-src').value=item.source;document.getElementById('inc-amt').value=item.amount;document.getElementById('inc-pay').value=item.paymethod;document.getElementById('inc-desc').value=item.desc||'';document.getElementById('inc-edit-id').value=id;}
+    else{document.getElementById('inc-modal-title').textContent='Add income';document.getElementById('inc-src').value='Monthly Salary';document.getElementById('inc-amt').value='';document.getElementById('inc-pay').value='Bank Transfer';document.getElementById('inc-desc').value='';document.getElementById('inc-edit-id').value='';}
+  }else{
+    const today=new Date().toISOString().split('T')[0];
+    if(id!=null){const item=state.expense.find(e=>e.id===id);if(!item)return;document.getElementById('exp-modal-title').textContent='Edit expense';document.getElementById('exp-title').value=item.title;document.getElementById('exp-cat').value=item.category;document.getElementById('exp-date').value=item.rawDate||today;document.getElementById('exp-amt').value=item.amount;document.getElementById('exp-edit-id').value=id;}
+    else{document.getElementById('exp-modal-title').textContent='Add expense';document.getElementById('exp-title').value='';document.getElementById('exp-cat').value='Food & Dining';document.getElementById('exp-date').value=today;document.getElementById('exp-amt').value='';document.getElementById('exp-edit-id').value='';}
+  }
+  document.getElementById('modal-'+type).classList.add('show');
+}
+function closeModal(t){document.getElementById('modal-'+t).classList.remove('show');}
+function saveIncome(){
+  const src=document.getElementById('inc-src').value,amt=parseFloat(document.getElementById('inc-amt').value),pay=document.getElementById('inc-pay').value,desc=document.getElementById('inc-desc').value,eid=document.getElementById('inc-edit-id').value;
+  if(!amt||amt<=0)return;
+  const today=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  if(eid){const idx=state.income.findIndex(i=>i.id===parseInt(eid));if(idx>-1)state.income[idx]={...state.income[idx],source:src,amount:amt,paymethod:pay,desc};}
+  else state.income.push({id:nextId++,source:src,amount:amt,paymethod:pay,desc,date:today});
+  closeModal('income');renderIncome();renderHome();
+}
+function saveExpense(){
+  const title=document.getElementById('exp-title').value||'Expense',cat=document.getElementById('exp-cat').value,rawDate=document.getElementById('exp-date').value,amt=parseFloat(document.getElementById('exp-amt').value),eid=document.getElementById('exp-edit-id').value;
+  if(!amt||amt<=0)return;
+  const fd=rawDate?new Date(rawDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'';
+  if(eid){const idx=state.expense.findIndex(e=>e.id===parseInt(eid));if(idx>-1)state.expense[idx]={...state.expense[idx],title,category:cat,date:fd,rawDate,amount:amt};}
+  else state.expense.push({id:nextId++,title,category:cat,date:fd,rawDate,amount:amt});
+  closeModal('expense');renderExpense();renderHome();
+}
+function deleteEntry(type,id){
+  if(type==='income')state.income=state.income.filter(i=>i.id!==id);
+  else state.expense=state.expense.filter(e=>e.id!==id);
+  if(type==='income')renderIncome();else renderExpense();
+  renderHome();
+}
+const SUGG=['Give me a summary','Where am I overspending?','Top categories','How much did I save?','What is a SIP?','Recommendations'];
+const KB=[
+  {k:['sip','mutual fund'],a:"A SIP lets you invest a fixed amount monthly in mutual funds. Even Rs.500/month compounded over 10+ years grows significantly through rupee-cost averaging."},
+  {k:['compound','compounding'],a:"Compound interest means earning interest on interest. Rs.10,000 at 12% annual return for 20 years becomes over Rs.96,000. Starting early is the most powerful financial decision."},
+  {k:['emergency','rainy day'],a:"An emergency fund is 3-6 months of living expenses in a liquid account. It protects you from debt when unexpected expenses hit."},
+  {k:['ppf','provident','80c'],a:"PPF offers ~7.1% tax-free returns, government-backed, 15-year lock-in. One of India's best risk-free investments."},
+  {k:['inflation'],a:"India's inflation is ~5-6% per year. If your money isn't growing at least that fast, you're losing real purchasing power."},
+  {k:['50/30/20','budget rule'],a:"50/30/20 rule: 50% to needs, 30% to wants, 20% to savings. A great starting framework for any budget."},
+  {k:['insurance','term plan'],a:"Term life and health insurance are non-negotiable. Aim for 10x annual income in life cover."},
+  {k:['nifty','sensex','stock','equity'],a:"Indian markets have historically returned 12-14% annually. Index funds through SIPs are the safest entry point for beginners."},
+  {k:['finny','finvio','what can you'],a:"I'm Finny, your free AI finance assistant built into Finvio! I analyze your real transactions, flag issues, and answer finance questions — all free. Premium AI coming soon!"},
+];
+function initChat(){
+  if(chatReady)return;chatReady=true;
+  const chips=document.getElementById('chat-chips');
+  SUGG.forEach(s=>{const b=document.createElement('button');b.className='chip';b.textContent=s;b.onclick=()=>chatSend(s);chips.appendChild(b);});
+  addBot({type:'list',text:"Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!",items:['📊 Monthly summary','🚨 Overspending alerts','🏆 Top categories','💰 Savings analysis','🎓 Finance questions (SIP, PPF, compound interest...)']});
+}
+function chatSend(txt){
+  const inp=document.getElementById('chat-inp'),text=txt||inp.value.trim();
+  if(!text)return;inp.value='';addUser(text);
+  document.getElementById('chat-snd').disabled=true;showTyping();
+  setTimeout(()=>{document.getElementById('typing-el')?.remove();addBot(runFinny(text));document.getElementById('chat-snd').disabled=false;sc();},550);
+}
+function sc(){const m=document.getElementById('chat-msgs');m.scrollTop=m.scrollHeight;}
+function runFinny(q){
+  const t=q.toLowerCase().trim();
+  const inc=state.income.reduce((s,i)=>s+i.amount,0),exp=state.expense.reduce((s,e)=>s+e.amount,0),sav=inc-exp,rate=inc>0?((sav/inc)*100).toFixed(1):0;
+  const bycat={};state.expense.forEach(e=>{bycat[e.category]=(bycat[e.category]||0)+e.amount;});
+  const sorted=Object.entries(bycat).sort((a,b)=>b[1]-a[1]);
+  if(t.match(/summary|overview|how am i|this month|my finances/)){if(inc===0&&exp===0)return{type:'plain',text:"No transactions yet. Go to Income and Expense tabs to start tracking!"};return{type:'summary',text:'Your current financial overview:',cards:[{l:'Income',v:fmt(inc),c:'#16a34a',b:'#f0fdf4'},{l:'Expenses',v:fmt(exp),c:'#ea580c',b:'#fff7ed'},{l:'Savings',v:fmt(Math.abs(sav)),c:sav>=0?'#16a34a':'#ef4444',b:sav>=0?'#f0fdf4':'#fef2f2',n:sav>=0?'saved':'deficit'},{l:'Rate',v:rate+'%',c:'#6ab04c',b:'#f0fdf4'}],insight:sav>=0?`Saved ${rate}% of income. ${parseFloat(rate)>=20?'Excellent! 🎯':'Aim for 20% for a stronger cushion.'}`:`Spent ${fmt(Math.abs(sav))} more than earned. Let's fix that!`};}
+  if(t.match(/overspend|budget|exceed/)){if(!sorted.length)return{type:'plain',text:"No expenses yet. Add some from the Expense tab!"};return{type:'alert',text:'Your top spending categories:',items:sorted.slice(0,4).map(c=>({cat:c[0],amt:fmt(c[1]),pct:exp>0?((c[1]/exp)*100).toFixed(0):0}))};}
+  if(t.match(/top|most|categor|breakdown|where.*spend/)){if(!sorted.length)return{type:'plain',text:"No expenses yet!"};return{type:'ranking',text:'Your spending breakdown:',items:sorted.slice(0,5).map((c,i)=>({rank:i+1,cat:c[0],amt:fmt(c[1]),pct:exp>0?((c[1]/exp)*100).toFixed(1):0}))};}
+  if(t.match(/saving|save|saved/)){if(inc===0)return{type:'plain',text:"Add your income first!"};const r=parseFloat(rate);return{type:'summary',text:'Your savings snapshot:',cards:[{l:'Saved',v:fmt(Math.max(sav,0)),c:'#16a34a',b:'#f0fdf4'},{l:'Rate',v:rate+'%',c:'#6ab04c',b:'#f0fdf4'}],insight:r>=30?'Exceptional! 🚀':r>=20?'Solid rate.':r>=10?'Decent. Aim for 20%.':r>0?'Low rate. Cut top categories.':'Spending more than earning!'};}
+  if(t.match(/recommend|advice|tip|improve|help me|suggest/)){const tips=[];if(sorted.length>0)tips.push(`${sorted[0][0]} is your biggest expense at ${fmt(sorted[0][1])}.`);if(parseFloat(rate)<20&&inc>0)tips.push(`Savings rate ${rate}% — aim for 20%.`);tips.push('Set a weekly 10-min money review.');tips.push('50/30/20: 50% needs, 30% wants, 20% savings.');return{type:'tips',text:'Recommendations based on your data:',items:tips};}
+  if(t.match(/^(hi|hello|hey|namaste)[\s!?]*$/))return{type:'list',text:'Hey! What would you like to know?',items:['📊 Summary','🏆 Top categories','💰 Savings','💡 Recommendations','🎓 Finance questions']};
+  if(t.match(/thank|thanks|great|awesome/))return{type:'plain',text:'Happy to help! 😊'};
+  for(const e of KB)if(e.k.some(k=>t.includes(k)))return{type:'plain',text:e.a};
+  return{type:'list',text:"Here's what I can help with:",items:["📊 'Give me a summary'","🏆 'Top spending categories'","💰 'How much did I save?'","💡 'Recommendations'","🎓 'What is a SIP?'"]};
+}
+const BAV=`<div class="bav"><img src="./finny-logo.png" alt="Finny"/></div>`;
+function renderBot(r){
+  if(r.type==='plain')return`<div style="font-size:13px;color:#374151;line-height:1.65;font-weight:500">${r.text}</div>`;
+  if(r.type==='summary'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:8px;font-weight:500">${r.text}</div>`;if(r.cards)h+=`<div class="mc">${r.cards.map(c=>`<div class="mci" style="background:${c.b};border-color:${c.c}22"><div class="mcl">${c.l}</div><div class="mcv" style="color:${c.c}">${c.v}</div>${c.n?`<div style="font-size:9px;color:${c.c};margin-top:1px;font-weight:700">${c.n}</div>`:''}</div>`).join('')}</div>`;if(r.insight)h+=`<div class="ins">${r.insight}</div>`;return h;}
+  if(r.type==='alert'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:7px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="alert-row"><div style="font-size:13px;font-weight:700;color:#374151">${i.cat}</div><div style="text-align:right"><div style="font-size:13px;font-weight:700;color:#ef4444">${i.amt}</div><div style="font-size:11px;color:#f87171">${i.pct}%</div></div></div>`;});return h;}
+  if(r.type==='ranking'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:7px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="rank-row"><div style="width:22px;height:22px;border-radius:5px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#6b7280;flex-shrink:0">#${i.rank}</div><div style="flex:1;font-size:13px;color:#374151;font-weight:600">${i.cat}</div><div style="text-align:right"><div style="font-size:13px;font-weight:700">${i.amt}</div><div style="font-size:11px;color:#9ca3af">${i.pct}%</div></div></div>`;});return h;}
+  if(r.type==='tips'||r.type==='list'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:8px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="list-item">${i}</div>`;});return h;}
+  return`<div style="font-size:13px">${r.text||''}</div>`;
+}
+function addBot(d){const el=document.createElement('div');el.className='bot-row fade';el.innerHTML=`${BAV}<div class="bb">${renderBot(d)}</div>`;document.getElementById('chat-msgs').appendChild(el);sc();}
+function addUser(t){const el=document.createElement('div');el.className='user-row fade';el.innerHTML=`<div class="ub">${t}</div>`;document.getElementById('chat-msgs').appendChild(el);sc();}
+function showTyping(){const el=document.createElement('div');el.className='bot-row fade';el.id='typing-el';el.innerHTML=`${BAV}<div class="typing"><span></span><span></span><span></span></div>`;document.getElementById('chat-msgs').appendChild(el);sc();}
+document.getElementById('chat-inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();chatSend();}});
+renderHome();
+</script>
+</body>
+</html>
