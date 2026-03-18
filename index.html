@@ -357,8 +357,20 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 </div>
 
 <script>
-const state={income:[],expense:[]};
-let nextId=1,currentTab='home',chatReady=false;
+function loadState(){
+  try{
+    const s=localStorage.getItem('finvio_state');
+    return s?JSON.parse(s):{income:[],expense:[]};
+  }catch(e){return{income:[],expense:[]};}
+}
+function saveState(){
+  try{localStorage.setItem('finvio_state',JSON.stringify(state));}catch(e){}
+}
+function loadNextId(){
+  try{return parseInt(localStorage.getItem('finvio_nextid')||'1');}catch(e){return 1;}
+}
+const state=loadState();
+let nextId=loadNextId(),currentTab='home',chatReady=false;
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarOverlay').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('show');}
 function goTab(id){
@@ -438,7 +450,7 @@ function saveIncome(){
   const today=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
   if(eid){const idx=state.income.findIndex(i=>i.id===parseInt(eid));if(idx>-1)state.income[idx]={...state.income[idx],source:src,amount:amt,paymethod:pay,desc};}
   else state.income.push({id:nextId++,source:src,amount:amt,paymethod:pay,desc,date:today});
-  closeModal('income');renderIncome();renderHome();
+  closeModal('income');saveState();renderIncome();renderHome();
 }
 function saveExpense(){
   const title=document.getElementById('exp-title').value||'Expense',cat=document.getElementById('exp-cat').value,rawDate=document.getElementById('exp-date').value,amt=parseFloat(document.getElementById('exp-amt').value),eid=document.getElementById('exp-edit-id').value;
@@ -446,12 +458,13 @@ function saveExpense(){
   const fd=rawDate?new Date(rawDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'';
   if(eid){const idx=state.expense.findIndex(e=>e.id===parseInt(eid));if(idx>-1)state.expense[idx]={...state.expense[idx],title,category:cat,date:fd,rawDate,amount:amt};}
   else state.expense.push({id:nextId++,title,category:cat,date:fd,rawDate,amount:amt});
-  closeModal('expense');renderExpense();renderHome();
+  closeModal('expense');saveState();renderExpense();renderHome();
 }
 function deleteEntry(type,id){
   if(type==='income')state.income=state.income.filter(i=>i.id!==id);
   else state.expense=state.expense.filter(e=>e.id!==id);
   if(type==='income')renderIncome();else renderExpense();
+  saveState();
   renderHome();
 }
 const SUGG=['Give me a summary','Where am I overspending?','Top categories','How much did I save?','What is a SIP?','Recommendations'];
