@@ -203,6 +203,41 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
     </button>
   </div>
   <div class="sidebar-footer">
+    <div style="margin-bottom:10px">
+      <div style="font-size:10px;color:var(--text-faint);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em">Currency</div>
+      <select id="currency-select" onchange="changeCurrency(this.value)" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;color:var(--text);background:var(--white);font-family:inherit;cursor:pointer">
+        <option value="₹">₹ INR — Indian Rupee</option>
+        <option value="$">$ USD — US Dollar</option>
+        <option value="€">€ EUR — Euro</option>
+        <option value="£">£ GBP — British Pound</option>
+        <option value="¥">¥ JPY — Japanese Yen</option>
+        <option value="¥">¥ CNY — Chinese Yuan</option>
+        <option value="A$">A$ AUD — Australian Dollar</option>
+        <option value="C$">C$ CAD — Canadian Dollar</option>
+        <option value="Fr">Fr CHF — Swiss Franc</option>
+        <option value="₩">₩ KRW — South Korean Won</option>
+        <option value="S$">S$ SGD — Singapore Dollar</option>
+        <option value="AED">AED — UAE Dirham</option>
+        <option value="SAR">SAR — Saudi Riyal</option>
+        <option value="R">R ZAR — South African Rand</option>
+        <option value="R$">R$ BRL — Brazilian Real</option>
+        <option value="MX$">MX$ MXN — Mexican Peso</option>
+        <option value="₺">₺ TRY — Turkish Lira</option>
+        <option value="₽">₽ RUB — Russian Ruble</option>
+        <option value="Rp">Rp IDR — Indonesian Rupiah</option>
+        <option value="₱">₱ PHP — Philippine Peso</option>
+        <option value="RM">RM MYR — Malaysian Ringgit</option>
+        <option value="฿">฿ THB — Thai Baht</option>
+        <option value="₦">₦ NGN — Nigerian Naira</option>
+        <option value="KSh">KSh KES — Kenyan Shilling</option>
+        <option value="EGP">EGP — Egyptian Pound</option>
+        <option value="NZ$">NZ$ NZD — New Zealand Dollar</option>
+        <option value="NOK">NOK — Norwegian Krone</option>
+        <option value="SEK">SEK — Swedish Krona</option>
+        <option value="DKK">DKK — Danish Krone</option>
+        <option value="PLN">PLN — Polish Zloty</option>
+      </select>
+    </div>
     <a href="https://play.google.com/store/apps/details?id=com.finvio" class="play-btn" target="_blank">
       <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5c.5.28.5 1.22 0 1.5L4.5 21c-.5.33-1.5.33-1.5-.5z" fill="white"/></svg>
       <div><span style="font-size:9px;color:rgba(255,255,255,0.7);font-weight:600;display:block">Get it on</span><span style="font-size:12px;color:#fff;font-weight:800;display:block">Google Play</span></div>
@@ -389,7 +424,10 @@ function goTab(id){
   if(id==='expense')renderExpense();
   if(id==='finny')initChat();
 }
-function fmt(n){return '₹'+Math.round(n).toLocaleString('en-IN');}
+let currencySymbol=localStorage.getItem('finvio_currency')||'₹';
+function changeCurrency(sym){currencySymbol=sym;localStorage.setItem('finvio_currency',sym);renderHome();if(currentTab==='income')renderIncome();if(currentTab==='expense')renderExpense();}
+function fmt(n){return currencySymbol+Math.round(n).toLocaleString();}
+function initCurrency(){const saved=localStorage.getItem('finvio_currency')||'₹';currencySymbol=saved;const sel=document.getElementById('currency-select');if(sel){for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===saved){sel.selectedIndex=i;break;}}}}
 function drawPie(cats,total,colors,msg){
   if(!cats.length)return`<div style="text-align:center;padding:28px 0;color:#9ca3af;font-size:13px;font-weight:600">${msg}</div>`;
   let off=0;
@@ -467,7 +505,7 @@ function deleteEntry(type,id){
   saveState();
   renderHome();
 }
-const SUGG=['Give me a summary','Where am I overspending?','Top categories','How much did I save?','What is a SIP?','Recommendations'];
+const SUGG=['Give me a summary','Add income','Add expense','Where am I overspending?','Top categories','How much did I save?','What is a SIP?'];
 const KB=[
   {k:['sip','mutual fund'],a:"A SIP lets you invest a fixed amount monthly in mutual funds. Even Rs.500/month compounded over 10+ years grows significantly through rupee-cost averaging."},
   {k:['compound','compounding'],a:"Compound interest means earning interest on interest. Rs.10,000 at 12% annual return for 20 years becomes over Rs.96,000. Starting early is the most powerful financial decision."},
@@ -479,11 +517,24 @@ const KB=[
   {k:['nifty','sensex','stock','equity'],a:"Indian markets have historically returned 12-14% annually. Index funds through SIPs are the safest entry point for beginners."},
   {k:['finny','finvio','what can you'],a:"I'm Finny, your free AI finance assistant built into Finvio! I analyze your real transactions, flag issues, and answer finance questions — all free. Premium AI coming soon!"},
 ];
+function saveChatHistory(){try{const msgs=[];document.querySelectorAll('#chat-msgs .bot-row:not(#typing-el), #chat-msgs .user-row').forEach(el=>{if(el.classList.contains('user-row')){msgs.push({role:'user',html:el.querySelector('.ub').innerHTML});}else{msgs.push({role:'bot',html:el.querySelector('.bb').innerHTML});}});localStorage.setItem('finvio_chat',JSON.stringify(msgs));}catch(e){}}
+function loadChatHistory(){try{const raw=localStorage.getItem('finvio_chat');return raw?JSON.parse(raw):[];}catch(e){return[];}}
 function initChat(){
   if(chatReady)return;chatReady=true;
   const chips=document.getElementById('chat-chips');
   SUGG.forEach(s=>{const b=document.createElement('button');b.className='chip';b.textContent=s;b.onclick=()=>chatSend(s);chips.appendChild(b);});
-  addBot({type:'list',text:"Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!",items:['📊 Monthly summary','🚨 Overspending alerts','🏆 Top categories','💰 Savings analysis','🎓 Finance questions (SIP, PPF, compound interest...)']});
+  const history=loadChatHistory();
+  if(history.length>0){
+    history.forEach(m=>{
+      const el=document.createElement('div');
+      if(m.role==='user'){el.className='user-row';el.innerHTML=`<div class="ub">${m.html}</div>`;}
+      else{el.className='bot-row';el.innerHTML=`${BAV}<div class="bb">${m.html}</div>`;}
+      document.getElementById('chat-msgs').appendChild(el);
+    });
+    sc();
+  } else {
+    addBot({type:'list',text:"Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!",items:['📊 Monthly summary','🚨 Overspending alerts','🏆 Top categories','💰 Savings analysis','🎓 Finance questions (SIP, PPF, compound interest...)']});
+  }
 }
 function chatSend(txt){
   const inp=document.getElementById('chat-inp'),text=txt||inp.value.trim();
@@ -492,11 +543,21 @@ function chatSend(txt){
   setTimeout(()=>{document.getElementById('typing-el')?.remove();addBot(runFinny(text));document.getElementById('chat-snd').disabled=false;sc();},550);
 }
 function sc(){const m=document.getElementById('chat-msgs');m.scrollTop=m.scrollHeight;}
+function finnyAddIncome(src,amt,pay,desc){const today=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});state.income.push({id:nextId++,source:src,amount:amt,paymethod:pay||'Bank Transfer',desc:desc||'',date:today});saveState();renderIncome();renderHome();}
+function finnyAddExpense(title,cat,amt,rawDate){const fd=rawDate?new Date(rawDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});state.expense.push({id:nextId++,title:title||cat,category:cat,date:fd,rawDate:rawDate||new Date().toISOString().split('T')[0],amount:amt});saveState();renderExpense();renderHome();}
 function runFinny(q){
   const t=q.toLowerCase().trim();
   const inc=state.income.reduce((s,i)=>s+i.amount,0),exp=state.expense.reduce((s,e)=>s+e.amount,0),sav=inc-exp,rate=inc>0?((sav/inc)*100).toFixed(1):0;
   const bycat={};state.expense.forEach(e=>{bycat[e.category]=(bycat[e.category]||0)+e.amount;});
   const sorted=Object.entries(bycat).sort((a,b)=>b[1]-a[1]);
+  const amtMatch=t.match(/(\d+[\d,]*(\.\d+)?)/);
+  const extractedAmt=amtMatch?parseFloat(amtMatch[1].replace(',','')):null;
+  if(t.match(/add.*(income|salary|earning|earning|received|got paid)|i (received|got|earned)/)){
+    return{type:'add_income_form',prefillAmt:extractedAmt};
+  }
+  if(t.match(/add.*(expense|spent|spend|bought|purchased|paid for)|i (spent|bought|paid|purchased)/)){
+    return{type:'add_expense_form',prefillAmt:extractedAmt,prefillTitle:q.replace(/add|expense|spent|spend|bought|purchased|paid for|i |for /gi,'').replace(/\d+/g,'').trim()};
+  }
   if(t.match(/summary|overview|how am i|this month|my finances/)){if(inc===0&&exp===0)return{type:'plain',text:"No transactions yet. Go to Income and Expense tabs to start tracking!"};return{type:'summary',text:'Your current financial overview:',cards:[{l:'Income',v:fmt(inc),c:'#16a34a',b:'#f0fdf4'},{l:'Expenses',v:fmt(exp),c:'#ea580c',b:'#fff7ed'},{l:'Savings',v:fmt(Math.abs(sav)),c:sav>=0?'#16a34a':'#ef4444',b:sav>=0?'#f0fdf4':'#fef2f2',n:sav>=0?'saved':'deficit'},{l:'Rate',v:rate+'%',c:'#6ab04c',b:'#f0fdf4'}],insight:sav>=0?`Saved ${rate}% of income. ${parseFloat(rate)>=20?'Excellent! 🎯':'Aim for 20% for a stronger cushion.'}`:`Spent ${fmt(Math.abs(sav))} more than earned. Let's fix that!`};}
   if(t.match(/overspend|budget|exceed/)){if(!sorted.length)return{type:'plain',text:"No expenses yet. Add some from the Expense tab!"};return{type:'alert',text:'Your top spending categories:',items:sorted.slice(0,4).map(c=>({cat:c[0],amt:fmt(c[1]),pct:exp>0?((c[1]/exp)*100).toFixed(0):0}))};}
   if(t.match(/top|most|categor|breakdown|where.*spend/)){if(!sorted.length)return{type:'plain',text:"No expenses yet!"};return{type:'ranking',text:'Your spending breakdown:',items:sorted.slice(0,5).map((c,i)=>({rank:i+1,cat:c[0],amt:fmt(c[1]),pct:exp>0?((c[1]/exp)*100).toFixed(1):0}))};}
@@ -513,6 +574,28 @@ function runFinny(q){
 const BAV=`<div class="bav"><img src="./finny-logo.png" alt="Finny"/></div>`;
 function renderBot(r){
   if(r.type==='plain')return`<div style="font-size:13px;color:#374151;line-height:1.65;font-weight:500">${r.text}</div>`;
+  if(r.type==='add_income_form'){
+    const fid='fi'+Date.now();
+    return`<div style="font-size:13px;color:#374151;font-weight:500;margin-bottom:10px">Sure! Let me help you add income. Fill in the details:</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <select id="fi-src-${fid}" style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-family:inherit;color:#374151"><option>Monthly Salary</option><option>Part Time Wages</option><option>Bank Interest</option><option>Freelance Income</option><option>Business Income</option><option>Bonus</option><option>Dividends</option><option>Rental Income</option><option>Investment Returns</option><option>Other</option></select>
+      <input id="fi-amt-${fid}" type="number" placeholder="Amount" value="${r.prefillAmt||''}" style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-family:inherit;color:#374151"/>
+      <select id="fi-pay-${fid}" style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-family:inherit;color:#374151"><option>Bank Transfer</option><option>UPI</option><option>Cash</option><option>Cheque</option><option>Other</option></select>
+      <input id="fi-desc-${fid}" type="text" placeholder="Description (optional)" style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-family:inherit;color:#374151"/>
+      <button onclick="const s=document.getElementById('fi-src-${fid}').value,a=parseFloat(document.getElementById('fi-amt-${fid}').value),p=document.getElementById('fi-pay-${fid}').value,d=document.getElementById('fi-desc-${fid}').value;if(!a||a<=0){alert('Please enter a valid amount');return;}finnyAddIncome(s,a,p,d);addBot({type:'plain',text:'✅ Income of '+fmt(a)+' from '+s+' added successfully!'});" style="padding:9px;background:#6ab04c;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Add Income ✓</button>
+    </div>`;
+  }
+  if(r.type==='add_expense_form'){
+    const fid='fe'+Date.now();
+    return`<div style="font-size:13px;color:#374151;font-weight:500;margin-bottom:10px">Sure! Let me help you add an expense. Fill in the details:</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input id="fe-title-${fid}" type="text" placeholder="Expense title (e.g. Lunch, Netflix)" value="${r.prefillTitle||''}" style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-family:inherit;color:#374151"/>
+      <select id="fe-cat-${fid}" style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-family:inherit;color:#374151"><option>Food &amp; Dining</option><option>Transport</option><option>Entertainment</option><option>Shopping</option><option>Health &amp; Medical</option><option>Groceries</option><option>House Rent</option><option>Utilities - Electricity, Water</option><option>Education</option><option>Personal Care</option><option>Fitness &amp; Sports</option><option>Travel</option><option>Subscriptions</option><option>Mobile &amp; Internet</option><option>Other</option></select>
+      <input id="fe-amt-${fid}" type="number" placeholder="Amount" value="${r.prefillAmt||''}" style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-family:inherit;color:#374151"/>
+      <input id="fe-date-${fid}" type="date" value="${new Date().toISOString().split('T')[0]}" style="padding:8px 10px;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-family:inherit;color:#374151"/>
+      <button onclick="const title=document.getElementById('fe-title-${fid}').value||'Expense',cat=document.getElementById('fe-cat-${fid}').value,a=parseFloat(document.getElementById('fe-amt-${fid}').value),d=document.getElementById('fe-date-${fid}').value;if(!a||a<=0){alert('Please enter a valid amount');return;}finnyAddExpense(title,cat,a,d);addBot({type:'plain',text:'✅ Expense of '+fmt(a)+' for '+title+' added successfully!'});" style="padding:9px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Add Expense ✓</button>
+    </div>`;
+  }
   if(r.type==='summary'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:8px;font-weight:500">${r.text}</div>`;if(r.cards)h+=`<div class="mc">${r.cards.map(c=>`<div class="mci" style="background:${c.b};border-color:${c.c}22"><div class="mcl">${c.l}</div><div class="mcv" style="color:${c.c}">${c.v}</div>${c.n?`<div style="font-size:9px;color:${c.c};margin-top:1px;font-weight:700">${c.n}</div>`:''}</div>`).join('')}</div>`;if(r.insight)h+=`<div class="ins">${r.insight}</div>`;return h;}
   if(r.type==='alert'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:7px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="alert-row"><div style="font-size:13px;font-weight:700;color:#374151">${i.cat}</div><div style="text-align:right"><div style="font-size:13px;font-weight:700;color:#ef4444">${i.amt}</div><div style="font-size:11px;color:#f87171">${i.pct}%</div></div></div>`;});return h;}
   if(r.type==='ranking'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:7px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="rank-row"><div style="width:22px;height:22px;border-radius:5px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#6b7280;flex-shrink:0">#${i.rank}</div><div style="flex:1;font-size:13px;color:#374151;font-weight:600">${i.cat}</div><div style="text-align:right"><div style="font-size:13px;font-weight:700">${i.amt}</div><div style="font-size:11px;color:#9ca3af">${i.pct}%</div></div></div>`;});return h;}
@@ -520,11 +603,11 @@ function renderBot(r){
   if(r.type==='tips'||r.type==='list'){let h=`<div style="font-size:13px;color:#374151;margin-bottom:8px;font-weight:500">${r.text}</div>`;r.items.forEach(i=>{h+=`<div class="list-item">${i}</div>`;});return h;}
   return`<div style="font-size:13px">${r.text||''}</div>`;
 }
-function addBot(d){const el=document.createElement('div');el.className='bot-row fade';el.innerHTML=`${BAV}<div class="bb">${renderBot(d)}</div>`;document.getElementById('chat-msgs').appendChild(el);sc();}
-function addUser(t){const el=document.createElement('div');el.className='user-row fade';el.innerHTML=`<div class="ub">${t}</div>`;document.getElementById('chat-msgs').appendChild(el);sc();}
+function addBot(d){const el=document.createElement('div');el.className='bot-row fade';el.innerHTML=`${BAV}<div class="bb">${renderBot(d)}</div>`;document.getElementById('chat-msgs').appendChild(el);sc();saveChatHistory();}
+function addUser(t){const el=document.createElement('div');el.className='user-row fade';el.innerHTML=`<div class="ub">${t}</div>`;document.getElementById('chat-msgs').appendChild(el);sc();saveChatHistory();}
 function showTyping(){const el=document.createElement('div');el.className='bot-row fade';el.id='typing-el';el.innerHTML=`${BAV}<div class="typing"><span></span><span></span><span></span></div>`;document.getElementById('chat-msgs').appendChild(el);sc();}
 document.getElementById('chat-inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();chatSend();}});
-renderHome();
+initCurrency();renderHome();
 </script>
 </body>
 </html>
