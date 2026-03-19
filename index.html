@@ -1123,7 +1123,20 @@
       }
 
       .inp-row {
-        padding: 8px 14px 12px;
+        padding: 8px 10px 10px;
+        gap: 6px;
+      }
+
+      #finny-mic, #finny-stop, .snd-btn {
+        width: 33px;
+        height: 33px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      .inp-box {
+        padding: 8px 10px;
+        font-size: 13px;
       }
 
       .chips {
@@ -1657,6 +1670,29 @@
       const inc = state.income.reduce((s, i) => s + i.amount, 0), exp = state.expense.reduce((s, e) => s + e.amount, 0), sav = inc - exp, rate = inc > 0 ? ((sav / inc) * 100).toFixed(1) : 0;
       const bycat = {}; state.expense.forEach(e => { bycat[e.category] = (bycat[e.category] || 0) + e.amount; });
       const sorted = Object.entries(bycat).sort((a, b) => b[1] - a[1]);
+      
+      if (t.match(/change currency|set currency|switch currency|currency to|use currency/)) {
+        let sym = t.match(/(\$|₹|€|£|¥|usd|inr|eur|gbp|jpy)/i);
+        if (sym) {
+           let s = sym[1].toUpperCase();
+           if (s==='USD') s='$';
+           else if (s==='INR') s='₹';
+           else if (s==='EUR') s='€';
+           else if (s==='GBP') s='£';
+           else if (s==='JPY') s='¥';
+           changeCurrency(s);
+           const sel = document.getElementById('currency-select');
+           if (sel) {
+              for (let i = 0; i < sel.options.length; i++) {
+                 if (sel.options[i].value === s) { sel.selectedIndex = i; break; }
+              }
+           }
+           return { type: 'plain', text: `I've updated your currency to ${s}!` };
+        } else {
+           return { type: 'plain', text: "Which currency would you like to switch to? (e.g. $, ₹, €, £)" };
+        }
+      }
+
       const amtMatch = t.match(/(\d+[\d,]*(\.\d+)?)/);
       const extractedAmt = amtMatch ? parseFloat(amtMatch[1].replace(',', '')) : null;
       if (t.match(/add.*(income|salary|earning|earning|received|got paid)|i (received|got|earned)/)) {
