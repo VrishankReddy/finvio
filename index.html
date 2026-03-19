@@ -55,6 +55,7 @@
     .layout {
       display: flex;
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
     }
 
@@ -66,6 +67,7 @@
       flex-direction: column;
       flex-shrink: 0;
       height: 100vh;
+      height: 100dvh;
       transition: transform .3s ease;
       z-index: 300;
     }
@@ -195,7 +197,7 @@
     }
 
     .sidebar-footer {
-      padding: 14px 16px;
+      padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 24px));
       border-top: 1px solid #f3f4f6;
     }
 
@@ -1671,25 +1673,55 @@
       const bycat = {}; state.expense.forEach(e => { bycat[e.category] = (bycat[e.category] || 0) + e.amount; });
       const sorted = Object.entries(bycat).sort((a, b) => b[1] - a[1]);
       
-      if (t.match(/change currency|set currency|switch currency|currency to|use currency/)) {
-        let sym = t.match(/(\$|₹|€|£|¥|usd|inr|eur|gbp|jpy)/i);
-        if (sym) {
-           let s = sym[1].toUpperCase();
-           if (s==='USD') s='$';
-           else if (s==='INR') s='₹';
-           else if (s==='EUR') s='€';
-           else if (s==='GBP') s='£';
-           else if (s==='JPY') s='¥';
-           changeCurrency(s);
+      if (t.match(/(change|switch|set|use|make).*(currency|to)|(currency to)|(euros|dollars|rupees|pounds)/)) {
+        const cMap = [
+          { s:'₹', k:['inr','india','rupee','₹'] },
+          { s:'$', k:['usd','us dollar','usa','america','dollar','$'] },
+          { s:'€', k:['eur','euro','€','europe'] },
+          { s:'£', k:['gbp','uk','pound','england','£','british'] },
+          { s:'¥', k:['jpy','japan','yen','¥','cny','china','yuan'] },
+          { s:'A$', k:['aud','australia','a$','australian dollar'] },
+          { s:'C$', k:['cad','canada','c$','canadian dollar'] },
+          { s:'Fr', k:['chf','swiss','switzerland','franc'] },
+          { s:'₩', k:['krw','korea','won','₩'] },
+          { s:'S$', k:['sgd','singapore','s$'] },
+          { s:'AED', k:['aed','uae','dubai','dirham'] },
+          { s:'SAR', k:['sar','saudi','riyal'] },
+          { s:'R', k:['zar','south africa','rand'] },
+          { s:'R$', k:['brl','brazil','real','reais'] },
+          { s:'MX$', k:['mxn','mexico','peso'] },
+          { s:'₺', k:['try','turkey','lira','₺'] },
+          { s:'₽', k:['rub','russia','ruble','₽'] },
+          { s:'Rp', k:['idr','indonesia','rupiah'] },
+          { s:'₱', k:['php','philippines','peso','₱'] },
+          { s:'RM', k:['myr','malaysia','ringgit'] },
+          { s:'฿', k:['thb','thailand','baht','฿'] },
+          { s:'₦', k:['ngn','nigeria','naira','₦'] },
+          { s:'KSh', k:['kes','kenya','shilling'] },
+          { s:'EGP', k:['egp','egypt','pound'] },
+          { s:'NZ$', k:['nzd','new zealand','nz$'] },
+          { s:'NOK', k:['nok','norway','krone'] },
+          { s:'SEK', k:['sek','sweden','krona'] },
+          { s:'DKK', k:['dkk','denmark','krone'] },
+          { s:'PLN', k:['pln','poland','zloty'] }
+        ];
+
+        let found = null;
+        for (let m of cMap) {
+          if (m.k.some(kw => t.includes(kw))) { found = m.s; break; }
+        }
+
+        if (found) {
+           changeCurrency(found);
            const sel = document.getElementById('currency-select');
            if (sel) {
               for (let i = 0; i < sel.options.length; i++) {
-                 if (sel.options[i].value === s) { sel.selectedIndex = i; break; }
+                 if (sel.options[i].value === found) { sel.selectedIndex = i; break; }
               }
            }
-           return { type: 'plain', text: `I've updated your currency to ${s}!` };
+           return { type: 'plain', text: `I've updated your currency to ${found}!` };
         } else {
-           return { type: 'plain', text: "Which currency would you like to switch to? (e.g. $, ₹, €, £)" };
+           return { type: 'plain', text: "Which currency would you like to switch to? For example, Indian Rupee, US Dollar, or Euros." };
         }
       }
 
