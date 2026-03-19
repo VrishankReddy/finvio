@@ -1643,11 +1643,11 @@
         addBot({ type: 'list', text: "Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!", items: ['📊 Monthly summary', '🚨 Overspending alerts', '🏆 Top categories', '💰 Savings analysis', '🎓 Finance questions (SIP, PPF, compound interest...)'] });
       }
     }
-    function chatSend(txt) {
+    function chatSend(txt, isVoice) {
       const inp = document.getElementById('chat-inp'), text = txt || inp.value.trim();
       if (!text) return; inp.value = ''; addUser(text);
       document.getElementById('chat-snd').disabled = true; showTyping();
-      setTimeout(() => { document.getElementById('typing-el')?.remove(); const d = runFinny(text); addBot(d); if (window.speakReply) speakReply(d); document.getElementById('chat-snd').disabled = false; sc(); }, 550);
+      setTimeout(() => { document.getElementById('typing-el')?.remove(); const d = runFinny(text); addBot(d); if (isVoice && window.speakReply) speakReply(d); document.getElementById('chat-snd').disabled = false; sc(); }, 550);
     }
     function sc() { const m = document.getElementById('chat-msgs'); m.scrollTop = m.scrollHeight; }
     function finnyAddIncome(src, amt, pay, desc) { const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); state.income.push({ id: nextId++, source: src, amount: amt, paymethod: pay || 'Bank Transfer', desc: desc || '', date: today }); saveState(); renderIncome(); renderHome(); }
@@ -1756,7 +1756,7 @@ if (recognition) {
   };
   recognition.onend = function() {
     isListening = false; micBtn.classList.remove('listening');
-    if (document.getElementById('chat-inp').value.trim() !== '') chatSend();
+    if (document.getElementById('chat-inp').value.trim() !== '') chatSend(null, true);
   };
   recognition.onerror = function(event) {
     console.error("Speech error", event); isListening = false; micBtn.classList.remove('listening');
