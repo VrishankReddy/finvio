@@ -1109,46 +1109,85 @@
 
       .bb {
         max-width: 88%;
-        font-size: 12.5px;
+        font-size: 13.5px;
+        border-radius: 16px 16px 16px 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        padding: 12px 14px;
+        border: none;
       }
 
       .ub {
         max-width: 85%;
+        font-size: 13.5px;
+        border-radius: 16px 16px 4px 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        padding: 12px 14px;
       }
 
       .msgs {
-        padding: 12px 14px;
+        padding: 16px 14px;
+        background: #f8fafc;
       }
 
       .chat-hdr {
         padding: 12px 14px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+        position: relative;
+        z-index: 10;
       }
 
       .inp-row {
-        padding: 8px 10px 10px;
-        gap: 6px;
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 12px));
+        gap: 8px;
+        background: var(--white);
+        border-top: 1px solid rgba(0,0,0,0.04);
+        align-items: flex-end;
       }
 
       #finny-mic, #finny-stop, .snd-btn {
-        width: 33px;
-        height: 33px;
-        border-radius: 8px;
-        font-size: 14px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        font-size: 15px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
       }
 
       .inp-box {
-        padding: 8px 10px;
-        font-size: 13px;
+        padding: 10px 14px;
+        font-size: 14px;
+        border-radius: 20px;
+        background: #f1f5f9;
+        border: 1px solid transparent;
+      }
+      
+      .inp-box:focus {
+        background: var(--white);
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px var(--green-light);
       }
 
       .chips {
-        padding: 8px 14px;
-        gap: 5px;
+        padding: 10px 14px;
+        gap: 8px;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      .chips::-webkit-scrollbar {
+        display: none;
       }
 
       .chip {
-        font-size: 11px;
-        padding: 5px 10px;
+        font-size: 12px;
+        padding: 8px 14px;
+        border-radius: 20px;
+        flex-shrink: 0;
+        background: var(--white);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.02);
       }
     }
 
