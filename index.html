@@ -1189,6 +1189,9 @@
         box-shadow: 0 1px 4px rgba(0,0,0,0.05);
         border: 1px solid rgba(0,0,0,0.02);
       }
+      .chat-hdr button:hover {
+        background: #f3f4f6 !important;
+      }
     }
 
     @media(min-width:769px) and (max-width:1024px) {
@@ -1369,6 +1372,9 @@
             <div style="width:7px;height:7px;border-radius:50%;background:#22c55e"></div>
             <span style="font-size:12px;color:#9ca3af;font-weight:600">Free AI</span>
           </div>
+          <button id="finny-clear" title="Clear Chat" onclick="clearFinnyChat()" style="background:transparent;border:none;cursor:pointer;margin-left:8px;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" class="clear-icon"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"></path></svg>
+          </button>
         </div>
         <div class="msgs" id="chat-msgs"></div>
         <div class="chips" id="chat-chips"></div>
@@ -1680,6 +1686,7 @@
     ];
     function saveChatHistory() { try { const msgs = []; document.querySelectorAll('#chat-msgs .bot-row:not(#typing-el), #chat-msgs .user-row').forEach(el => { if (el.classList.contains('user-row')) { msgs.push({ role: 'user', html: el.querySelector('.ub').innerHTML }); } else { msgs.push({ role: 'bot', html: el.querySelector('.bb').innerHTML }); } }); localStorage.setItem('finvio_chat', JSON.stringify(msgs)); } catch (e) { } }
     function loadChatHistory() { try { const raw = localStorage.getItem('finvio_chat'); return raw ? JSON.parse(raw) : []; } catch (e) { return []; } }
+    function clearFinnyChat() { if (confirm("Clear all Finny chat history?")) { document.getElementById('chat-msgs').innerHTML = ''; localStorage.removeItem('finvio_chat'); addBot({ type: 'list', text: "Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!", items: ['📊 Monthly summary', '🚨 Overspending alerts', '🏆 Top categories', '💰 Savings analysis', '🎓 Finance questions (SIP, PPF, compound interest...)'] }); } }
     function initChat() {
       if (chatReady) return; chatReady = true;
       const chips = document.getElementById('chat-chips');
@@ -1909,6 +1916,9 @@ window.speakReply = function(replyObj) {
   };
   synth.speak(utterance);
 };
+
+
+
 initCurrency(); renderHome();
   </script>
 </body>
