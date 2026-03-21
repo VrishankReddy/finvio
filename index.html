@@ -1673,7 +1673,7 @@
       saveState();
       renderHome();
     }
-    const SUGG = ['Give me a summary', 'Add income', 'Add expense', 'Where am I overspending?', 'Top categories', 'How much did I save?', 'What is a SIP?'];
+    const SUGG = ['Give me a summary', 'Add income', 'Add expense', 'Show my incomes', 'Show my expenses', 'Where am I overspending?', 'Top categories', 'How much did I save?'];
     const KB = [
       { k: ['sip', 'mutual fund'], a: "A SIP lets you invest a fixed amount monthly in mutual funds. Even Rs.500/month compounded over 10+ years grows significantly through rupee-cost averaging." },
       { k: ['compound', 'compounding'], a: "Compound interest means earning interest on interest. Rs.10,000 at 12% annual return for 20 years becomes over Rs.96,000. Starting early is the most powerful financial decision." },
@@ -1714,6 +1714,10 @@
     function sc() { const m = document.getElementById('chat-msgs'); m.scrollTop = m.scrollHeight; }
     function finnyAddIncome(src, amt, pay, desc) { const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); state.income.push({ id: nextId++, source: src, amount: amt, paymethod: pay || 'Bank Transfer', desc: desc || '', date: today }); saveState(); renderIncome(); renderHome(); }
     function finnyAddExpense(title, cat, amt, rawDate) { const fd = rawDate ? new Date(rawDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); state.expense.push({ id: nextId++, title: title || cat, category: cat, date: fd, rawDate: rawDate || new Date().toISOString().split('T')[0], amount: amt }); saveState(); renderExpense(); renderHome(); }
+    function finnyEditIncome(id, src, amt, pay, desc) { const idx = state.income.findIndex(i => i.id === id); if (idx > -1) { state.income[idx] = { ...state.income[idx], source: src, amount: amt, paymethod: pay, desc: desc }; saveState(); renderIncome(); renderHome(); return true; } return false; }
+    function finnyDeleteIncome(id) { state.income = state.income.filter(i => i.id !== id); saveState(); renderIncome(); renderHome(); }
+    function finnyEditExpense(id, title, cat, amt, rawDate) { const idx = state.expense.findIndex(e => e.id === id); if (idx > -1) { const fd = rawDate ? new Date(rawDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : state.expense[idx].date; state.expense[idx] = { ...state.expense[idx], title, category: cat, amount: amt, date: fd, rawDate: rawDate || state.expense[idx].rawDate }; saveState(); renderExpense(); renderHome(); return true; } return false; }
+    function finnyDeleteExpense(id) { state.expense = state.expense.filter(e => e.id !== id); saveState(); renderExpense(); renderHome(); }
     function runFinny(q) {
       const t = q.toLowerCase().trim();
       const inc = state.income.reduce((s, i) => s + i.amount, 0), exp = state.expense.reduce((s, e) => s + e.amount, 0), sav = inc - exp, rate = inc > 0 ? ((sav / inc) * 100).toFixed(1) : 0;
@@ -1772,6 +1776,37 @@
         }
       }
 
+      // --- SHOW ONLY INCOMES ---
+      if (t.match(/show.*(my )?(income|incomes|earnings)|^(my )?(income|incomes|earnings)$|list.*(income|incomes)/)) {
+        if (!state.income.length) return { type: 'plain', text: "No income entries yet. Add some from the Income tab!" };
+        return { type: 'show_entries', entryType: 'income', text: `Here are all your income entries (${state.income.length}):`, entries: [...state.income].reverse() };
+      }
+      // --- SHOW ONLY EXPENSES ---
+      if (t.match(/show.*(my )?(expense|expenses|spending|spendings)|^(my )?(expense|expenses)$|list.*(expense|expenses)/)) {
+        if (!state.expense.length) return { type: 'plain', text: "No expense entries yet. Add some from the Expense tab!" };
+        return { type: 'show_entries', entryType: 'expense', text: `Here are all your expense entries (${state.expense.length}):`, entries: [...state.expense].reverse() };
+      }
+      // --- EDIT INCOME VIA FINNY ---
+      if (t.match(/edit.*(income|salary|earning)|change.*(income|salary|earning)|update.*(income|salary|earning)/)) {
+        if (!state.income.length) return { type: 'plain', text: "No income entries to edit. Add some first!" };
+        return { type: 'pick_income_edit', text: 'Which income entry would you like to edit?', entries: [...state.income].reverse() };
+      }
+      // --- DELETE INCOME VIA FINNY ---
+      if (t.match(/delete.*(income|salary|earning)|remove.*(income|salary|earning)/)) {
+        if (!state.income.length) return { type: 'plain', text: "No income entries to delete." };
+        return { type: 'pick_income_delete', text: 'Which income entry would you like to delete?', entries: [...state.income].reverse() };
+      }
+
+      // --- EDIT EXPENSE VIA FINNY ---
+      if (t.match(/edit.*(expense|spending|spend)|change.*(expense|spending)|update.*(expense|spending)/)) {
+        if (!state.expense.length) return { type: 'plain', text: "No expense entries to edit. Add some first!" };
+        return { type: 'pick_expense_edit', text: 'Which expense would you like to edit?', entries: [...state.expense].reverse() };
+      }
+      // --- DELETE EXPENSE VIA FINNY ---
+      if (t.match(/delete.*(expense|spending|spend)|remove.*(expense|spending|spend)/)) {
+        if (!state.expense.length) return { type: 'plain', text: "No expense entries to delete." };
+        return { type: 'pick_expense_delete', text: 'Which expense would you like to delete?', entries: [...state.expense].reverse() };
+      }
       const amtMatch = t.match(/(\d+[\d,]*(\.\d+)?)/);
       const extractedAmt = amtMatch ? parseFloat(amtMatch[1].replace(',', '')) : null;
       if (t.match(/add.*(income|salary|earning|earning|received|got paid)|i (received|got|earned)/)) {
@@ -1791,7 +1826,7 @@
       if (t.match(/^(hi|hello|hey|namaste|yo|wassup|how's good|how are you)?[\s!?]*$/)) return { type: 'list', text: 'Hey! What would you like to know?', items: ['📊 Summary', '🏆 Top categories', '💰 Savings', '💡 Recommendations', '🎓 Finance questions'] };
       if (t.match(/thank|thanks|great|awesome/)) return { type: 'plain', text: 'Happy to help! 😊' };
       for (const e of KB) if (e.k.some(k => t.includes(k))) return { type: 'plain', text: e.a };
-      return { type: 'list', text: "Here's what I can help with:", items: ["📊 'Give me a summary'", "🏆 'Top spending categories'", "💰 'How much did I save?'", "💡 'Recommendations'", "🎓 'What is a SIP?'"] };
+      return { type: 'list', text: "Here's what I can help with:", items: ["📊 'Give me a summary'", "💵 'Show my incomes'", "💸 'Show my expenses'", "✏️ 'Edit income' or 'Edit expense'", "🗑️ 'Delete income' or 'Delete expense'", "🏆 'Top spending categories'", "💰 'How much did I save?'", "💡 'Recommendations'"] };
     }
     const BAV = `<div class="bav"><img src="./finny-logo.png" alt="Finny"/></div>`;
     function renderBot(r) {
@@ -1823,6 +1858,116 @@
       if (r.type === 'ranking') { let h = `<div style="font-size:13px;color:#374151;margin-bottom:7px;font-weight:500">${r.text}</div>`; r.items.forEach(i => { h += `<div class="rank-row"><div style="width:22px;height:22px;border-radius:5px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#6b7280;flex-shrink:0">#${i.rank}</div><div style="flex:1;font-size:13px;color:#374151;font-weight:600">${i.cat}</div><div style="text-align:right"><div style="font-size:13px;font-weight:700">${i.amt}</div><div style="font-size:11px;color:#9ca3af">${i.pct}%</div></div></div>`; }); return h; }
       if (r.type === 'founder') { let h = `<div style="font-size:13px;color:#374151;line-height:1.65;font-weight:500;margin-bottom:10px">${r.text}</div><div style="display:flex;gap:8px;flex-wrap:wrap">`; r.links.forEach(l => { h += `<a href="${l.url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f0fdf4;border:1.5px solid #6ab04c;border-radius:10px;text-decoration:none;font-size:12px;color:#166534;font-weight:700;font-family:inherit">${l.icon} ${l.label}</a>`; }); h += `</div>`; return h; }
       if (r.type === 'tips' || r.type === 'list') { let h = `<div style="font-size:13px;color:#374151;margin-bottom:8px;font-weight:500">${r.text}</div>`; r.items.forEach(i => { h += `<div class="list-item">${i}</div>`; }); return h; }
+      if (r.type === 'show_entries') {
+        let h = `<div style="font-size:13px;color:#374151;margin-bottom:10px;font-weight:500">${r.text}</div>`;
+        const total = r.entries.reduce((s, e) => s + e.amount, 0);
+        h += `<div style="font-size:12px;color:#6b7280;font-weight:600;margin-bottom:8px">Total: <span style="color:#111827;font-weight:700">${fmt(total)}</span></div>`;
+        r.entries.forEach(e => {
+          if (r.entryType === 'income') {
+            h += `<div style="background:#f9fafb;border:0.5px solid #e5e7eb;border-radius:9px;padding:10px 12px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:700;color:#374151">${e.source}</div><div style="font-size:11px;color:#9ca3af">${e.date || ''} · ${e.paymethod || ''}</div>${e.desc ? `<div style="font-size:11px;color:#6b7280;margin-top:2px">${e.desc}</div>` : ''}</div>
+              <div style="font-size:14px;font-weight:700;color:#16a34a">+${fmt(e.amount)}</div>
+            </div>`;
+          } else {
+            h += `<div style="background:#f9fafb;border:0.5px solid #e5e7eb;border-radius:9px;padding:10px 12px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center">
+              <div><div style="font-size:13px;font-weight:700;color:#374151">${e.title || e.category}</div><div style="font-size:11px;color:#9ca3af">${e.date || ''} · ${e.category}</div></div>
+              <div style="font-size:14px;font-weight:700;color:#ef4444">-${fmt(e.amount)}</div>
+            </div>`;
+          }
+        });
+        return h;
+      }
+      if (r.type === 'pick_income_edit') {
+        let h = `<div style="font-size:13px;color:#374151;margin-bottom:10px;font-weight:500">${r.text}</div>`;
+        r.entries.forEach(e => {
+          const fid = 'ied' + e.id + '_' + Date.now();
+          h += `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px;margin-bottom:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div style="font-size:13px;font-weight:700;color:#374151">${e.source} — ${fmt(e.amount)}</div>
+              <div style="font-size:11px;color:#9ca3af">${e.date || ''}</div>
+            </div>
+            <div id="editform_${fid}" style="display:none;flex-direction:column;gap:6px">
+              <select id="src_${fid}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151">
+                <option${e.source==='Monthly Salary'?' selected':''}>Monthly Salary</option>
+                <option${e.source==='Part Time Wages'?' selected':''}>Part Time Wages</option>
+                <option${e.source==='Bank Interest'?' selected':''}>Bank Interest</option>
+                <option${e.source==='Freelance Income'?' selected':''}>Freelance Income</option>
+                <option${e.source==='Business Income'?' selected':''}>Business Income</option>
+                <option${e.source==='Bonus'?' selected':''}>Bonus</option>
+                <option${e.source==='Dividends'?' selected':''}>Dividends</option>
+                <option${e.source==='Rental Income'?' selected':''}>Rental Income</option>
+                <option${e.source==='Investment Returns'?' selected':''}>Investment Returns</option>
+                <option${e.source==='Side Business'?' selected':''}>Side Business</option>
+                <option${e.source==='Other'?' selected':''}>Other</option>
+              </select>
+              <input id="amt_${fid}" type="number" value="${e.amount}" placeholder="Amount" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
+              <select id="pay_${fid}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151">
+                <option${e.paymethod==='Bank Transfer'?' selected':''}>Bank Transfer</option>
+                <option${e.paymethod==='UPI'?' selected':''}>UPI</option>
+                <option${e.paymethod==='Cash'?' selected':''}>Cash</option>
+                <option${e.paymethod==='Cheque'?' selected':''}>Cheque</option>
+                <option${e.paymethod==='Other'?' selected':''}>Other</option>
+              </select>
+              <input id="desc_${fid}" type="text" value="${(e.desc||'').replace(/"/g,'&quot;')}" placeholder="Description" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
+              <button onclick="(function(){var s=document.getElementById('src_${fid}').value;var a=parseFloat(document.getElementById('amt_${fid}').value);var p=document.getElementById('pay_${fid}').value;var d=document.getElementById('desc_${fid}').value;if(!a||a<=0){alert('Enter valid amount');return;}finnyEditIncome(${e.id},s,a,p,d);addBot({type:'plain',text:'✅ Income updated!'});})()" style="padding:8px;background:#6ab04c;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Save Changes ✓</button>
+            </div>
+            <button onclick="(function(){var f=document.getElementById('editform_${fid}');f.style.display=f.style.display==='flex'?'none':'flex'})()" style="padding:7px 12px;background:#fff;border:1.5px solid #6ab04c;border-radius:7px;font-size:12px;color:#6ab04c;cursor:pointer;font-weight:700;font-family:inherit;width:100%">✏️ Edit this</button>
+          </div>`;
+        });
+        return h;
+      }
+      if (r.type === 'pick_income_delete') {
+        let h = `<div style="font-size:13px;color:#374151;margin-bottom:10px;font-weight:500">${r.text}</div>`;
+        r.entries.forEach(e => {
+          h += `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:13px;font-weight:700;color:#374151">${e.source}</div><div style="font-size:11px;color:#9ca3af">${e.date || ''} · ${fmt(e.amount)}</div></div>
+            <button onclick="if(confirm('Delete ${e.source} — ${fmt(e.amount)}?')){finnyDeleteIncome(${e.id});addBot({type:'plain',text:'🗑️ Income from ${e.source} deleted.'})}" style="padding:7px 14px;background:#ef4444;border:none;border-radius:7px;font-size:12px;color:#fff;cursor:pointer;font-weight:700;font-family:inherit;flex-shrink:0">Delete</button>
+          </div>`;
+        });
+        return h;
+      }
+      if (r.type === 'pick_expense_edit') {
+        let h = `<div style="font-size:13px;color:#374151;margin-bottom:10px;font-weight:500">${r.text}</div>`;
+        r.entries.forEach(e => {
+          const fid = 'xed' + e.id + '_' + Date.now();
+          h += `<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:12px;margin-bottom:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div style="font-size:13px;font-weight:700;color:#374151">${e.title || e.category} — ${fmt(e.amount)}</div>
+              <div style="font-size:11px;color:#9ca3af">${e.date || ''}</div>
+            </div>
+            <div id="editform_${fid}" style="display:none;flex-direction:column;gap:6px">
+              <input id="ti_${fid}" type="text" value="${(e.title||'').replace(/"/g,'&quot;')}" placeholder="Title" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
+              <select id="cat_${fid}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151">
+                <option${e.category==='Food & Dining'?' selected':''}>Food &amp; Dining</option>
+                <option${e.category==='Transport'?' selected':''}>Transport</option>
+                <option${e.category==='Entertainment'?' selected':''}>Entertainment</option>
+                <option${e.category==='Shopping'?' selected':''}>Shopping</option>
+                <option${e.category==='Health & Medical'?' selected':''}>Health &amp; Medical</option>
+                <option${e.category==='Groceries'?' selected':''}>Groceries</option>
+                <option${e.category==='House Rent'?' selected':''}>House Rent</option>
+                <option${e.category==='Education'?' selected':''}>Education</option>
+                <option${e.category==='Subscriptions'?' selected':''}>Subscriptions</option>
+                <option${e.category==='Other'?' selected':''}>Other</option>
+              </select>
+              <input id="amt_${fid}" type="number" value="${e.amount}" placeholder="Amount" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
+              <input id="dt_${fid}" type="date" value="${e.rawDate||''}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
+              <button onclick="(function(){var ti=document.getElementById('ti_${fid}').value;var ca=document.getElementById('cat_${fid}').value;var a=parseFloat(document.getElementById('amt_${fid}').value);var d=document.getElementById('dt_${fid}').value;if(!a||a<=0){alert('Enter valid amount');return;}finnyEditExpense(${e.id},ti,ca,a,d);addBot({type:'plain',text:'✅ Expense updated!'});})()" style="padding:8px;background:#ea580c;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Save Changes ✓</button>
+            </div>
+            <button onclick="(function(){var f=document.getElementById('editform_${fid}');f.style.display=f.style.display==='flex'?'none':'flex'})()" style="padding:7px 12px;background:#fff;border:1.5px solid #ea580c;border-radius:7px;font-size:12px;color:#ea580c;cursor:pointer;font-weight:700;font-family:inherit;width:100%">✏️ Edit this</button>
+          </div>`;
+        });
+        return h;
+      }
+      if (r.type === 'pick_expense_delete') {
+        let h = `<div style="font-size:13px;color:#374151;margin-bottom:10px;font-weight:500">${r.text}</div>`;
+        r.entries.forEach(e => {
+          h += `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+            <div><div style="font-size:13px;font-weight:700;color:#374151">${e.title||e.category}</div><div style="font-size:11px;color:#9ca3af">${e.date || ''} · ${fmt(e.amount)}</div></div>
+            <button onclick="if(confirm('Delete ${(e.title||e.category).replace(/'/g,"\\'")} — ${fmt(e.amount)}?')){finnyDeleteExpense(${e.id});addBot({type:'plain',text:'🗑️ Expense deleted.'})}" style="padding:7px 14px;background:#ef4444;border:none;border-radius:7px;font-size:12px;color:#fff;cursor:pointer;font-weight:700;font-family:inherit;flex-shrink:0">Delete</button>
+          </div>`;
+        });
+        return h;
+      }
       return `<div style="font-size:13px">${r.text || ''}</div>`;
     }
     function addBot(d) { const el = document.createElement('div'); el.className = 'bot-row fade'; el.innerHTML = `${BAV}<div class="bb">${renderBot(d)}</div>`; document.getElementById('chat-msgs').appendChild(el); sc(); saveChatHistory(); }
