@@ -1207,6 +1207,113 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* ══════════════════ DARK MODE ══════════════════ */
+    body.dark {
+      --bg: #0f1117; --white: #1a1d27; --border: #2d3145;
+      --text: #f1f3f9; --text-sub: #c8cde0; --text-muted: #8b92b4; --text-faint: #5c6387;
+      --shadow: 0 1px 8px rgba(0,0,0,0.5); --green-light: #0d2818; --green-text: #6ab04c;
+      --red-light: #2a1010; color-scheme: dark;
+    }
+    /* Sidebar */
+    body.dark .sidebar { background:#1a1d27; border-right-color:#2d3145; }
+    body.dark .sidebar-brand { border-bottom-color:#2d3145; }
+    body.dark .sidebar-footer { border-top-color:#2d3145; }
+    body.dark .nav-item:hover { background:#12151f; }
+    body.dark .nav-item.active { background:#0d2818; }
+    body.dark .nav-label { color:#8b92b4; }
+    body.dark .nav-item.active .nav-label { color:#6ab04c; }
+    /* Topbar */
+    body.dark .topbar { background:#1a1d27; border-bottom-color:#2d3145; }
+    body.dark .topbar-title { color:#f1f3f9; }
+    body.dark .topbar-theme-btn { background:#1a1d27; border-color:#2d3145; }
+    /* Cards */
+    body.dark .card, body.dark .stat-card, body.dark .entry { background:#1a1d27; border-color:#2d3145; }
+    body.dark .card-title { color:#f1f3f9; }
+    body.dark .stat-label { color:#5c6387; }
+    body.dark .entry-key { color:#8b92b4; }
+    body.dark .entry-val { color:#c8cde0; }
+    body.dark .count-row { color:#8b92b4; }
+    body.dark .count-row span { color:#f1f3f9; }
+    body.dark .empty { color:#5c6387; }
+    /* Lists */
+    body.dark .rank-row, body.dark .list-item { background:#12151f; border-color:#2d3145; color:#c8cde0; }
+    body.dark .alert-row { background:#2a1010; border-color:#5a2020; }
+    body.dark .ins { background:#0d2818; color:#6ab04c; border-left-color:#6ab04c; }
+    /* Chat */
+    body.dark #chat-msgs { background:#0f1117; }
+    body.dark .chat-hdr { background:#1a1d27; border-bottom-color:#2d3145; }
+    body.dark .bb { background:#1a1d27; border-color:#2d3145; color:#c8cde0 !important; }
+    body.dark .bb * { color:#c8cde0 !important; }
+    body.dark .bb .mcl { color:#5c6387 !important; }
+    body.dark .bb .ins { color:#6ab04c !important; background:#0d2818 !important; }
+    body.dark .bb .alert-row { background:#2a1010 !important; }
+    body.dark .bb .rank-row { background:#12151f !important; border-color:#2d3145 !important; }
+    body.dark .bb .list-item { background:#12151f !important; border-color:#2d3145 !important; }
+    body.dark .bb select, body.dark .bb input { background:#0f1117 !important; color:#f1f3f9 !important; border-color:#2d3145 !important; }
+    body.dark .ub { background:#5a9e3e; color:#fff; }
+    body.dark .chips { background:#1a1d27; border-top-color:#2d3145; }
+    body.dark .chip { background:#12151f; border-color:#2d3145; color:#8b92b4; }
+    body.dark .inp-row { background:#1a1d27; border-top-color:#2d3145; }
+    body.dark .inp-box { background:#12151f; border-color:#2d3145; color:#f1f3f9; }
+    body.dark .inp-box::placeholder { color:#5c6387; }
+    body.dark .chat-ft { background:#1a1d27; color:#3a3f5c; }
+    body.dark .typing { background:#1a1d27; border-color:#2d3145; }
+    /* Modal */
+    body.dark .modal-overlay { background:rgba(0,0,0,0.7); }
+    body.dark .modal-box { background:#1a1d27; }
+    body.dark .modal-box h3 { color:#f1f3f9; }
+    body.dark .field label { color:#8b92b4; }
+    body.dark .field input, body.dark .field select { background:#0f1117; color:#f1f3f9; border-color:#2d3145; }
+    body.dark .btn-cancel { background:#1a1d27; color:#8b92b4; border-color:#2d3145; }
+    body.dark .btn-edit { background:#0d2818; }
+    body.dark .btn-del { background:#2a1010; }
+    /* Bottom nav */
+    body.dark .bottom-nav { background:#1a1d27; border-top-color:#2d3145; }
+    body.dark .bnav-label { color:#5c6387; }
+    body.dark .bnav-item.active .bnav-label { color:#6ab04c; }
+    /* Play btn */
+    body.dark .play-btn { background:#12151f; }
+    body.dark .play-btn:hover { background:#1e2235; }
+    /* Currency select */
+    body.dark #currency-select { background:#0f1117; color:#f1f3f9; border-color:#2d3145; }
+    body.dark select option { background:#1a1d27; color:#f1f3f9; }
+    /* Toggle */
+    body.dark .toggle-track { background:#6ab04c; }
+    body.dark .theme-toggle-wrap { border-top-color:#2d3145; }
+    body.dark .toggle-label { color:#8b92b4; }
+    /* Hardcoded color overrides via attribute selectors */
+    body.dark [style*="color:#111827"] { color:#f1f3f9 !important; }
+    body.dark [style*="color: #111827"] { color:#f1f3f9 !important; }
+    body.dark [style*="color:#374151"] { color:#c8cde0 !important; }
+    body.dark [style*="color: #374151"] { color:#c8cde0 !important; }
+    body.dark [style*="color:#6b7280"] { color:#8b92b4 !important; }
+    body.dark [style*="color: #6b7280"] { color:#8b92b4 !important; }
+    body.dark [style*="color:#9ca3af"] { color:#5c6387 !important; }
+    body.dark [style*="color: #9ca3af"] { color:#5c6387 !important; }
+    body.dark [style*="color:#d1d5db"] { color:#3a3f5c !important; }
+    body.dark [style*="border-bottom:0.5px solid #f3f4f6"] { border-bottom-color:#2d3145 !important; }
+    body.dark [style*="background:#f3f4f6"] { background:#12151f !important; color:#c8cde0 !important; }
+    body.dark [style*="background:#f9fafb"] { background:#12151f !important; }
+    body.dark [style*="background:#f0fdf4"] { background:#0d2818 !important; }
+    body.dark [style*="background:#fff7ed"] { background:#1f1208 !important; }
+    body.dark [style*="background:#fef2f2"] { background:#2a1010 !important; }
+    body.dark [style*="background:#eef2ff"] { background:#0d1228 !important; }
+    body.dark [style*="border:1px solid #e5e7eb"] { border-color:#2d3145 !important; background:#1a1d27 !important; color:#c8cde0 !important; }
+    body.dark [style*="border:0.5px solid #e5e7eb"] { border-color:#2d3145 !important; }
+    body.dark [style*="stroke:#374151"] { stroke:#c8cde0 !important; }
+    /* Profile page */
+    body.dark .finny-topbtn { background:#0d2818; border-color:#6ab04c; color:#6ab04c; }
+    body.dark .finny-topbtn:hover { background:#0d2818; }
+    body.dark .topbar-theme-btn:hover { background:#12151f; }
+    /* ══════════════════ TOGGLE STYLES ══════════════════ */
+    .theme-toggle-wrap { display:flex; align-items:center; gap:10px; padding:12px 16px 14px; border-top:1px solid #f3f4f6; }
+    .toggle-label { font-size:11px; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:.05em; flex:1; }
+    .toggle-track { width:46px; height:26px; border-radius:13px; background:#e5e7eb; position:relative; cursor:pointer; transition:background .3s ease; flex-shrink:0; border:none; padding:0; }
+    .toggle-thumb { width:20px; height:20px; border-radius:50%; background:#fff; position:absolute; top:3px; left:3px; transition:transform .3s cubic-bezier(.34,1.56,.64,1); display:flex; align-items:center; justify-content:center; font-size:11px; box-shadow:0 1px 4px rgba(0,0,0,0.2); pointer-events:none; }
+    body.dark .toggle-thumb { transform:translateX(20px); }
+    .topbar-theme-btn { width:36px; height:36px; border-radius:10px; border:1.5px solid var(--border); background:var(--white); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }
+    .topbar-theme-btn:hover { background:var(--bg); }
   </style>
 </head>
 
@@ -1253,6 +1360,12 @@
         </button>
       </div>
       <div class="sidebar-footer">
+        <div class="theme-toggle-wrap">
+          <span class="toggle-label" id="theme-lbl">Light mode</span>
+          <button class="toggle-track" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+            <div class="toggle-thumb" id="toggle-thumb">☀️</div>
+          </button>
+        </div>
         <div style="margin-bottom:10px">
           <div
             style="font-size:10px;color:var(--text-faint);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em">
@@ -1595,6 +1708,24 @@
     let currencySymbol = localStorage.getItem('finvio_currency') || '₹';
     function changeCurrency(sym) { currencySymbol = sym; localStorage.setItem('finvio_currency', sym); renderHome(); if (currentTab === 'income') renderIncome(); if (currentTab === 'expense') renderExpense(); }
     function fmt(n) { return currencySymbol + Math.round(n).toLocaleString(); }
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('finvio_theme', isDark ? 'dark' : 'light');
+      updateThemeUI(isDark);
+    }
+    function updateThemeUI(isDark) {
+      const lbl = document.getElementById('theme-lbl');
+      const thumb = document.getElementById('toggle-thumb');
+      const topIcon = document.getElementById('topbar-theme-icon');
+      if (lbl) lbl.textContent = isDark ? 'Dark mode' : 'Light mode';
+      if (thumb) thumb.textContent = isDark ? '🌙' : '☀️';
+      if (topIcon) topIcon.textContent = isDark ? '🌙' : '☀️';
+    }
+    function initTheme() {
+      const saved = localStorage.getItem('finvio_theme') || 'light';
+      if (saved === 'dark') { document.body.classList.add('dark'); updateThemeUI(true); }
+      else { updateThemeUI(false); }
+    }
     function initCurrency() { const saved = localStorage.getItem('finvio_currency') || '₹'; currencySymbol = saved; const sel = document.getElementById('currency-select'); if (sel) { for (let i = 0; i < sel.options.length; i++) { if (sel.options[i].value === saved) { sel.selectedIndex = i; break; } } } }
     function drawPie(cats, total, colors, msg) {
       if (!cats.length) return `<div style="text-align:center;padding:28px 0;color:#9ca3af;font-size:13px;font-weight:600">${msg}</div>`;
@@ -1724,6 +1855,19 @@
       const bycat = {}; state.expense.forEach(e => { bycat[e.category] = (bycat[e.category] || 0) + e.amount; });
       const sorted = Object.entries(bycat).sort((a, b) => b[1] - a[1]);
       
+      if (t.match(/dark mode|dark theme|switch to dark|enable dark|turn dark|night mode|go dark/)) {
+        document.body.classList.add('dark'); localStorage.setItem('finvio_theme','dark'); updateThemeUI(true);
+        return { type: 'plain', text: "🌙 Dark mode enabled! Easy on the eyes." };
+      }
+      if (t.match(/light mode|light theme|switch to light|enable light|turn light|day mode|go light/)) {
+        document.body.classList.remove('dark'); localStorage.setItem('finvio_theme','light'); updateThemeUI(false);
+        return { type: 'plain', text: "☀️ Light mode enabled! Bright and clean." };
+      }
+      if (t.match(/toggle (theme|mode)|switch (theme|mode)|change (theme|mode)/)) {
+        const isDark = document.body.classList.toggle('dark');
+        localStorage.setItem('finvio_theme', isDark ? 'dark' : 'light'); updateThemeUI(isDark);
+        return { type: 'plain', text: isDark ? "🌙 Switched to dark mode!" : "☀️ Switched to light mode!" };
+      }
       if (t.match(/(change|switch|set|use|make).*(currency|to)|(currency to)|(euros|dollars|rupees|pounds)/)) {
         const cMap = [
           { s:'₹', k:['inr','india','rupee','₹'] },
@@ -2065,7 +2209,7 @@ window.speakReply = function(replyObj) {
 
 
 
-initCurrency(); renderHome();
+initTheme(); initCurrency(); renderHome();
   </script>
 </body>
 
