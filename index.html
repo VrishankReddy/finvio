@@ -1314,7 +1314,58 @@
     body.dark .toggle-thumb { transform:translateX(20px); }
     .topbar-theme-btn { width:36px; height:36px; border-radius:10px; border:1.5px solid var(--border); background:var(--white); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }
     .topbar-theme-btn:hover { background:var(--bg); }
+
+    /* ══════════════ MESSAGING TAB ══════════════ */
+    .msg-wrap { display:flex; flex-direction:column; height:100%; }
+    .msg-connect-card { background:var(--white); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); border:0.5px solid #f3f4f6; margin-bottom:14px; }
+    .msg-code-display { background:var(--green-light); border:1.5px dashed var(--green); border-radius:12px; padding:16px; text-align:center; margin-bottom:14px; cursor:pointer; transition:background .2s; }
+    .msg-code-display:hover { background:#dcfce7; }
+    .msg-code-label { font-size:10px; color:var(--green); font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
+    .msg-code-value { font-family:'Nunito',monospace; font-size:28px; font-weight:900; color:var(--green-text); letter-spacing:4px; }
+    .msg-code-hint { font-size:11px; color:var(--text-faint); margin-top:4px; font-weight:500; }
+    .msg-connect-row { display:flex; gap:8px; }
+    .msg-connect-input { flex:1; padding:10px 14px; border:1px solid var(--border); border-radius:10px; font-size:13px; color:var(--text); background:var(--white); font-family:'Nunito',sans-serif; font-weight:600; text-transform:uppercase; letter-spacing:2px; }
+    .msg-connect-input:focus { outline:none; border-color:var(--green); }
+    .msg-connect-btn { padding:10px 18px; border:none; border-radius:10px; background:var(--green); color:#fff; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap; }
+    .msg-connect-btn:hover { background:var(--green-dark); }
+    .msg-connect-btn:disabled { background:var(--border); cursor:not-allowed; }
+    .msg-chatbox { flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:10px; background:var(--bg); }
+    .msg-chatbox::-webkit-scrollbar { width:4px; }
+    .msg-chatbox::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+    .msg-bubble { padding:10px 14px; border-radius:14px; max-width:75%; font-size:13px; line-height:1.5; word-wrap:break-word; font-weight:500; animation:fadeUp .2s ease; }
+    .msg-bubble.msg-me { background:var(--green); color:#fff; align-self:flex-end; border-bottom-right-radius:4px; font-weight:600; }
+    .msg-bubble.msg-them { background:var(--white); color:var(--text-sub); align-self:flex-start; border-bottom-left-radius:4px; border:0.5px solid var(--border); }
+    .msg-input-row { display:flex; gap:8px; padding:10px 20px 16px; align-items:flex-end; border-top:0.5px solid var(--border); background:var(--white); }
+    .msg-input-box { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:10px 14px; font-size:13px; color:var(--text); font-weight:500; font-family:'Nunito',sans-serif; resize:none; line-height:1.4; max-height:80px; }
+    .msg-input-box:focus { outline:none; border-color:var(--green); }
+    .msg-send-btn { width:36px; height:36px; border-radius:10px; background:var(--green); border:none; cursor:pointer; color:#fff; font-size:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .msg-send-btn:disabled { background:var(--border); }
+    .msg-status { text-align:center; font-size:11px; color:var(--text-faint); padding:6px 0; background:var(--white); font-weight:600; }
+    .msg-empty { text-align:center; padding:40px 20px; color:var(--text-faint); font-size:13px; font-weight:600; }
+    /* Dark mode messaging */
+    body.dark .msg-connect-card { background:var(--white); border-color:#2d3145; }
+    body.dark .msg-code-display { background:#0d2818; border-color:#6ab04c; }
+    body.dark .msg-code-display:hover { background:#0d2818; }
+    body.dark .msg-code-value { color:#6ab04c; }
+    body.dark .msg-connect-input { background:#0f1117; color:#f1f3f9; border-color:#2d3145; }
+    body.dark .msg-chatbox { background:#0f1117; }
+    body.dark .msg-bubble.msg-them { background:#1a1d27; border-color:#2d3145; color:#c8cde0; }
+    body.dark .msg-bubble.msg-me { background:#5a9e3e; }
+    body.dark .msg-input-row { background:#1a1d27; border-top-color:#2d3145; }
+    body.dark .msg-input-box { background:#12151f; border-color:#2d3145; color:#f1f3f9; }
+    body.dark .msg-status { background:#1a1d27; color:#5c6387; }
+    @media(max-width:768px) {
+      .msg-input-row { padding:10px 12px calc(10px + env(safe-area-inset-bottom, 12px)); }
+      .msg-input-box { border-radius:20px; background:#f1f5f9; border:1px solid transparent; padding:10px 14px; font-size:14px; }
+      .msg-input-box:focus { background:var(--white); border-color:var(--green); box-shadow:0 0 0 3px var(--green-light); }
+      .msg-send-btn { border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+      .msg-chatbox { padding:16px 14px; background:#f8fafc; }
+      .msg-bubble { max-width:85%; }
+      .msg-bubble.msg-me { border-radius:16px 16px 4px 16px; box-shadow:0 2px 8px rgba(0,0,0,0.06); padding:12px 14px; }
+      .msg-bubble.msg-them { border-radius:16px 16px 16px 4px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:12px 14px; border:none; }
+    }
   </style>
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
 
 <body>
@@ -1346,6 +1397,12 @@
             <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
           </svg>
           <span class="nav-label">Expense</span>
+        </button>
+        <button class="nav-item" id="nav-messages" onclick="goTab('messages')">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="nav-label">Messages</span>
         </button>
         <button class="nav-finny" onclick="goTab('finny')">
           <div class="nav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
@@ -1469,6 +1526,50 @@
         <div class="content" id="expense-body"></div>
       </div>
 
+
+      <div id="s-messages" class="screen">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+                <path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round" />
+              </svg></button>
+            <span class="topbar-title">Messages</span>
+          </div>
+        </div>
+        <div class="content" id="messages-body">
+          <div class="msg-connect-card">
+            <div class="msg-code-display" id="msg-code-display" onclick="copyMsgCode()" title="Click to copy">
+              <div class="msg-code-label">Your Chat Code</div>
+              <div class="msg-code-value" id="msg-my-id">......</div>
+              <div class="msg-code-hint">Tap to copy · Share with a friend</div>
+            </div>
+            <div class="msg-connect-row">
+              <input class="msg-connect-input" type="text" id="msg-friend-id" placeholder="Friend's code" maxlength="6" />
+              <button class="msg-connect-btn" id="msg-connect-btn" onclick="connectToFriend()">Connect</button>
+            </div>
+            <div class="msg-status" id="msg-status">Setting up...</div>
+          </div>
+          <div id="msg-chat-area" style="display:none;flex:1;flex-direction:column;background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:0.5px solid #f3f4f6;overflow:hidden;min-height:350px">
+            <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white)">
+              <div style="width:32px;height:32px;border-radius:10px;background:var(--green);display:flex;align-items:center;justify-content:center">
+                <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" stroke="#fff" stroke-width="2"/></svg>
+              </div>
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text)" id="msg-peer-name">Friend</div>
+                <div style="font-size:11px;color:var(--green);font-weight:600" id="msg-peer-status">Connected</div>
+              </div>
+            </div>
+            <div class="msg-chatbox" id="msg-chatbox">
+              <div class="msg-empty">Say hello! 👋</div>
+            </div>
+            <div class="msg-input-row">
+              <input class="msg-input-box" type="text" id="msg-input" placeholder="Type a message..." disabled />
+              <button class="msg-send-btn" id="msg-send-btn" onclick="sendMsg()" disabled>↑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="s-finny" class="screen">
         <div class="chat-hdr">
           <button class="back-btn" onclick="goTab('home')" aria-label="Go back"><svg viewBox="0 0 24 24" fill="none"
@@ -1575,6 +1676,12 @@
               <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
             </svg>
             <span class="bnav-label">Expense</span>
+          </button>
+          <button class="bnav-item" id="bnav-messages" onclick="goTab('messages')">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="bnav-label">Messages</span>
           </button>
           <button class="bnav-finny" onclick="goTab('finny')">
             <div class="bnav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
@@ -1693,7 +1800,7 @@
       currentTab = id; closeSidebar();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('s-' + id).classList.add('active');
-      ['home', 'income', 'expense', 'profile'].forEach(t => {
+      ['home', 'income', 'expense', 'messages', 'profile'].forEach(t => {
         const active = t === id;
         const n = document.getElementById('nav-' + t);
         const bn = document.getElementById('bnav-' + t);
@@ -1703,6 +1810,7 @@
       if (id === 'home') renderHome();
       if (id === 'income') renderIncome();
       if (id === 'expense') renderExpense();
+      if (id === 'messages') initMessaging();
       if (id === 'finny') initChat();
     }
     let currencySymbol = localStorage.getItem('finvio_currency') || '₹';
@@ -2208,6 +2316,114 @@ window.speakReply = function(replyObj) {
 };
 
 
+
+
+    // ══════════════ MESSAGING LOGIC ══════════════
+    function generateChatCode() {
+      const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      return Array.from({length: 6}, () => alphabet.charAt(Math.floor(Math.random() * alphabet.length))).join('');
+    }
+
+    let msgCode = generateChatCode();
+    let msgPeer = null;
+    let msgConn = null;
+    let msgInitialized = false;
+
+    function initMessaging() {
+      if (msgInitialized) return;
+      msgInitialized = true;
+      msgPeer = new Peer(msgCode);
+      
+      msgPeer.on('open', function(id) {
+        document.getElementById('msg-my-id').innerText = id;
+        document.getElementById('msg-status').innerText = 'Online · Ready to connect';
+      });
+
+      msgPeer.on('connection', function(conn) {
+        msgConn = conn;
+        setupMsgConnection();
+      });
+
+      msgPeer.on('error', function(err) {
+        if (err.type === 'unavailable-id') {
+          msgCode = generateChatCode();
+          msgInitialized = false;
+          initMessaging();
+        } else {
+          document.getElementById('msg-status').innerText = 'Connection error — try again';
+        }
+      });
+    }
+
+    function connectToFriend() {
+      const friendId = document.getElementById('msg-friend-id').value.toUpperCase().trim();
+      if (!friendId || friendId.length < 4) return;
+      if (!msgPeer) return;
+      document.getElementById('msg-connect-btn').disabled = true;
+      document.getElementById('msg-connect-btn').textContent = 'Connecting...';
+      msgConn = msgPeer.connect(friendId);
+      setupMsgConnection();
+    }
+
+    function setupMsgConnection() {
+      msgConn.on('open', function() {
+        document.getElementById('msg-status').innerText = 'Connected to ' + msgConn.peer;
+        document.getElementById('msg-input').disabled = false;
+        document.getElementById('msg-send-btn').disabled = false;
+        document.getElementById('msg-chat-area').style.display = 'flex';
+        document.getElementById('msg-peer-name').innerText = msgConn.peer;
+        document.getElementById('msg-connect-btn').disabled = false;
+        document.getElementById('msg-connect-btn').textContent = 'Connect';
+        document.getElementById('msg-chatbox').innerHTML = '<div class="msg-empty">Connected! Say hello 👋</div>';
+      });
+
+      msgConn.on('data', function(data) {
+        renderMsgBubble(data, 'msg-them');
+      });
+
+      msgConn.on('close', function() {
+        document.getElementById('msg-status').innerText = 'Disconnected';
+        document.getElementById('msg-input').disabled = true;
+        document.getElementById('msg-send-btn').disabled = true;
+        document.getElementById('msg-peer-status').innerText = 'Disconnected';
+      });
+    }
+
+    function renderMsgBubble(content, cls) {
+      const box = document.getElementById('msg-chatbox');
+      const empty = box.querySelector('.msg-empty');
+      if (empty) empty.remove();
+      const el = document.createElement('div');
+      el.className = 'msg-bubble ' + cls;
+      el.innerText = content;
+      box.appendChild(el);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function sendMsg() {
+      const inp = document.getElementById('msg-input');
+      const val = inp.value.trim();
+      if (val && msgConn && msgConn.open) {
+        msgConn.send(val);
+        renderMsgBubble(val, 'msg-me');
+        inp.value = '';
+      }
+    }
+
+    function copyMsgCode() {
+      const code = document.getElementById('msg-my-id').innerText;
+      if (code && code !== '......') {
+        navigator.clipboard.writeText(code);
+        document.getElementById('msg-status').innerText = 'Code copied!';
+        setTimeout(function() {
+          document.getElementById('msg-status').innerText = msgConn ? 'Connected' : 'Online · Ready to connect';
+        }, 2000);
+      }
+    }
+
+    document.getElementById('msg-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); sendMsg(); }
+    });
 
 initTheme(); initCurrency(); renderHome();
   </script>
