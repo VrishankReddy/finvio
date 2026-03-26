@@ -1314,6 +1314,64 @@
     body.dark .toggle-thumb { transform:translateX(20px); }
     .topbar-theme-btn { width:36px; height:36px; border-radius:10px; border:1.5px solid var(--border); background:var(--white); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }
     .topbar-theme-btn:hover { background:var(--bg); }
+
+    /* ══════════════════ MESSAGING ══════════════════ */
+    .msg-lobby { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:40px 20px; flex:1; }
+    .msg-lobby-title { font-size:22px; font-weight:800; color:var(--text); text-align:center; }
+    .msg-lobby-sub { font-size:13px; color:var(--text-muted); font-weight:500; text-align:center; max-width:320px; }
+    .msg-lobby-btns { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+    .msg-lobby-btn { padding:14px 28px; border-radius:12px; border:2px solid var(--green); font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; }
+    .msg-lobby-btn.primary { background:var(--green); color:#fff; border-color:var(--green); }
+    .msg-lobby-btn.primary:hover { background:var(--green-dark); }
+    .msg-lobby-btn.secondary { background:var(--white); color:var(--green); }
+    .msg-lobby-btn.secondary:hover { background:var(--green-light); }
+    .msg-code-display { font-size:32px; font-weight:900; letter-spacing:6px; color:var(--green); background:var(--green-light); padding:14px 28px; border-radius:14px; border:2px dashed var(--green); text-align:center; user-select:all; }
+    .msg-code-input { padding:12px 16px; border:1.5px solid var(--border); border-radius:12px; font-size:16px; font-weight:700; text-align:center; letter-spacing:4px; width:200px; font-family:inherit; color:var(--text); background:var(--white); }
+    .msg-code-input:focus { outline:none; border-color:var(--green); }
+    .msg-rooms-list { width:100%; max-width:400px; display:flex; flex-direction:column; gap:8px; }
+    .msg-room-item { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--white); border:1px solid var(--border); border-radius:12px; cursor:pointer; transition:all .15s; box-shadow:var(--shadow); }
+    .msg-room-item:hover { border-color:var(--green); background:var(--green-light); }
+    .msg-room-code { font-size:15px; font-weight:800; color:var(--text); letter-spacing:2px; }
+    .msg-room-meta { font-size:11px; color:var(--text-faint); font-weight:600; }
+    .msg-chat-area { display:flex; flex-direction:column; height:100%; }
+    .msg-chat-hdr { padding:12px 20px; border-bottom:1px solid var(--border); background:var(--white); display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .msg-chat-back { background:none; border:none; cursor:pointer; padding:6px; border-radius:8px; display:flex; align-items:center; }
+    .msg-chat-back:hover { background:var(--bg); }
+    .msg-chat-msgs { flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:8px; background:var(--bg); }
+    .msg-chat-msgs::-webkit-scrollbar { width:4px; }
+    .msg-chat-msgs::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+    .msg-bubble-me { align-self:flex-end; background:var(--green); color:#fff; padding:10px 14px; border-radius:14px 14px 3px 14px; max-width:70%; font-size:13px; font-weight:600; line-height:1.5; }
+    .msg-bubble-other { align-self:flex-start; background:var(--white); color:var(--text-sub); padding:10px 14px; border-radius:14px 14px 14px 3px; max-width:70%; font-size:13px; font-weight:500; line-height:1.5; border:0.5px solid var(--border); }
+    .msg-bubble-time { font-size:9px; opacity:0.6; margin-top:3px; display:block; }
+    .msg-bubble-sender { font-size:10px; font-weight:700; color:var(--green); margin-bottom:3px; display:block; }
+    .msg-input-row { display:flex; gap:8px; padding:10px 20px 16px; align-items:flex-end; border-top:0.5px solid var(--border); background:var(--white); }
+    .msg-input-box { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:10px 14px; font-size:13px; color:var(--text); resize:none; line-height:1.4; max-height:80px; font-weight:500; font-family:'Nunito',sans-serif; }
+    .msg-input-box:focus { outline:none; border-color:var(--green); }
+    .msg-send-btn { width:36px; height:36px; border-radius:10px; background:var(--green); border:none; cursor:pointer; color:#fff; font-size:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .msg-send-btn:disabled { background:var(--border); }
+    .msg-clear-btn { background:none; border:none; cursor:pointer; padding:6px; border-radius:8px; display:flex; align-items:center; margin-left:auto; }
+    .msg-clear-btn:hover { background:var(--bg); }
+    .msg-section { display:none; flex-direction:column; height:100%; }
+    .msg-section.active { display:flex; }
+    .msg-name-prompt { display:flex; flex-direction:column; align-items:center; gap:12px; }
+    .msg-or { font-size:12px; color:var(--text-faint); font-weight:700; }
+    body.dark .msg-room-item { background:var(--white); border-color:var(--border); }
+    body.dark .msg-room-item:hover { background:var(--green-light); border-color:var(--green); }
+    body.dark .msg-bubble-other { background:var(--white); border-color:var(--border); color:var(--text-sub); }
+    body.dark .msg-code-display { background:var(--green-light); color:var(--green); border-color:var(--green); }
+    body.dark .msg-code-input { background:var(--white); color:var(--text); border-color:var(--border); }
+    body.dark .msg-chat-hdr { background:var(--white); border-bottom-color:var(--border); }
+    body.dark .msg-input-row { background:var(--white); border-top-color:var(--border); }
+    body.dark .msg-input-box { background:#12151f; border-color:var(--border); color:var(--text); }
+    @media(max-width:768px) {
+      .msg-chat-msgs { padding:16px 14px; }
+      .msg-chat-hdr { padding:12px 14px; }
+      .msg-input-row { padding:10px 12px calc(10px + env(safe-area-inset-bottom, 12px)); }
+      .msg-input-box { border-radius:20px; font-size:14px; padding:10px 14px; }
+      .msg-send-btn { border-radius:50%; }
+      .msg-bubble-me { max-width:85%; }
+      .msg-bubble-other { max-width:88%; }
+    }
   </style>
 </head>
 
@@ -1346,6 +1404,10 @@
             <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
           </svg>
           <span class="nav-label">Expense</span>
+        </button>
+        <button class="nav-item" id="nav-messaging" onclick="goTab('messaging')">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="nav-label">Messaging</span>
         </button>
         <button class="nav-finny" onclick="goTab('finny')">
           <div class="nav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
@@ -1469,6 +1531,63 @@
         <div class="content" id="expense-body"></div>
       </div>
 
+      <div id="s-messaging" class="screen">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round"/></svg></button>
+            <span class="topbar-title">Messaging</span>
+          </div>
+        </div>
+        <div id="msg-lobby" class="msg-section active">
+          <div class="msg-lobby">
+            <svg viewBox="0 0 24 24" fill="none" width="48" height="48"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#6ab04c" stroke-width="1.5"/></svg>
+            <div class="msg-lobby-title">Chat Rooms</div>
+            <div class="msg-lobby-sub">Generate a code and share it with someone, or enter a code to join their chat room. Chats are saved in your browser.</div>
+            <div id="msg-name-area" class="msg-name-prompt">
+              <input type="text" id="msg-username" class="msg-code-input" placeholder="Your name" style="letter-spacing:0;font-size:14px;width:220px"/>
+              <button class="msg-lobby-btn primary" onclick="msgSetName()">Set Name</button>
+            </div>
+            <div id="msg-actions" style="display:none;flex-direction:column;align-items:center;gap:16px;width:100%">
+              <div id="msg-hello" style="font-size:13px;color:var(--text-muted);font-weight:600"></div>
+              <div class="msg-lobby-btns">
+                <button class="msg-lobby-btn primary" onclick="msgGenerateCode()">🔑 Generate Code</button>
+                <button class="msg-lobby-btn secondary" onclick="msgShowEnter()">📝 Enter Code</button>
+              </div>
+              <div id="msg-generated" style="display:none;flex-direction:column;align-items:center;gap:10px">
+                <div class="msg-code-display" id="msg-gen-code"></div>
+                <div style="font-size:12px;color:var(--text-muted);font-weight:600">Share this code with others!</div>
+                <button class="msg-lobby-btn primary" style="padding:10px 20px;font-size:13px" onclick="msgJoinRoom(document.getElementById('msg-gen-code').textContent)">Enter Chat →</button>
+              </div>
+              <div id="msg-enter" style="display:none;flex-direction:column;align-items:center;gap:10px">
+                <input type="text" id="msg-enter-code" class="msg-code-input" placeholder="000000" maxlength="6"/>
+                <button class="msg-lobby-btn primary" style="padding:10px 20px;font-size:13px" onclick="msgJoinFromInput()">Join Chat →</button>
+              </div>
+              <div id="msg-rooms-area" style="width:100%;max-width:400px;margin-top:10px"></div>
+            </div>
+          </div>
+        </div>
+        <div id="msg-chatview" class="msg-section">
+          <div class="msg-chat-area">
+            <div class="msg-chat-hdr">
+              <button class="msg-chat-back" onclick="msgBackToLobby()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M19 12H5M12 5l-7 7 7 7" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <svg viewBox="0 0 24 24" fill="none" width="28" height="28"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#6ab04c" stroke-width="2"/></svg>
+              <div>
+                <div style="font-size:15px;font-weight:800;color:var(--text)">Room <span id="msg-room-title"></span></div>
+                <div style="font-size:11px;color:var(--text-faint);font-weight:500">Local chat · Same browser</div>
+              </div>
+              <button class="msg-clear-btn" onclick="msgClearChat()" title="Clear chat for you">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+            <div class="msg-chat-msgs" id="msg-messages"></div>
+            <div class="msg-input-row">
+              <textarea class="msg-input-box" id="msg-input" rows="1" placeholder="Type a message..."></textarea>
+              <button class="msg-send-btn" onclick="msgSendMessage()">↑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="s-finny" class="screen">
         <div class="chat-hdr">
           <button class="back-btn" onclick="goTab('home')" aria-label="Go back"><svg viewBox="0 0 24 24" fill="none"
@@ -1575,6 +1694,10 @@
               <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
             </svg>
             <span class="bnav-label">Expense</span>
+          </button>
+          <button class="bnav-item" id="bnav-messaging" onclick="goTab('messaging')">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="bnav-label">Chat</span>
           </button>
           <button class="bnav-finny" onclick="goTab('finny')">
             <div class="bnav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
@@ -1693,7 +1816,7 @@
       currentTab = id; closeSidebar();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('s-' + id).classList.add('active');
-      ['home', 'income', 'expense', 'profile'].forEach(t => {
+      ['home', 'income', 'expense', 'messaging', 'profile'].forEach(t => {
         const active = t === id;
         const n = document.getElementById('nav-' + t);
         const bn = document.getElementById('bnav-' + t);
@@ -1704,6 +1827,7 @@
       if (id === 'income') renderIncome();
       if (id === 'expense') renderExpense();
       if (id === 'finny') initChat();
+      if (id === 'messaging') msgInitLobby();
     }
     let currencySymbol = localStorage.getItem('finvio_currency') || '₹';
     function changeCurrency(sym) { currencySymbol = sym; localStorage.setItem('finvio_currency', sym); renderHome(); if (currentTab === 'income') renderIncome(); if (currentTab === 'expense') renderExpense(); }
@@ -2208,6 +2332,182 @@ window.speakReply = function(replyObj) {
 };
 
 
+
+// ══════════════════ MESSAGING SYSTEM ══════════════════
+let msgUserId = localStorage.getItem('finvio_msg_userid');
+let msgUserName = localStorage.getItem('finvio_msg_username') || '';
+let msgCurrentRoom = null;
+let msgChannel = null;
+
+if (!msgUserId) {
+  msgUserId = 'u_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+  localStorage.setItem('finvio_msg_userid', msgUserId);
+}
+
+function msgGetRooms() {
+  try { return JSON.parse(localStorage.getItem('finvio_msg_rooms') || '[]'); } catch(e) { return []; }
+}
+function msgSaveRooms(rooms) { localStorage.setItem('finvio_msg_rooms', JSON.stringify(rooms)); }
+
+function msgGetMessages(code) {
+  try { return JSON.parse(localStorage.getItem('finvio_msg_chat_' + code) || '[]'); } catch(e) { return []; }
+}
+function msgSaveMessages(code, msgs) { localStorage.setItem('finvio_msg_chat_' + code, JSON.stringify(msgs)); }
+
+function msgGetClearTime(code) {
+  return parseInt(localStorage.getItem('finvio_msg_clear_' + code + '_' + msgUserId) || '0');
+}
+
+function msgSetName() {
+  const name = document.getElementById('msg-username').value.trim();
+  if (!name) return;
+  msgUserName = name;
+  localStorage.setItem('finvio_msg_username', name);
+  msgInitLobby();
+}
+
+function msgInitLobby() {
+  if (!msgUserName) {
+    document.getElementById('msg-name-area').style.display = 'flex';
+    document.getElementById('msg-actions').style.display = 'none';
+    return;
+  }
+  document.getElementById('msg-name-area').style.display = 'none';
+  document.getElementById('msg-actions').style.display = 'flex';
+  document.getElementById('msg-hello').textContent = 'Hi, ' + msgUserName + '! 👋';
+  document.getElementById('msg-generated').style.display = 'none';
+  document.getElementById('msg-enter').style.display = 'none';
+  msgRenderRooms();
+}
+
+function msgGenerateCode() {
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  document.getElementById('msg-gen-code').textContent = code;
+  document.getElementById('msg-generated').style.display = 'flex';
+  document.getElementById('msg-enter').style.display = 'none';
+  // Add to rooms
+  const rooms = msgGetRooms();
+  if (!rooms.includes(code)) { rooms.push(code); msgSaveRooms(rooms); }
+  msgRenderRooms();
+}
+
+function msgShowEnter() {
+  document.getElementById('msg-enter').style.display = 'flex';
+  document.getElementById('msg-generated').style.display = 'none';
+  document.getElementById('msg-enter-code').value = '';
+  document.getElementById('msg-enter-code').focus();
+}
+
+function msgJoinFromInput() {
+  const code = document.getElementById('msg-enter-code').value.trim();
+  if (!code || code.length < 4) { alert('Please enter a valid code'); return; }
+  msgJoinRoom(code);
+}
+
+function msgJoinRoom(code) {
+  const rooms = msgGetRooms();
+  if (!rooms.includes(code)) { rooms.push(code); msgSaveRooms(rooms); }
+  msgCurrentRoom = code;
+  document.getElementById('msg-room-title').textContent = code;
+  document.getElementById('msg-lobby').classList.remove('active');
+  document.getElementById('msg-chatview').classList.add('active');
+  msgRenderMessages();
+  // Setup BroadcastChannel for cross-tab
+  if (msgChannel) msgChannel.close();
+  try {
+    msgChannel = new BroadcastChannel('finvio_msg_' + code);
+    msgChannel.onmessage = function(e) {
+      if (e.data && e.data.type === 'new_message') { msgRenderMessages(); }
+    };
+  } catch(e) {}
+  // Also listen for storage events (cross-tab fallback)
+  document.getElementById('msg-input').focus();
+}
+
+function msgBackToLobby() {
+  document.getElementById('msg-chatview').classList.remove('active');
+  document.getElementById('msg-lobby').classList.add('active');
+  if (msgChannel) { msgChannel.close(); msgChannel = null; }
+  msgCurrentRoom = null;
+  msgRenderRooms();
+}
+
+function msgRenderRooms() {
+  const rooms = msgGetRooms();
+  const area = document.getElementById('msg-rooms-area');
+  if (!rooms.length) { area.innerHTML = ''; return; }
+  area.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Your Rooms</div>' +
+    rooms.map(code => {
+      const msgs = msgGetMessages(code);
+      const clearTime = msgGetClearTime(code);
+      const visible = msgs.filter(m => m.ts > clearTime);
+      const last = visible.length ? visible[visible.length - 1] : null;
+      return '<div class="msg-room-item" onclick="msgJoinRoom(\'' + code + '\')">' +
+        '<div><div class="msg-room-code">' + code + '</div>' +
+        '<div class="msg-room-meta">' + (last ? last.name + ': ' + (last.text.length > 30 ? last.text.substring(0,30) + '...' : last.text) : 'No messages yet') + '</div></div>' +
+        '<svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 18l6-6-6-6" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/></svg></div>';
+    }).join('');
+}
+
+function msgRenderMessages() {
+  const container = document.getElementById('msg-messages');
+  const msgs = msgGetMessages(msgCurrentRoom);
+  const clearTime = msgGetClearTime(msgCurrentRoom);
+  const visible = msgs.filter(m => m.ts > clearTime);
+  if (!visible.length) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-faint);font-size:13px;font-weight:600">No messages yet. Say hi! 👋</div>';
+    return;
+  }
+  container.innerHTML = visible.map(m => {
+    const isMe = m.uid === msgUserId;
+    const time = new Date(m.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    if (isMe) {
+      return '<div class="msg-bubble-me">' + escHtml(m.text) + '<span class="msg-bubble-time">' + time + '</span></div>';
+    } else {
+      return '<div class="msg-bubble-other"><span class="msg-bubble-sender">' + escHtml(m.name) + '</span>' + escHtml(m.text) + '<span class="msg-bubble-time">' + time + '</span></div>';
+    }
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function escHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+function msgSendMessage() {
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text || !msgCurrentRoom) return;
+  const msg = { uid: msgUserId, name: msgUserName, text: text, ts: Date.now() };
+  const msgs = msgGetMessages(msgCurrentRoom);
+  msgs.push(msg);
+  msgSaveMessages(msgCurrentRoom, msgs);
+  input.value = '';
+  msgRenderMessages();
+  // Notify other tabs
+  if (msgChannel) { try { msgChannel.postMessage({ type: 'new_message' }); } catch(e) {} }
+}
+
+function msgClearChat() {
+  if (!msgCurrentRoom) return;
+  if (!confirm('Clear chat for you? The other person will still see their messages.')) return;
+  localStorage.setItem('finvio_msg_clear_' + msgCurrentRoom + '_' + msgUserId, String(Date.now()));
+  msgRenderMessages();
+}
+
+// Listen for storage events for cross-tab sync
+window.addEventListener('storage', function(e) {
+  if (e.key && e.key.startsWith('finvio_msg_chat_') && msgCurrentRoom) {
+    const code = e.key.replace('finvio_msg_chat_', '');
+    if (code === msgCurrentRoom) msgRenderMessages();
+  }
+});
+
+// Enter key for messaging
+document.getElementById('msg-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); msgSendMessage(); }
+});
+document.getElementById('msg-enter-code').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { e.preventDefault(); msgJoinFromInput(); }
+});
 
 initTheme(); initCurrency(); renderHome();
   </script>
