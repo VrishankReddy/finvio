@@ -925,16 +925,63 @@
       animation-delay: .36s;
     }
 
-    #finny-mic, #finny-stop {
-      width: 36px; height: 36px; border-radius: 10px; background: #f0f0f0; border: 1px solid var(--border);
-      cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      transition: all 0.15s; font-size: 16px;
+    #finny-mic,
+    #finny-stop {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #f0f0f0;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      font-size: 16px;
     }
-    #finny-stop { color: #ff4d4d; display: none; }
-    #finny-stop:hover { background: #ffe0e0; }
-    #finny-mic.listening { animation: pulse 1.5s infinite; background: #ffe0e0; color: #ff4d4d; border-color: #ffcccc; }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); } }
-    @keyframes typingpulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+    #finny-stop {
+      color: #ff4d4d;
+      display: none;
+    }
+
+    #finny-stop:hover {
+      background: #ffe0e0;
+    }
+
+    #finny-mic.listening {
+      animation: pulse 1.5s infinite;
+      background: #ffe0e0;
+      color: #ff4d4d;
+      border-color: #ffcccc;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(255, 77, 77, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 77, 77, 0);
+      }
+    }
+
+    @keyframes typingpulse {
+
+      0%,
+      100% {
+        opacity: .3
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
 
     .bottom-nav {
       display: none;
@@ -1111,7 +1158,7 @@
         max-width: 88%;
         font-size: 13.5px;
         border-radius: 16px 16px 16px 4px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         padding: 12px 14px;
         border: none;
       }
@@ -1120,7 +1167,7 @@
         max-width: 85%;
         font-size: 13.5px;
         border-radius: 16px 16px 4px 16px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         padding: 12px 14px;
       }
 
@@ -1131,7 +1178,7 @@
 
       .chat-hdr {
         padding: 12px 14px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
         position: relative;
         z-index: 10;
       }
@@ -1140,16 +1187,18 @@
         padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 12px));
         gap: 8px;
         background: var(--white);
-        border-top: 1px solid rgba(0,0,0,0.04);
+        border-top: 1px solid rgba(0, 0, 0, 0.04);
         align-items: flex-end;
       }
 
-      #finny-mic, #finny-stop, .snd-btn {
+      #finny-mic,
+      #finny-stop,
+      .snd-btn {
         width: 36px;
         height: 36px;
         border-radius: 50%;
         font-size: 15px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
       }
 
       .inp-box {
@@ -1159,7 +1208,7 @@
         background: #f1f5f9;
         border: 1px solid transparent;
       }
-      
+
       .inp-box:focus {
         background: var(--white);
         border-color: var(--green);
@@ -1175,7 +1224,7 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-      
+
       .chips::-webkit-scrollbar {
         display: none;
       }
@@ -1186,9 +1235,10 @@
         border-radius: 20px;
         flex-shrink: 0;
         background: var(--white);
-        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-        border: 1px solid rgba(0,0,0,0.02);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.02);
       }
+
       .chat-hdr button:hover {
         background: #f3f4f6 !important;
       }
@@ -1210,160 +1260,803 @@
 
     /* ══════════════════ DARK MODE ══════════════════ */
     body.dark {
-      --bg: #0f1117; --white: #1a1d27; --border: #2d3145;
-      --text: #f1f3f9; --text-sub: #c8cde0; --text-muted: #8b92b4; --text-faint: #5c6387;
-      --shadow: 0 1px 8px rgba(0,0,0,0.5); --green-light: #0d2818; --green-text: #6ab04c;
-      --red-light: #2a1010; color-scheme: dark;
+      --bg: #0f1117;
+      --white: #1a1d27;
+      --border: #2d3145;
+      --text: #f1f3f9;
+      --text-sub: #c8cde0;
+      --text-muted: #8b92b4;
+      --text-faint: #5c6387;
+      --shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+      --green-light: #0d2818;
+      --green-text: #6ab04c;
+      --red-light: #2a1010;
+      color-scheme: dark;
     }
+
     /* Sidebar */
-    body.dark .sidebar { background:#1a1d27; border-right-color:#2d3145; }
-    body.dark .sidebar-brand { border-bottom-color:#2d3145; }
-    body.dark .sidebar-footer { border-top-color:#2d3145; }
-    body.dark .nav-item:hover { background:#12151f; }
-    body.dark .nav-item.active { background:#0d2818; }
-    body.dark .nav-label { color:#8b92b4; }
-    body.dark .nav-item.active .nav-label { color:#6ab04c; }
+    body.dark .sidebar {
+      background: #1a1d27;
+      border-right-color: #2d3145;
+    }
+
+    body.dark .sidebar-brand {
+      border-bottom-color: #2d3145;
+    }
+
+    body.dark .sidebar-footer {
+      border-top-color: #2d3145;
+    }
+
+    body.dark .nav-item:hover {
+      background: #12151f;
+    }
+
+    body.dark .nav-item.active {
+      background: #0d2818;
+    }
+
+    body.dark .nav-label {
+      color: #8b92b4;
+    }
+
+    body.dark .nav-item.active .nav-label {
+      color: #6ab04c;
+    }
+
     /* Topbar */
-    body.dark .topbar { background:#1a1d27; border-bottom-color:#2d3145; }
-    body.dark .topbar-title { color:#f1f3f9; }
-    body.dark .topbar-theme-btn { background:#1a1d27; border-color:#2d3145; }
+    body.dark .topbar {
+      background: #1a1d27;
+      border-bottom-color: #2d3145;
+    }
+
+    body.dark .topbar-title {
+      color: #f1f3f9;
+    }
+
+    body.dark .topbar-theme-btn {
+      background: #1a1d27;
+      border-color: #2d3145;
+    }
+
     /* Cards */
-    body.dark .card, body.dark .stat-card, body.dark .entry { background:#1a1d27; border-color:#2d3145; }
-    body.dark .card-title { color:#f1f3f9; }
-    body.dark .stat-label { color:#5c6387; }
-    body.dark .entry-key { color:#8b92b4; }
-    body.dark .entry-val { color:#c8cde0; }
-    body.dark .count-row { color:#8b92b4; }
-    body.dark .count-row span { color:#f1f3f9; }
-    body.dark .empty { color:#5c6387; }
+    body.dark .card,
+    body.dark .stat-card,
+    body.dark .entry {
+      background: #1a1d27;
+      border-color: #2d3145;
+    }
+
+    body.dark .card-title {
+      color: #f1f3f9;
+    }
+
+    body.dark .stat-label {
+      color: #5c6387;
+    }
+
+    body.dark .entry-key {
+      color: #8b92b4;
+    }
+
+    body.dark .entry-val {
+      color: #c8cde0;
+    }
+
+    body.dark .count-row {
+      color: #8b92b4;
+    }
+
+    body.dark .count-row span {
+      color: #f1f3f9;
+    }
+
+    body.dark .empty {
+      color: #5c6387;
+    }
+
     /* Lists */
-    body.dark .rank-row, body.dark .list-item { background:#12151f; border-color:#2d3145; color:#c8cde0; }
-    body.dark .alert-row { background:#2a1010; border-color:#5a2020; }
-    body.dark .ins { background:#0d2818; color:#6ab04c; border-left-color:#6ab04c; }
+    body.dark .rank-row,
+    body.dark .list-item {
+      background: #12151f;
+      border-color: #2d3145;
+      color: #c8cde0;
+    }
+
+    body.dark .alert-row {
+      background: #2a1010;
+      border-color: #5a2020;
+    }
+
+    body.dark .ins {
+      background: #0d2818;
+      color: #6ab04c;
+      border-left-color: #6ab04c;
+    }
+
     /* Chat */
-    body.dark #chat-msgs { background:#0f1117; }
-    body.dark .chat-hdr { background:#1a1d27; border-bottom-color:#2d3145; }
-    body.dark .bb { background:#1a1d27; border-color:#2d3145; color:#c8cde0 !important; }
-    body.dark .bb * { color:#c8cde0 !important; }
-    body.dark .bb .mcl { color:#5c6387 !important; }
-    body.dark .bb .ins { color:#6ab04c !important; background:#0d2818 !important; }
-    body.dark .bb .alert-row { background:#2a1010 !important; }
-    body.dark .bb .rank-row { background:#12151f !important; border-color:#2d3145 !important; }
-    body.dark .bb .list-item { background:#12151f !important; border-color:#2d3145 !important; }
-    body.dark .bb select, body.dark .bb input { background:#0f1117 !important; color:#f1f3f9 !important; border-color:#2d3145 !important; }
-    body.dark .ub { background:#5a9e3e; color:#fff; }
-    body.dark .chips { background:#1a1d27; border-top-color:#2d3145; }
-    body.dark .chip { background:#12151f; border-color:#2d3145; color:#8b92b4; }
-    body.dark .inp-row { background:#1a1d27; border-top-color:#2d3145; }
-    body.dark .inp-box { background:#12151f; border-color:#2d3145; color:#f1f3f9; }
-    body.dark .inp-box::placeholder { color:#5c6387; }
-    body.dark .chat-ft { background:#1a1d27; color:#3a3f5c; }
-    body.dark .typing { background:#1a1d27; border-color:#2d3145; }
+    body.dark #chat-msgs {
+      background: #0f1117;
+    }
+
+    body.dark .chat-hdr {
+      background: #1a1d27;
+      border-bottom-color: #2d3145;
+    }
+
+    body.dark .bb {
+      background: #1a1d27;
+      border-color: #2d3145;
+      color: #c8cde0 !important;
+    }
+
+    body.dark .bb * {
+      color: #c8cde0 !important;
+    }
+
+    body.dark .bb .mcl {
+      color: #5c6387 !important;
+    }
+
+    body.dark .bb .ins {
+      color: #6ab04c !important;
+      background: #0d2818 !important;
+    }
+
+    body.dark .bb .alert-row {
+      background: #2a1010 !important;
+    }
+
+    body.dark .bb .rank-row {
+      background: #12151f !important;
+      border-color: #2d3145 !important;
+    }
+
+    body.dark .bb .list-item {
+      background: #12151f !important;
+      border-color: #2d3145 !important;
+    }
+
+    body.dark .bb select,
+    body.dark .bb input {
+      background: #0f1117 !important;
+      color: #f1f3f9 !important;
+      border-color: #2d3145 !important;
+    }
+
+    body.dark .ub {
+      background: #5a9e3e;
+      color: #fff;
+    }
+
+    body.dark .chips {
+      background: #1a1d27;
+      border-top-color: #2d3145;
+    }
+
+    body.dark .chip {
+      background: #12151f;
+      border-color: #2d3145;
+      color: #8b92b4;
+    }
+
+    body.dark .inp-row {
+      background: #1a1d27;
+      border-top-color: #2d3145;
+    }
+
+    body.dark .inp-box {
+      background: #12151f;
+      border-color: #2d3145;
+      color: #f1f3f9;
+    }
+
+    body.dark .inp-box::placeholder {
+      color: #5c6387;
+    }
+
+    body.dark .chat-ft {
+      background: #1a1d27;
+      color: #3a3f5c;
+    }
+
+    body.dark .typing {
+      background: #1a1d27;
+      border-color: #2d3145;
+    }
+
     /* Modal */
-    body.dark .modal-overlay { background:rgba(0,0,0,0.7); }
-    body.dark .modal-box { background:#1a1d27; }
-    body.dark .modal-box h3 { color:#f1f3f9; }
-    body.dark .field label { color:#8b92b4; }
-    body.dark .field input, body.dark .field select { background:#0f1117; color:#f1f3f9; border-color:#2d3145; }
-    body.dark .btn-cancel { background:#1a1d27; color:#8b92b4; border-color:#2d3145; }
-    body.dark .btn-edit { background:#0d2818; }
-    body.dark .btn-del { background:#2a1010; }
+    body.dark .modal-overlay {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    body.dark .modal-box {
+      background: #1a1d27;
+    }
+
+    body.dark .modal-box h3 {
+      color: #f1f3f9;
+    }
+
+    body.dark .field label {
+      color: #8b92b4;
+    }
+
+    body.dark .field input,
+    body.dark .field select {
+      background: #0f1117;
+      color: #f1f3f9;
+      border-color: #2d3145;
+    }
+
+    body.dark .btn-cancel {
+      background: #1a1d27;
+      color: #8b92b4;
+      border-color: #2d3145;
+    }
+
+    body.dark .btn-edit {
+      background: #0d2818;
+    }
+
+    body.dark .btn-del {
+      background: #2a1010;
+    }
+
     /* Bottom nav */
-    body.dark .bottom-nav { background:#1a1d27; border-top-color:#2d3145; }
-    body.dark .bnav-label { color:#5c6387; }
-    body.dark .bnav-item.active .bnav-label { color:#6ab04c; }
+    body.dark .bottom-nav {
+      background: #1a1d27;
+      border-top-color: #2d3145;
+    }
+
+    body.dark .bnav-label {
+      color: #5c6387;
+    }
+
+    body.dark .bnav-item.active .bnav-label {
+      color: #6ab04c;
+    }
+
     /* Play btn */
-    body.dark .play-btn { background:#12151f; }
-    body.dark .play-btn:hover { background:#1e2235; }
+    body.dark .play-btn {
+      background: #12151f;
+    }
+
+    body.dark .play-btn:hover {
+      background: #1e2235;
+    }
+
     /* Currency select */
-    body.dark #currency-select { background:#0f1117; color:#f1f3f9; border-color:#2d3145; }
-    body.dark select option { background:#1a1d27; color:#f1f3f9; }
+    body.dark #currency-select {
+      background: #0f1117;
+      color: #f1f3f9;
+      border-color: #2d3145;
+    }
+
+    body.dark select option {
+      background: #1a1d27;
+      color: #f1f3f9;
+    }
+
     /* Toggle */
-    body.dark .toggle-track { background:#6ab04c; }
-    body.dark .theme-toggle-wrap { border-top-color:#2d3145; }
-    body.dark .toggle-label { color:#8b92b4; }
+    body.dark .toggle-track {
+      background: #6ab04c;
+    }
+
+    body.dark .theme-toggle-wrap {
+      border-top-color: #2d3145;
+    }
+
+    body.dark .toggle-label {
+      color: #8b92b4;
+    }
+
     /* Hardcoded color overrides via attribute selectors */
-    body.dark [style*="color:#111827"] { color:#f1f3f9 !important; }
-    body.dark [style*="color: #111827"] { color:#f1f3f9 !important; }
-    body.dark [style*="color:#374151"] { color:#c8cde0 !important; }
-    body.dark [style*="color: #374151"] { color:#c8cde0 !important; }
-    body.dark [style*="color:#6b7280"] { color:#8b92b4 !important; }
-    body.dark [style*="color: #6b7280"] { color:#8b92b4 !important; }
-    body.dark [style*="color:#9ca3af"] { color:#5c6387 !important; }
-    body.dark [style*="color: #9ca3af"] { color:#5c6387 !important; }
-    body.dark [style*="color:#d1d5db"] { color:#3a3f5c !important; }
-    body.dark [style*="border-bottom:0.5px solid #f3f4f6"] { border-bottom-color:#2d3145 !important; }
-    body.dark [style*="background:#f3f4f6"] { background:#12151f !important; color:#c8cde0 !important; }
-    body.dark [style*="background:#f9fafb"] { background:#12151f !important; }
-    body.dark [style*="background:#f0fdf4"] { background:#0d2818 !important; }
-    body.dark [style*="background:#fff7ed"] { background:#1f1208 !important; }
-    body.dark [style*="background:#fef2f2"] { background:#2a1010 !important; }
-    body.dark [style*="background:#eef2ff"] { background:#0d1228 !important; }
-    body.dark [style*="border:1px solid #e5e7eb"] { border-color:#2d3145 !important; background:#1a1d27 !important; color:#c8cde0 !important; }
-    body.dark [style*="border:0.5px solid #e5e7eb"] { border-color:#2d3145 !important; }
-    body.dark [style*="stroke:#374151"] { stroke:#c8cde0 !important; }
+    body.dark [style*="color:#111827"] {
+      color: #f1f3f9 !important;
+    }
+
+    body.dark [style*="color: #111827"] {
+      color: #f1f3f9 !important;
+    }
+
+    body.dark [style*="color:#374151"] {
+      color: #c8cde0 !important;
+    }
+
+    body.dark [style*="color: #374151"] {
+      color: #c8cde0 !important;
+    }
+
+    body.dark [style*="color:#6b7280"] {
+      color: #8b92b4 !important;
+    }
+
+    body.dark [style*="color: #6b7280"] {
+      color: #8b92b4 !important;
+    }
+
+    body.dark [style*="color:#9ca3af"] {
+      color: #5c6387 !important;
+    }
+
+    body.dark [style*="color: #9ca3af"] {
+      color: #5c6387 !important;
+    }
+
+    body.dark [style*="color:#d1d5db"] {
+      color: #3a3f5c !important;
+    }
+
+    body.dark [style*="border-bottom:0.5px solid #f3f4f6"] {
+      border-bottom-color: #2d3145 !important;
+    }
+
+    body.dark [style*="background:#f3f4f6"] {
+      background: #12151f !important;
+      color: #c8cde0 !important;
+    }
+
+    body.dark [style*="background:#f9fafb"] {
+      background: #12151f !important;
+    }
+
+    body.dark [style*="background:#f0fdf4"] {
+      background: #0d2818 !important;
+    }
+
+    body.dark [style*="background:#fff7ed"] {
+      background: #1f1208 !important;
+    }
+
+    body.dark [style*="background:#fef2f2"] {
+      background: #2a1010 !important;
+    }
+
+    body.dark [style*="background:#eef2ff"] {
+      background: #0d1228 !important;
+    }
+
+    body.dark [style*="border:1px solid #e5e7eb"] {
+      border-color: #2d3145 !important;
+      background: #1a1d27 !important;
+      color: #c8cde0 !important;
+    }
+
+    body.dark [style*="border:0.5px solid #e5e7eb"] {
+      border-color: #2d3145 !important;
+    }
+
+    body.dark [style*="stroke:#374151"] {
+      stroke: #c8cde0 !important;
+    }
+
     /* Profile page */
-    body.dark .finny-topbtn { background:#0d2818; border-color:#6ab04c; color:#6ab04c; }
-    body.dark .finny-topbtn:hover { background:#0d2818; }
-    body.dark .topbar-theme-btn:hover { background:#12151f; }
+    body.dark .finny-topbtn {
+      background: #0d2818;
+      border-color: #6ab04c;
+      color: #6ab04c;
+    }
+
+    body.dark .finny-topbtn:hover {
+      background: #0d2818;
+    }
+
+    body.dark .topbar-theme-btn:hover {
+      background: #12151f;
+    }
+
     /* ══════════════════ TOGGLE STYLES ══════════════════ */
-    .theme-toggle-wrap { display:flex; align-items:center; gap:10px; padding:12px 16px 14px; border-top:1px solid #f3f4f6; }
-    .toggle-label { font-size:11px; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:.05em; flex:1; }
-    .toggle-track { width:46px; height:26px; border-radius:13px; background:#e5e7eb; position:relative; cursor:pointer; transition:background .3s ease; flex-shrink:0; border:none; padding:0; }
-    .toggle-thumb { width:20px; height:20px; border-radius:50%; background:#fff; position:absolute; top:3px; left:3px; transition:transform .3s cubic-bezier(.34,1.56,.64,1); display:flex; align-items:center; justify-content:center; font-size:11px; box-shadow:0 1px 4px rgba(0,0,0,0.2); pointer-events:none; }
-    body.dark .toggle-thumb { transform:translateX(20px); }
-    .topbar-theme-btn { width:36px; height:36px; border-radius:10px; border:1.5px solid var(--border); background:var(--white); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; }
-    .topbar-theme-btn:hover { background:var(--bg); }
+    .theme-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px 14px;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    .toggle-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      flex: 1;
+    }
+
+    .toggle-track {
+      width: 46px;
+      height: 26px;
+      border-radius: 13px;
+      background: #e5e7eb;
+      position: relative;
+      cursor: pointer;
+      transition: background .3s ease;
+      flex-shrink: 0;
+      border: none;
+      padding: 0;
+    }
+
+    .toggle-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      pointer-events: none;
+    }
+
+    body.dark .toggle-thumb {
+      transform: translateX(20px);
+    }
+
+    .topbar-theme-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+
+    .topbar-theme-btn:hover {
+      background: var(--bg);
+    }
 
     /* ══════════════ MESSAGING TAB ══════════════ */
-    .msg-wrap { display:flex; flex-direction:column; height:100%; }
-    .msg-connect-card { background:var(--white); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); border:0.5px solid #f3f4f6; margin-bottom:14px; }
-    .msg-code-display { background:var(--green-light); border:1.5px dashed var(--green); border-radius:12px; padding:16px; text-align:center; margin-bottom:14px; cursor:pointer; transition:background .2s; }
-    .msg-code-display:hover { background:#dcfce7; }
-    .msg-code-label { font-size:10px; color:var(--green); font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
-    .msg-code-value { font-family:'Nunito',monospace; font-size:28px; font-weight:900; color:var(--green-text); letter-spacing:4px; }
-    .msg-code-hint { font-size:11px; color:var(--text-faint); margin-top:4px; font-weight:500; }
-    .msg-connect-row { display:flex; gap:8px; }
-    .msg-connect-input { flex:1; padding:10px 14px; border:1px solid var(--border); border-radius:10px; font-size:13px; color:var(--text); background:var(--white); font-family:'Nunito',sans-serif; font-weight:600; text-transform:uppercase; letter-spacing:2px; }
-    .msg-connect-input:focus { outline:none; border-color:var(--green); }
-    .msg-connect-btn { padding:10px 18px; border:none; border-radius:10px; background:var(--green); color:#fff; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap; }
-    .msg-connect-btn:hover { background:var(--green-dark); }
-    .msg-connect-btn:disabled { background:var(--border); cursor:not-allowed; }
-    .msg-chatbox { flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:10px; background:var(--bg); }
-    .msg-chatbox::-webkit-scrollbar { width:4px; }
-    .msg-chatbox::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
-    .msg-bubble { padding:10px 14px; border-radius:14px; max-width:75%; font-size:13px; line-height:1.5; word-wrap:break-word; font-weight:500; animation:fadeUp .2s ease; }
-    .msg-bubble.msg-me { background:var(--green); color:#fff; align-self:flex-end; border-bottom-right-radius:4px; font-weight:600; }
-    .msg-bubble.msg-them { background:var(--white); color:var(--text-sub); align-self:flex-start; border-bottom-left-radius:4px; border:0.5px solid var(--border); }
-    .msg-input-row { display:flex; gap:8px; padding:10px 20px 16px; align-items:flex-end; border-top:0.5px solid var(--border); background:var(--white); }
-    .msg-input-box { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:10px 14px; font-size:13px; color:var(--text); font-weight:500; font-family:'Nunito',sans-serif; resize:none; line-height:1.4; max-height:80px; }
-    .msg-input-box:focus { outline:none; border-color:var(--green); }
-    .msg-send-btn { width:36px; height:36px; border-radius:10px; background:var(--green); border:none; cursor:pointer; color:#fff; font-size:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-    .msg-send-btn:disabled { background:var(--border); }
-    .msg-status { text-align:center; font-size:11px; color:var(--text-faint); padding:6px 0; background:var(--white); font-weight:600; }
-    .msg-empty { text-align:center; padding:40px 20px; color:var(--text-faint); font-size:13px; font-weight:600; }
-    /* Dark mode messaging */
-    body.dark .msg-connect-card { background:var(--white); border-color:#2d3145; }
-    body.dark .msg-code-display { background:#0d2818; border-color:#6ab04c; }
-    body.dark .msg-code-display:hover { background:#0d2818; }
-    body.dark .msg-code-value { color:#6ab04c; }
-    body.dark .msg-connect-input { background:#0f1117; color:#f1f3f9; border-color:#2d3145; }
-    body.dark .msg-chatbox { background:#0f1117; }
-    body.dark .msg-bubble.msg-them { background:#1a1d27; border-color:#2d3145; color:#c8cde0; }
-    body.dark .msg-bubble.msg-me { background:#5a9e3e; }
-    body.dark .msg-input-row { background:#1a1d27; border-top-color:#2d3145; }
-    body.dark .msg-input-box { background:#12151f; border-color:#2d3145; color:#f1f3f9; }
-    body.dark .msg-status { background:#1a1d27; color:#5c6387; }
-    @media(max-width:768px) {
-      .msg-input-row { padding:10px 12px calc(10px + env(safe-area-inset-bottom, 12px)); }
-      .msg-input-box { border-radius:20px; background:#f1f5f9; border:1px solid transparent; padding:10px 14px; font-size:14px; }
-      .msg-input-box:focus { background:var(--white); border-color:var(--green); box-shadow:0 0 0 3px var(--green-light); }
-      .msg-send-btn { border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
-      .msg-chatbox { padding:16px 14px; background:#f8fafc; }
-      .msg-bubble { max-width:85%; }
-      .msg-bubble.msg-me { border-radius:16px 16px 4px 16px; box-shadow:0 2px 8px rgba(0,0,0,0.06); padding:12px 14px; }
-      .msg-bubble.msg-them { border-radius:16px 16px 16px 4px; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:12px 14px; border:none; }
+    .msg-wrap {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
+
+    .msg-connect-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 0.5px solid #f3f4f6;
+      margin-bottom: 14px;
+    }
+
+    .msg-code-display {
+      background: var(--green-light);
+      border: 1.5px dashed var(--green);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 14px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .msg-code-display:hover {
+      background: #dcfce7;
+    }
+
+    .msg-code-label {
+      font-size: 10px;
+      color: var(--green);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 4px;
+    }
+
+    .msg-code-value {
+      font-family: 'Nunito', monospace;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--green-text);
+      letter-spacing: 4px;
+    }
+
+    .msg-code-hint {
+      font-size: 11px;
+      color: var(--text-faint);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .msg-connect-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .msg-connect-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--white);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .msg-connect-input:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+
+    .msg-connect-btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      background: var(--green);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .msg-connect-btn:hover {
+      background: var(--green-dark);
+    }
+
+    .msg-connect-btn:disabled {
+      background: var(--border);
+      cursor: not-allowed;
+    }
+
+    .msg-chatbox {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--bg);
+    }
+
+    .msg-chatbox::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .msg-chatbox::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    .msg-bubble {
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 75%;
+      font-size: 13px;
+      line-height: 1.5;
+      word-wrap: break-word;
+      font-weight: 500;
+      animation: fadeUp .2s ease;
+    }
+
+    .msg-bubble.msg-me {
+      background: var(--green);
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      font-weight: 600;
+    }
+
+    .msg-bubble.msg-them {
+      background: var(--white);
+      color: var(--text-sub);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 0.5px solid var(--border);
+    }
+
+    .msg-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 10px 20px 16px;
+      align-items: flex-end;
+      border-top: 0.5px solid var(--border);
+      background: var(--white);
+    }
+
+    .msg-input-box {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+      font-family: 'Nunito', sans-serif;
+      resize: none;
+      line-height: 1.4;
+      max-height: 80px;
+    }
+
+    .msg-input-box:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+
+    .msg-send-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--green);
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-size: 16px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .msg-send-btn:disabled {
+      background: var(--border);
+    }
+
+    .msg-status {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-faint);
+      padding: 6px 0;
+      background: var(--white);
+      font-weight: 600;
+    }
+
+    .msg-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-faint);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Dark mode messaging */
+    body.dark .msg-connect-card {
+      background: var(--white);
+      border-color: #2d3145;
+    }
+
+    body.dark .msg-code-display {
+      background: #0d2818;
+      border-color: #6ab04c;
+    }
+
+    body.dark .msg-code-display:hover {
+      background: #0d2818;
+    }
+
+    body.dark .msg-code-value {
+      color: #6ab04c;
+    }
+
+    body.dark .msg-connect-input {
+      background: #0f1117;
+      color: #f1f3f9;
+      border-color: #2d3145;
+    }
+
+    body.dark .msg-chatbox {
+      background: #0f1117;
+    }
+
+    body.dark .msg-bubble.msg-them {
+      background: #1a1d27;
+      border-color: #2d3145;
+      color: #c8cde0;
+    }
+
+    body.dark .msg-bubble.msg-me {
+      background: #5a9e3e;
+    }
+
+    body.dark .msg-input-row {
+      background: #1a1d27;
+      border-top-color: #2d3145;
+    }
+
+    body.dark .msg-input-box {
+      background: #12151f;
+      border-color: #2d3145;
+      color: #f1f3f9;
+    }
+
+    body.dark .msg-status {
+      background: #1a1d27;
+      color: #5c6387;
+    }
+
+    @media(max-width:768px) {
+      .msg-input-row {
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 12px));
+      }
+
+      .msg-input-box {
+        border-radius: 20px;
+        background: #f1f5f9;
+        border: 1px solid transparent;
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+
+      .msg-input-box:focus {
+        background: var(--white);
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px var(--green-light);
+      }
+
+      .msg-send-btn {
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      }
+
+      .msg-chatbox {
+        padding: 16px 14px;
+        background: #f8fafc;
+      }
+
+      .msg-bubble {
+        max-width: 85%;
+      }
+
+      .msg-bubble.msg-me {
+        border-radius: 16px 16px 4px 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        padding: 12px 14px;
+      }
+
+      .msg-bubble.msg-them {
+        border-radius: 16px 16px 16px 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        padding: 12px 14px;
+        border: none;
+      }
+    }
+
+    /* ══════════════ CALENDAR ══════════════ */
+    .cal-wrap { padding: 16px 0; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04); border: 1px solid rgba(255, 255, 255, 0.5); }
+    .cal-hdr { display: flex; align-items: center; justify-content: center; gap: 24px; padding: 10px 20px 24px; }
+    .cal-btn { background: rgba(106, 176, 76, 0.1); border: 1px solid rgba(106, 176, 76, 0.15); width: 40px; height: 40px; border-radius: 12px; cursor: pointer; color: var(--green-dark); display: flex; align-items: center; justify-content: center; transition: all .2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .cal-btn:hover { background: rgba(106, 176, 76, 0.2); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(106, 176, 76, 0.15); }
+    .cal-title { font-size: 24px; font-weight: 800; color: var(--text); min-width: 170px; text-align: center; font-family: 'Nunito', sans-serif; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 16px 16px; gap: 6px; }
+    .cal-dh { text-align: center; font-size: 13px; font-weight: 800; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; padding-bottom: 14px; }
+    .cal-day { border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 12px 2px; transition: all .2s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: transparent; border: 1px solid transparent; min-height: 60px; }
+    .cal-day:hover { background: rgba(255, 255, 255, 0.9); transform: translateY(-3px) scale(1.02); box-shadow: 0 4px 14px rgba(0,0,0,0.04); border-color: rgba(230, 230, 230, 0.6); }
+    .cal-day.empty { background: transparent; cursor: default; }
+    .cal-day.empty:hover { transform: none; background: transparent; box-shadow: none; border-color: transparent; }
+    .cal-date { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1; }
+    .cal-net { font-size: 11.5px; font-weight: 800; padding: 3px 6px; border-radius: 6px; letter-spacing: -0.02em; }
+    .cal-net.pos { color: var(--green-dark); background: rgba(106, 176, 76, 0.12); }
+    .cal-net.neg { color: var(--red); background: rgba(239, 68, 68, 0.1); }
+    .cal-net.neu { display: none; }
+    body.dark .cal-wrap { background: rgba(26, 29, 39, 0.65); border: 1px solid rgba(255, 255, 255, 0.05); }
+    body.dark .cal-hdr { color: #f1f3f9; }
+    body.dark .cal-btn { background: rgba(106, 176, 76, 0.15); color: #6ab04c; border-color: rgba(106, 176, 76, 0.2); }
+    body.dark .cal-btn:hover { background: rgba(106, 176, 76, 0.25); box-shadow: 0 4px 12px rgba(106, 176, 76, 0.2); }
+    body.dark .cal-title { color: #f1f3f9; }
+    body.dark .cal-dh { color: #5c6387; }
+    body.dark .cal-day:hover { background: rgba(45, 49, 69, 0.6); border-color: rgba(255, 255, 255, 0.05); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+    body.dark .cal-date { color: #f1f3f9; }
+    body.dark .cal-net.pos { background: rgba(106, 176, 76, 0.15); color: #6ab04c; }
+    body.dark .cal-net.neg { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
   </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
@@ -1398,9 +2091,17 @@
           </svg>
           <span class="nav-label">Expense</span>
         </button>
+        <button class="nav-item" id="nav-calendar" onclick="goTab('calendar')">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="#9ca3af" stroke-width="2" />
+            <path d="M16 2v4M8 2v4M3 10h18" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <span class="nav-label">Calendar</span>
+        </button>
         <button class="nav-item" id="nav-messages" onclick="goTab('messages')">
           <svg viewBox="0 0 24 24" fill="none">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" />
           </svg>
           <span class="nav-label">Messages</span>
         </button>
@@ -1526,11 +2227,25 @@
         <div class="content" id="expense-body"></div>
       </div>
 
+      <div id="s-calendar" class="screen">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22"
+                height="22">
+                <path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round" />
+              </svg></button>
+            <span class="topbar-title">Calendar</span>
+          </div>
+        </div>
+        <div class="content" id="calendar-body"></div>
+      </div>
+
 
       <div id="s-messages" class="screen">
         <div class="topbar">
           <div class="topbar-left">
-            <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+            <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22"
+                height="22">
                 <path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round" />
               </svg></button>
             <span class="topbar-title">Messages</span>
@@ -1544,15 +2259,22 @@
               <div class="msg-code-hint">Tap to copy · Share with a friend</div>
             </div>
             <div class="msg-connect-row">
-              <input class="msg-connect-input" type="text" id="msg-friend-id" placeholder="Friend's code" maxlength="6" />
+              <input class="msg-connect-input" type="text" id="msg-friend-id" placeholder="Friend's code"
+                maxlength="6" />
               <button class="msg-connect-btn" id="msg-connect-btn" onclick="connectToFriend()">Connect</button>
             </div>
             <div class="msg-status" id="msg-status">Setting up...</div>
           </div>
-          <div id="msg-chat-area" style="display:none;flex:1;flex-direction:column;background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:0.5px solid #f3f4f6;overflow:hidden;min-height:350px">
-            <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white)">
-              <div style="width:32px;height:32px;border-radius:10px;background:var(--green);display:flex;align-items:center;justify-content:center">
-                <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" stroke="#fff" stroke-width="2"/></svg>
+          <div id="msg-chat-area"
+            style="display:none;flex:1;flex-direction:column;background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:0.5px solid #f3f4f6;overflow:hidden;min-height:350px">
+            <div
+              style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--white)">
+              <div
+                style="width:32px;height:32px;border-radius:10px;background:var(--green);display:flex;align-items:center;justify-content:center">
+                <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" stroke="#fff"
+                    stroke-width="2" />
+                </svg>
               </div>
               <div>
                 <div style="font-size:14px;font-weight:700;color:var(--text)" id="msg-peer-name">Friend</div>
@@ -1586,8 +2308,12 @@
             <div style="width:7px;height:7px;border-radius:50%;background:#22c55e"></div>
             <span style="font-size:12px;color:#9ca3af;font-weight:600">Free AI</span>
           </div>
-          <button id="finny-clear" title="Clear Chat" onclick="clearFinnyChat()" style="background:transparent;border:none;cursor:pointer;margin-left:8px;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" class="clear-icon"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"></path></svg>
+          <button id="finny-clear" title="Clear Chat" onclick="clearFinnyChat()"
+            style="background:transparent;border:none;cursor:pointer;margin-left:8px;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" class="clear-icon">
+              <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="#9ca3af"
+                stroke-width="2" stroke-linecap="round"></path>
+            </svg>
           </button>
         </div>
         <div class="msgs" id="chat-msgs"></div>
@@ -1677,9 +2403,17 @@
             </svg>
             <span class="bnav-label">Expense</span>
           </button>
+          <button class="bnav-item" id="bnav-calendar" onclick="goTab('calendar')">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="#9ca3af" stroke-width="2" />
+              <path d="M16 2v4M8 2v4M3 10h18" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="bnav-label">Calendar</span>
+          </button>
           <button class="bnav-item" id="bnav-messages" onclick="goTab('messages')">
             <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
-              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <span class="bnav-label">Messages</span>
           </button>
@@ -1800,7 +2534,7 @@
       currentTab = id; closeSidebar();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('s-' + id).classList.add('active');
-      ['home', 'income', 'expense', 'messages', 'profile'].forEach(t => {
+      ['home', 'income', 'expense', 'calendar', 'messages', 'profile'].forEach(t => {
         const active = t === id;
         const n = document.getElementById('nav-' + t);
         const bn = document.getElementById('bnav-' + t);
@@ -1810,10 +2544,12 @@
       if (id === 'home') renderHome();
       if (id === 'income') renderIncome();
       if (id === 'expense') renderExpense();
+      if (id === 'calendar') renderCalendar();
       if (id === 'messages') initMessaging();
       if (id === 'finny') initChat();
     }
     let currencySymbol = localStorage.getItem('finvio_currency') || '₹';
+    let calDate = new Date();
     function changeCurrency(sym) { currencySymbol = sym; localStorage.setItem('finvio_currency', sym); renderHome(); if (currentTab === 'income') renderIncome(); if (currentTab === 'expense') renderExpense(); }
     function fmt(n) { return currencySymbol + Math.round(n).toLocaleString(); }
     function toggleTheme() {
@@ -1877,6 +2613,65 @@
       if (!state.expense.length) { eb.innerHTML = `<div class="empty">No expenses added yet.<br><span style="font-size:13px;color:#d1d5db">Click "Add Expense" to get started</span></div>`; return; }
       eb.innerHTML = `<div class="count-row">Total count: <span>${state.expense.length}</span> &nbsp;|&nbsp; Total amount: <span>${fmt(tot)}</span></div><div class="entry-grid">` + [...state.expense].reverse().map(e => `<div class="entry"><div class="entry-tag entry-tag-r">${e.date || 'Today'}</div><div style="padding-top:6px"><div class="entry-row"><span class="entry-key">Title :</span><span class="entry-val">${e.title}</span></div><div class="entry-row"><span class="entry-key">Category :</span><span class="entry-val">${e.category}</span></div><div class="entry-row"><span class="entry-key">Amount :</span><span class="entry-val r" style="font-weight:700">-${fmt(e.amount)}</span></div><div class="entry-row"><span class="entry-key">Date :</span><span class="entry-val">${e.date || '—'}</span></div></div><div class="entry-btns"><button class="btn-edit" onclick="openModal('expense',${e.id})">Edit</button><button class="btn-del" onclick="deleteEntry('expense',${e.id})">Delete</button></div></div>`).join('') + `</div>`;
     }
+
+    function prevCalMonth() { calDate.setMonth(calDate.getMonth() - 1); renderCalendar(); }
+    function nextCalMonth() { calDate.setMonth(calDate.getMonth() + 1); renderCalendar(); }
+    
+    function renderCalendar() {
+      const cb = document.getElementById('calendar-body');
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const monthName = calDate.toLocaleDateString('en-US', { month: 'long' });
+      
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      
+      const dailyNet = {};
+      state.income.forEach(i => {
+        const d = new Date(i.rawDate || i.date || new Date().toISOString().split('T')[0]);
+        if (d.getMonth() === month && d.getFullYear() === year) {
+          const day = d.getDate();
+          dailyNet[day] = (dailyNet[day] || 0) + i.amount;
+        }
+      });
+      state.expense.forEach(e => {
+        const d = new Date(e.rawDate || e.date || new Date().toISOString().split('T')[0]);
+        if (d.getMonth() === month && d.getFullYear() === year) {
+          const day = d.getDate();
+          dailyNet[day] = (dailyNet[day] || 0) - e.amount;
+        }
+      });
+
+      let gridHtml = '';
+      for (let i = 0; i < firstDay; i++) {
+        gridHtml += `<div class="cal-day empty"></div>`;
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const net = dailyNet[d] || 0;
+        let cClass = 'neu';
+        if (net > 0) cClass = 'pos';
+        else if (net < 0) cClass = 'neg';
+        const formattedNet = net > 0 ? '+' + fmt(net) : (net < 0 ? fmt(net).replace('-', '- ') : '');
+        gridHtml += `<div class="cal-day">
+          <div class="cal-date">${d}</div>
+          <div class="cal-net ${cClass}">${net !== 0 ? formattedNet : ''}</div>
+        </div>`;
+      }
+
+      cb.innerHTML = `
+        <div class="cal-wrap">
+          <div class="cal-hdr">
+            <button class="cal-btn" onclick="prevCalMonth()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <div class="cal-title">${monthName} ${year}</div>
+            <button class="cal-btn" onclick="nextCalMonth()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-dh">Su</div><div class="cal-dh">Mo</div><div class="cal-dh">Tu</div><div class="cal-dh">We</div><div class="cal-dh">Th</div><div class="cal-dh">Fr</div><div class="cal-dh">Sa</div>
+            ${gridHtml}
+          </div>
+        </div>
+      `;
+    }
     function openModal(type, id) {
       if (type === 'income') {
         if (id != null) { const item = state.income.find(i => i.id === id); if (!item) return; document.getElementById('inc-modal-title').textContent = 'Edit income'; document.getElementById('inc-src').value = item.source; document.getElementById('inc-amt').value = item.amount; document.getElementById('inc-pay').value = item.paymethod; document.getElementById('inc-desc').value = item.desc || ''; document.getElementById('inc-edit-id').value = id; }
@@ -1893,9 +2688,10 @@
       const src = document.getElementById('inc-src').value, amt = parseFloat(document.getElementById('inc-amt').value), pay = document.getElementById('inc-pay').value, desc = document.getElementById('inc-desc').value, eid = document.getElementById('inc-edit-id').value;
       if (!amt || amt <= 0) return;
       const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      const rawDate = new Date().toISOString().split('T')[0];
       if (eid) { const idx = state.income.findIndex(i => i.id === parseInt(eid)); if (idx > -1) state.income[idx] = { ...state.income[idx], source: src, amount: amt, paymethod: pay, desc }; }
-      else state.income.push({ id: nextId++, source: src, amount: amt, paymethod: pay, desc, date: today });
-      closeModal('income'); saveState(); renderIncome(); renderHome();
+      else state.income.push({ id: nextId++, source: src, amount: amt, paymethod: pay, desc, date: today, rawDate: rawDate });
+      closeModal('income'); saveState(); renderIncome(); renderHome(); if (currentTab === 'calendar') renderCalendar();
     }
     function saveExpense() {
       const title = document.getElementById('exp-title').value || 'Expense', cat = document.getElementById('exp-cat').value, rawDate = document.getElementById('exp-date').value, amt = parseFloat(document.getElementById('exp-amt').value), eid = document.getElementById('exp-edit-id').value;
@@ -1903,7 +2699,7 @@
       const fd = rawDate ? new Date(rawDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
       if (eid) { const idx = state.expense.findIndex(e => e.id === parseInt(eid)); if (idx > -1) state.expense[idx] = { ...state.expense[idx], title, category: cat, date: fd, rawDate, amount: amt }; }
       else state.expense.push({ id: nextId++, title, category: cat, date: fd, rawDate, amount: amt });
-      closeModal('expense'); saveState(); renderExpense(); renderHome();
+      closeModal('expense'); saveState(); renderExpense(); renderHome(); if (currentTab === 'calendar') renderCalendar();
     }
     function deleteEntry(type, id) {
       if (type === 'income') state.income = state.income.filter(i => i.id !== id);
@@ -1911,6 +2707,7 @@
       if (type === 'income') renderIncome(); else renderExpense();
       saveState();
       renderHome();
+      if (currentTab === 'calendar') renderCalendar();
     }
     const SUGG = ['Give me a summary', 'Add income', 'Add expense', 'Show my incomes', 'Show my expenses', 'Where am I overspending?', 'Top categories', 'How much did I save?'];
     const KB = [
@@ -1962,13 +2759,13 @@
       const inc = state.income.reduce((s, i) => s + i.amount, 0), exp = state.expense.reduce((s, e) => s + e.amount, 0), sav = inc - exp, rate = inc > 0 ? ((sav / inc) * 100).toFixed(1) : 0;
       const bycat = {}; state.expense.forEach(e => { bycat[e.category] = (bycat[e.category] || 0) + e.amount; });
       const sorted = Object.entries(bycat).sort((a, b) => b[1] - a[1]);
-      
+
       if (t.match(/dark mode|dark theme|switch to dark|enable dark|turn dark|night mode|go dark/)) {
-        document.body.classList.add('dark'); localStorage.setItem('finvio_theme','dark'); updateThemeUI(true);
+        document.body.classList.add('dark'); localStorage.setItem('finvio_theme', 'dark'); updateThemeUI(true);
         return { type: 'plain', text: "🌙 Dark mode enabled! Easy on the eyes." };
       }
       if (t.match(/light mode|light theme|switch to light|enable light|turn light|day mode|go light/)) {
-        document.body.classList.remove('dark'); localStorage.setItem('finvio_theme','light'); updateThemeUI(false);
+        document.body.classList.remove('dark'); localStorage.setItem('finvio_theme', 'light'); updateThemeUI(false);
         return { type: 'plain', text: "☀️ Light mode enabled! Bright and clean." };
       }
       if (t.match(/toggle (theme|mode)|switch (theme|mode)|change (theme|mode)/)) {
@@ -1978,35 +2775,35 @@
       }
       if (t.match(/(change|switch|set|use|make).*(currency|to)|(currency to)|(euros|dollars|rupees|pounds)/)) {
         const cMap = [
-          { s:'₹', k:['inr','india','rupee','₹'] },
-          { s:'$', k:['usd','us dollar','usa','america','dollar','$'] },
-          { s:'€', k:['eur','euro','€','europe'] },
-          { s:'£', k:['gbp','uk','pound','england','£','british'] },
-          { s:'¥', k:['jpy','japan','yen','¥','cny','china','yuan'] },
-          { s:'A$', k:['aud','australia','a$','australian dollar'] },
-          { s:'C$', k:['cad','canada','c$','canadian dollar'] },
-          { s:'Fr', k:['chf','swiss','switzerland','franc'] },
-          { s:'₩', k:['krw','korea','won','₩'] },
-          { s:'S$', k:['sgd','singapore','s$'] },
-          { s:'AED', k:['aed','uae','dubai','dirham'] },
-          { s:'SAR', k:['sar','saudi','riyal'] },
-          { s:'R', k:['zar','south africa','rand'] },
-          { s:'R$', k:['brl','brazil','real','reais'] },
-          { s:'MX$', k:['mxn','mexico','peso'] },
-          { s:'₺', k:['try','turkey','lira','₺'] },
-          { s:'₽', k:['rub','russia','ruble','₽'] },
-          { s:'Rp', k:['idr','indonesia','rupiah'] },
-          { s:'₱', k:['php','philippines','peso','₱'] },
-          { s:'RM', k:['myr','malaysia','ringgit'] },
-          { s:'฿', k:['thb','thailand','baht','฿'] },
-          { s:'₦', k:['ngn','nigeria','naira','₦'] },
-          { s:'KSh', k:['kes','kenya','shilling'] },
-          { s:'EGP', k:['egp','egypt','pound'] },
-          { s:'NZ$', k:['nzd','new zealand','nz$'] },
-          { s:'NOK', k:['nok','norway','krone'] },
-          { s:'SEK', k:['sek','sweden','krona'] },
-          { s:'DKK', k:['dkk','denmark','krone'] },
-          { s:'PLN', k:['pln','poland','zloty'] }
+          { s: '₹', k: ['inr', 'india', 'rupee', '₹'] },
+          { s: '$', k: ['usd', 'us dollar', 'usa', 'america', 'dollar', '$'] },
+          { s: '€', k: ['eur', 'euro', '€', 'europe'] },
+          { s: '£', k: ['gbp', 'uk', 'pound', 'england', '£', 'british'] },
+          { s: '¥', k: ['jpy', 'japan', 'yen', '¥', 'cny', 'china', 'yuan'] },
+          { s: 'A$', k: ['aud', 'australia', 'a$', 'australian dollar'] },
+          { s: 'C$', k: ['cad', 'canada', 'c$', 'canadian dollar'] },
+          { s: 'Fr', k: ['chf', 'swiss', 'switzerland', 'franc'] },
+          { s: '₩', k: ['krw', 'korea', 'won', '₩'] },
+          { s: 'S$', k: ['sgd', 'singapore', 's$'] },
+          { s: 'AED', k: ['aed', 'uae', 'dubai', 'dirham'] },
+          { s: 'SAR', k: ['sar', 'saudi', 'riyal'] },
+          { s: 'R', k: ['zar', 'south africa', 'rand'] },
+          { s: 'R$', k: ['brl', 'brazil', 'real', 'reais'] },
+          { s: 'MX$', k: ['mxn', 'mexico', 'peso'] },
+          { s: '₺', k: ['try', 'turkey', 'lira', '₺'] },
+          { s: '₽', k: ['rub', 'russia', 'ruble', '₽'] },
+          { s: 'Rp', k: ['idr', 'indonesia', 'rupiah'] },
+          { s: '₱', k: ['php', 'philippines', 'peso', '₱'] },
+          { s: 'RM', k: ['myr', 'malaysia', 'ringgit'] },
+          { s: '฿', k: ['thb', 'thailand', 'baht', '฿'] },
+          { s: '₦', k: ['ngn', 'nigeria', 'naira', '₦'] },
+          { s: 'KSh', k: ['kes', 'kenya', 'shilling'] },
+          { s: 'EGP', k: ['egp', 'egypt', 'pound'] },
+          { s: 'NZ$', k: ['nzd', 'new zealand', 'nz$'] },
+          { s: 'NOK', k: ['nok', 'norway', 'krone'] },
+          { s: 'SEK', k: ['sek', 'sweden', 'krona'] },
+          { s: 'DKK', k: ['dkk', 'denmark', 'krone'] },
+          { s: 'PLN', k: ['pln', 'poland', 'zloty'] }
         ];
 
         let found = null;
@@ -2015,16 +2812,16 @@
         }
 
         if (found) {
-           changeCurrency(found);
-           const sel = document.getElementById('currency-select');
-           if (sel) {
-              for (let i = 0; i < sel.options.length; i++) {
-                 if (sel.options[i].value === found) { sel.selectedIndex = i; break; }
-              }
-           }
-           return { type: 'plain', text: `I've updated your currency to ${found}!` };
+          changeCurrency(found);
+          const sel = document.getElementById('currency-select');
+          if (sel) {
+            for (let i = 0; i < sel.options.length; i++) {
+              if (sel.options[i].value === found) { sel.selectedIndex = i; break; }
+            }
+          }
+          return { type: 'plain', text: `I've updated your currency to ${found}!` };
         } else {
-           return { type: 'plain', text: "Which currency would you like to switch to? For example, Indian Rupee, US Dollar, or Euros." };
+          return { type: 'plain', text: "Which currency would you like to switch to? For example, Indian Rupee, US Dollar, or Euros." };
         }
       }
 
@@ -2140,27 +2937,27 @@
             </div>
             <div id="editform_${fid}" style="display:none;flex-direction:column;gap:6px">
               <select id="src_${fid}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151">
-                <option${e.source==='Monthly Salary'?' selected':''}>Monthly Salary</option>
-                <option${e.source==='Part Time Wages'?' selected':''}>Part Time Wages</option>
-                <option${e.source==='Bank Interest'?' selected':''}>Bank Interest</option>
-                <option${e.source==='Freelance Income'?' selected':''}>Freelance Income</option>
-                <option${e.source==='Business Income'?' selected':''}>Business Income</option>
-                <option${e.source==='Bonus'?' selected':''}>Bonus</option>
-                <option${e.source==='Dividends'?' selected':''}>Dividends</option>
-                <option${e.source==='Rental Income'?' selected':''}>Rental Income</option>
-                <option${e.source==='Investment Returns'?' selected':''}>Investment Returns</option>
-                <option${e.source==='Side Business'?' selected':''}>Side Business</option>
-                <option${e.source==='Other'?' selected':''}>Other</option>
+                <option${e.source === 'Monthly Salary' ? ' selected' : ''}>Monthly Salary</option>
+                <option${e.source === 'Part Time Wages' ? ' selected' : ''}>Part Time Wages</option>
+                <option${e.source === 'Bank Interest' ? ' selected' : ''}>Bank Interest</option>
+                <option${e.source === 'Freelance Income' ? ' selected' : ''}>Freelance Income</option>
+                <option${e.source === 'Business Income' ? ' selected' : ''}>Business Income</option>
+                <option${e.source === 'Bonus' ? ' selected' : ''}>Bonus</option>
+                <option${e.source === 'Dividends' ? ' selected' : ''}>Dividends</option>
+                <option${e.source === 'Rental Income' ? ' selected' : ''}>Rental Income</option>
+                <option${e.source === 'Investment Returns' ? ' selected' : ''}>Investment Returns</option>
+                <option${e.source === 'Side Business' ? ' selected' : ''}>Side Business</option>
+                <option${e.source === 'Other' ? ' selected' : ''}>Other</option>
               </select>
               <input id="amt_${fid}" type="number" value="${e.amount}" placeholder="Amount" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
               <select id="pay_${fid}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151">
-                <option${e.paymethod==='Bank Transfer'?' selected':''}>Bank Transfer</option>
-                <option${e.paymethod==='UPI'?' selected':''}>UPI</option>
-                <option${e.paymethod==='Cash'?' selected':''}>Cash</option>
-                <option${e.paymethod==='Cheque'?' selected':''}>Cheque</option>
-                <option${e.paymethod==='Other'?' selected':''}>Other</option>
+                <option${e.paymethod === 'Bank Transfer' ? ' selected' : ''}>Bank Transfer</option>
+                <option${e.paymethod === 'UPI' ? ' selected' : ''}>UPI</option>
+                <option${e.paymethod === 'Cash' ? ' selected' : ''}>Cash</option>
+                <option${e.paymethod === 'Cheque' ? ' selected' : ''}>Cheque</option>
+                <option${e.paymethod === 'Other' ? ' selected' : ''}>Other</option>
               </select>
-              <input id="desc_${fid}" type="text" value="${(e.desc||'').replace(/"/g,'&quot;')}" placeholder="Description" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
+              <input id="desc_${fid}" type="text" value="${(e.desc || '').replace(/"/g, '&quot;')}" placeholder="Description" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
               <button onclick="(function(){var s=document.getElementById('src_${fid}').value;var a=parseFloat(document.getElementById('amt_${fid}').value);var p=document.getElementById('pay_${fid}').value;var d=document.getElementById('desc_${fid}').value;if(!a||a<=0){alert('Enter valid amount');return;}finnyEditIncome(${e.id},s,a,p,d);addBot({type:'plain',text:'✅ Income updated!'});})()" style="padding:8px;background:#6ab04c;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Save Changes ✓</button>
             </div>
             <button onclick="(function(){var f=document.getElementById('editform_${fid}');f.style.display=f.style.display==='flex'?'none':'flex'})()" style="padding:7px 12px;background:#fff;border:1.5px solid #6ab04c;border-radius:7px;font-size:12px;color:#6ab04c;cursor:pointer;font-weight:700;font-family:inherit;width:100%">✏️ Edit this</button>
@@ -2188,21 +2985,21 @@
               <div style="font-size:11px;color:#9ca3af">${e.date || ''}</div>
             </div>
             <div id="editform_${fid}" style="display:none;flex-direction:column;gap:6px">
-              <input id="ti_${fid}" type="text" value="${(e.title||'').replace(/"/g,'&quot;')}" placeholder="Title" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
+              <input id="ti_${fid}" type="text" value="${(e.title || '').replace(/"/g, '&quot;')}" placeholder="Title" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
               <select id="cat_${fid}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151">
-                <option${e.category==='Food & Dining'?' selected':''}>Food &amp; Dining</option>
-                <option${e.category==='Transport'?' selected':''}>Transport</option>
-                <option${e.category==='Entertainment'?' selected':''}>Entertainment</option>
-                <option${e.category==='Shopping'?' selected':''}>Shopping</option>
-                <option${e.category==='Health & Medical'?' selected':''}>Health &amp; Medical</option>
-                <option${e.category==='Groceries'?' selected':''}>Groceries</option>
-                <option${e.category==='House Rent'?' selected':''}>House Rent</option>
-                <option${e.category==='Education'?' selected':''}>Education</option>
-                <option${e.category==='Subscriptions'?' selected':''}>Subscriptions</option>
-                <option${e.category==='Other'?' selected':''}>Other</option>
+                <option${e.category === 'Food & Dining' ? ' selected' : ''}>Food &amp; Dining</option>
+                <option${e.category === 'Transport' ? ' selected' : ''}>Transport</option>
+                <option${e.category === 'Entertainment' ? ' selected' : ''}>Entertainment</option>
+                <option${e.category === 'Shopping' ? ' selected' : ''}>Shopping</option>
+                <option${e.category === 'Health & Medical' ? ' selected' : ''}>Health &amp; Medical</option>
+                <option${e.category === 'Groceries' ? ' selected' : ''}>Groceries</option>
+                <option${e.category === 'House Rent' ? ' selected' : ''}>House Rent</option>
+                <option${e.category === 'Education' ? ' selected' : ''}>Education</option>
+                <option${e.category === 'Subscriptions' ? ' selected' : ''}>Subscriptions</option>
+                <option${e.category === 'Other' ? ' selected' : ''}>Other</option>
               </select>
               <input id="amt_${fid}" type="number" value="${e.amount}" placeholder="Amount" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
-              <input id="dt_${fid}" type="date" value="${e.rawDate||''}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
+              <input id="dt_${fid}" type="date" value="${e.rawDate || ''}" style="padding:7px 10px;border:1px solid #e5e7eb;border-radius:7px;font-size:12px;font-family:inherit;color:#374151"/>
               <button onclick="(function(){var ti=document.getElementById('ti_${fid}').value;var ca=document.getElementById('cat_${fid}').value;var a=parseFloat(document.getElementById('amt_${fid}').value);var d=document.getElementById('dt_${fid}').value;if(!a||a<=0){alert('Enter valid amount');return;}finnyEditExpense(${e.id},ti,ca,a,d);addBot({type:'plain',text:'✅ Expense updated!'});})()" style="padding:8px;background:#ea580c;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Save Changes ✓</button>
             </div>
             <button onclick="(function(){var f=document.getElementById('editform_${fid}');f.style.display=f.style.display==='flex'?'none':'flex'})()" style="padding:7px 12px;background:#fff;border:1.5px solid #ea580c;border-radius:7px;font-size:12px;color:#ea580c;cursor:pointer;font-weight:700;font-family:inherit;width:100%">✏️ Edit this</button>
@@ -2214,8 +3011,8 @@
         let h = `<div style="font-size:13px;color:#374151;margin-bottom:10px;font-weight:500">${r.text}</div>`;
         r.entries.forEach(e => {
           h += `<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
-            <div><div style="font-size:13px;font-weight:700;color:#374151">${e.title||e.category}</div><div style="font-size:11px;color:#9ca3af">${e.date || ''} · ${fmt(e.amount)}</div></div>
-            <button onclick="if(confirm('Delete ${(e.title||e.category).replace(/'/g,"\\'")} — ${fmt(e.amount)}?')){finnyDeleteExpense(${e.id});addBot({type:'plain',text:'🗑️ Expense deleted.'})}" style="padding:7px 14px;background:#ef4444;border:none;border-radius:7px;font-size:12px;color:#fff;cursor:pointer;font-weight:700;font-family:inherit;flex-shrink:0">Delete</button>
+            <div><div style="font-size:13px;font-weight:700;color:#374151">${e.title || e.category}</div><div style="font-size:11px;color:#9ca3af">${e.date || ''} · ${fmt(e.amount)}</div></div>
+            <button onclick="if(confirm('Delete ${(e.title || e.category).replace(/'/g, "\\'")} — ${fmt(e.amount)}?')){finnyDeleteExpense(${e.id});addBot({type:'plain',text:'🗑️ Expense deleted.'})}" style="padding:7px 14px;background:#ef4444;border:none;border-radius:7px;font-size:12px;color:#fff;cursor:pointer;font-weight:700;font-family:inherit;flex-shrink:0">Delete</button>
           </div>`;
         });
         return h;
@@ -2227,93 +3024,93 @@
     function showTyping() { const el = document.createElement('div'); el.className = 'bot-row fade'; el.id = 'typing-el'; el.innerHTML = `${BAV}<div class="typing"><span></span><span></span><span></span></div>`; document.getElementById('chat-msgs').appendChild(el); sc(); }
     document.getElementById('chat-inp').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatSend(); } });
 
-// --- VOICE CHAT LOGIC ---
-const micBtn = document.getElementById('finny-mic');
-const stopBtn = document.getElementById('finny-stop');
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-const synth = window.speechSynthesis;
-let isListening = false;
-let _synthPrimed = false;
-let finnyVoice = null;
+    // --- VOICE CHAT LOGIC ---
+    const micBtn = document.getElementById('finny-mic');
+    const stopBtn = document.getElementById('finny-stop');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+    const synth = window.speechSynthesis;
+    let isListening = false;
+    let _synthPrimed = false;
+    let finnyVoice = null;
 
-function loadVoices() {
-  if (!synth) return;
-  const voices = synth.getVoices();
-  if (!voices.length) return;
-  finnyVoice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Karen') || v.name.includes('Tessa') || v.name.includes('Google UK English Female') || v.name.includes('Google US English')) ||
-               voices.find(v => v.name.includes('Female') || v.name.includes('female')) ||
-               voices.find(v => (v.lang === 'en-US' || v.lang === 'en-GB') && v.name.includes('Zira')) || null;
-}
+    function loadVoices() {
+      if (!synth) return;
+      const voices = synth.getVoices();
+      if (!voices.length) return;
+      finnyVoice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Karen') || v.name.includes('Tessa') || v.name.includes('Google UK English Female') || v.name.includes('Google US English')) ||
+        voices.find(v => v.name.includes('Female') || v.name.includes('female')) ||
+        voices.find(v => (v.lang === 'en-US' || v.lang === 'en-GB') && v.name.includes('Zira')) || null;
+    }
 
-if (synth) {
-  if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
-  loadVoices();
-}
+    if (synth) {
+      if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
+      loadVoices();
+    }
 
-function primeSynth() {
-  if (!_synthPrimed && synth) {
-    var utt = new SpeechSynthesisUtterance(''); utt.volume = 0; synth.speak(utt); _synthPrimed = true;
-  }
-}
+    function primeSynth() {
+      if (!_synthPrimed && synth) {
+        var utt = new SpeechSynthesisUtterance(''); utt.volume = 0; synth.speak(utt); _synthPrimed = true;
+      }
+    }
 
-document.querySelector('.bnav-finny').addEventListener('click', primeSynth);
-document.querySelector('.nav-finny').addEventListener('click', primeSynth);
+    document.querySelector('.bnav-finny').addEventListener('click', primeSynth);
+    document.querySelector('.nav-finny').addEventListener('click', primeSynth);
 
-if (recognition) {
-  recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'en-US';
-  recognition.onstart = function() { isListening = true; micBtn.classList.add('listening'); };
-  recognition.onresult = function(event) {
-    document.getElementById('chat-inp').value = event.results[0][0].transcript;
-  };
-  recognition.onend = function() {
-    isListening = false; micBtn.classList.remove('listening');
-    if (document.getElementById('chat-inp').value.trim() !== '') chatSend(null, true);
-  };
-  recognition.onerror = function(event) {
-    console.error("Speech error", event); isListening = false; micBtn.classList.remove('listening');
-  };
-  micBtn.addEventListener('click', function() {
-    primeSynth();
-    if (isListening) recognition.stop(); else recognition.start();
-  });
-} else {
-  if (micBtn) micBtn.style.display = 'none';
-}
+    if (recognition) {
+      recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'en-US';
+      recognition.onstart = function () { isListening = true; micBtn.classList.add('listening'); };
+      recognition.onresult = function (event) {
+        document.getElementById('chat-inp').value = event.results[0][0].transcript;
+      };
+      recognition.onend = function () {
+        isListening = false; micBtn.classList.remove('listening');
+        if (document.getElementById('chat-inp').value.trim() !== '') chatSend(null, true);
+      };
+      recognition.onerror = function (event) {
+        console.error("Speech error", event); isListening = false; micBtn.classList.remove('listening');
+      };
+      micBtn.addEventListener('click', function () {
+        primeSynth();
+        if (isListening) recognition.stop(); else recognition.start();
+      });
+    } else {
+      if (micBtn) micBtn.style.display = 'none';
+    }
 
-if (stopBtn) {
-  stopBtn.addEventListener('click', function() {
-    if (synth && synth.speaking) synth.cancel();
-    stopBtn.style.display = 'none'; micBtn.style.display = 'flex';
-  });
-}
+    if (stopBtn) {
+      stopBtn.addEventListener('click', function () {
+        if (synth && synth.speaking) synth.cancel();
+        stopBtn.style.display = 'none'; micBtn.style.display = 'flex';
+      });
+    }
 
-window.speakReply = function(replyObj) {
-  if (!synth) return;
-  let txt = replyObj.text || '';
-  if(replyObj.items) {
-    if(replyObj.type === 'ranking') txt += replyObj.items.map((i, idx) => ` Number ${idx+1}, ${i.cat}, ${i.amt}.`).join(' ');
-    else if(replyObj.type === 'alert') txt += replyObj.items.map(i => ` ${i.cat}, ${i.amt}.`).join(' ');
-    else txt += replyObj.items.map(i => ` ${i}.`).join(' ');
-  }
-  if(replyObj.insight) txt += ` ${replyObj.insight}`;
-  if(replyObj.cards) txt += replyObj.cards.map(c => ` ${c.l}: ${c.v}.`).join(' ');
-  
-  const tmp = document.createElement("DIV");
-  tmp.innerHTML = txt;
-  let cleanTxt = tmp.textContent || tmp.innerText || "";
-  cleanTxt = cleanTxt.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
-  
-  const utterance = new SpeechSynthesisUtterance(cleanTxt);
-  if (finnyVoice) utterance.voice = finnyVoice;
-  utterance.onstart = function() {
-    if (stopBtn && micBtn) { micBtn.style.display = 'none'; stopBtn.style.display = 'flex'; }
-  };
-  utterance.onend = function() {
-    if (stopBtn && micBtn) { stopBtn.style.display = 'none'; micBtn.style.display = 'flex'; }
-  };
-  synth.speak(utterance);
-};
+    window.speakReply = function (replyObj) {
+      if (!synth) return;
+      let txt = replyObj.text || '';
+      if (replyObj.items) {
+        if (replyObj.type === 'ranking') txt += replyObj.items.map((i, idx) => ` Number ${idx + 1}, ${i.cat}, ${i.amt}.`).join(' ');
+        else if (replyObj.type === 'alert') txt += replyObj.items.map(i => ` ${i.cat}, ${i.amt}.`).join(' ');
+        else txt += replyObj.items.map(i => ` ${i}.`).join(' ');
+      }
+      if (replyObj.insight) txt += ` ${replyObj.insight}`;
+      if (replyObj.cards) txt += replyObj.cards.map(c => ` ${c.l}: ${c.v}.`).join(' ');
+
+      const tmp = document.createElement("DIV");
+      tmp.innerHTML = txt;
+      let cleanTxt = tmp.textContent || tmp.innerText || "";
+      cleanTxt = cleanTxt.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
+
+      const utterance = new SpeechSynthesisUtterance(cleanTxt);
+      if (finnyVoice) utterance.voice = finnyVoice;
+      utterance.onstart = function () {
+        if (stopBtn && micBtn) { micBtn.style.display = 'none'; stopBtn.style.display = 'flex'; }
+      };
+      utterance.onend = function () {
+        if (stopBtn && micBtn) { stopBtn.style.display = 'none'; micBtn.style.display = 'flex'; }
+      };
+      synth.speak(utterance);
+    };
 
 
 
@@ -2321,7 +3118,7 @@ window.speakReply = function(replyObj) {
     // ══════════════ MESSAGING LOGIC ══════════════
     function generateChatCode() {
       const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-      return Array.from({length: 6}, () => alphabet.charAt(Math.floor(Math.random() * alphabet.length))).join('');
+      return Array.from({ length: 6 }, () => alphabet.charAt(Math.floor(Math.random() * alphabet.length))).join('');
     }
 
     let msgCode = generateChatCode();
@@ -2333,18 +3130,18 @@ window.speakReply = function(replyObj) {
       if (msgInitialized) return;
       msgInitialized = true;
       msgPeer = new Peer(msgCode);
-      
-      msgPeer.on('open', function(id) {
+
+      msgPeer.on('open', function (id) {
         document.getElementById('msg-my-id').innerText = id;
         document.getElementById('msg-status').innerText = 'Online · Ready to connect';
       });
 
-      msgPeer.on('connection', function(conn) {
+      msgPeer.on('connection', function (conn) {
         msgConn = conn;
         setupMsgConnection();
       });
 
-      msgPeer.on('error', function(err) {
+      msgPeer.on('error', function (err) {
         if (err.type === 'unavailable-id') {
           msgCode = generateChatCode();
           msgInitialized = false;
@@ -2366,7 +3163,7 @@ window.speakReply = function(replyObj) {
     }
 
     function setupMsgConnection() {
-      msgConn.on('open', function() {
+      msgConn.on('open', function () {
         document.getElementById('msg-status').innerText = 'Connected to ' + msgConn.peer;
         document.getElementById('msg-input').disabled = false;
         document.getElementById('msg-send-btn').disabled = false;
@@ -2377,11 +3174,11 @@ window.speakReply = function(replyObj) {
         document.getElementById('msg-chatbox').innerHTML = '<div class="msg-empty">Connected! Say hello 👋</div>';
       });
 
-      msgConn.on('data', function(data) {
+      msgConn.on('data', function (data) {
         renderMsgBubble(data, 'msg-them');
       });
 
-      msgConn.on('close', function() {
+      msgConn.on('close', function () {
         document.getElementById('msg-status').innerText = 'Disconnected';
         document.getElementById('msg-input').disabled = true;
         document.getElementById('msg-send-btn').disabled = true;
@@ -2415,17 +3212,17 @@ window.speakReply = function(replyObj) {
       if (code && code !== '......') {
         navigator.clipboard.writeText(code);
         document.getElementById('msg-status').innerText = 'Code copied!';
-        setTimeout(function() {
+        setTimeout(function () {
           document.getElementById('msg-status').innerText = msgConn ? 'Connected' : 'Online · Ready to connect';
         }, 2000);
       }
     }
 
-    document.getElementById('msg-input').addEventListener('keydown', function(e) {
+    document.getElementById('msg-input').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); sendMsg(); }
     });
 
-initTheme(); initCurrency(); renderHome();
+    initTheme(); initCurrency(); renderHome();
   </script>
 </body>
 
