@@ -2057,6 +2057,44 @@
     body.dark .cal-date { color: #f1f3f9; }
     body.dark .cal-net.pos { background: rgba(106, 176, 76, 0.15); color: #6ab04c; }
     body.dark .cal-net.neg { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+    /* ══════════════ CALCULATOR ══════════════ */
+    .calc-topbtn { display: flex; align-items: center; gap: 7px; padding: 8px 14px; border: 1.5px solid var(--green); border-radius: 10px; background: var(--green-light); color: var(--green); font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0; font-family: inherit; transition: all .2s; }
+    .calc-topbtn:hover { background: #dcfce7; transform: translateY(-1px); }
+    .calc-disp { background: #f8fafc; border-radius: 12px; padding: 16px; font-size: 32px; font-weight: 800; color: var(--text); text-align: right; margin-bottom: 16px; border: 1px solid var(--border); overflow-x: auto; white-space: nowrap; }
+    .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .calc-b { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 0; font-size: 18px; font-weight: 700; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .1s; font-family: 'Nunito', sans-serif; }
+    .calc-b:hover { background: #e2e8f0; }
+    .calc-b.op { background: var(--green-light); color: var(--green-dark); border-color: rgba(106,176,76,0.2); }
+    .calc-b.op:hover { background: rgba(106,176,76,0.2); }
+    .calc-b.eq { background: var(--green); color: #fff; border-color: var(--green); grid-column: span 2; }
+    .calc-b.eq:hover { background: var(--green-dark); }
+    .calc-act { display: flex; gap: 8px; margin-top: 16px; }
+    .calc-act-btn { flex: 1; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer; border: none; color: #fff; transition: all .2s; font-family: 'Nunito', sans-serif; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .calc-act-inc { background: var(--green); }
+    .calc-act-inc:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,176,76,0.2); }
+    .calc-act-exp { background: var(--red); }
+    .calc-act-exp:hover { background: #b91c1c; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.2); }
+    body.dark .calc-topbtn { background: rgba(106,176,76,0.15); border-color: rgba(106,176,76,0.3); color: #6ab04c; }
+    body.dark .calc-topbtn:hover { background: rgba(106,176,76,0.25); }
+    body.dark .calc-disp { background: #0f1117; border-color: #2d3145; color: #f1f3f9; }
+    body.dark .calc-b { background: #1a1d27; border-color: #2d3145; color: #f1f3f9; }
+    body.dark .calc-b:hover { background: #12151f; }
+    body.dark .calc-b.op { background: rgba(106,176,76,0.15); color: #6ab04c; border-color: rgba(106,176,76,0.2); }
+    body.dark .calc-b.op:hover { background: rgba(106,176,76,0.25); }
+
+    /* ══════════════ MORE FEATURES ══════════════ */
+    .more-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; }
+    .more-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--white); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; text-decoration: none; color: var(--text); }
+    .more-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 24px rgba(0,0,0,0.06); border-color: var(--green); }
+    .more-card svg { width: 48px; height: 48px; stroke: var(--green); stroke-width: 1.5; }
+    .more-card span { font-size: 16px; font-weight: 700; color: var(--text); }
+    .more-card p { font-size: 13px; color: var(--text-faint); margin: 0; text-align: center; font-weight: 500; }
+    @media(max-width:768px) { .more-grid { grid-template-columns: 1fr; gap: 16px; padding: 16px; } }
+    body.dark .more-card { background: #1a1d27; border-color: #2d3145; color: #f1f3f9; }
+    body.dark .more-card:hover { border-color: #6ab04c; box-shadow: 0 12px 24px rgba(0,0,0,0.3); }
+    body.dark .more-card span { color: #f1f3f9; }
+    body.dark .more-card p { color: #8b92b4; }
   </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
@@ -2091,23 +2129,18 @@
           </svg>
           <span class="nav-label">Expense</span>
         </button>
-        <button class="nav-item" id="nav-calendar" onclick="goTab('calendar')">
-          <svg viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="#9ca3af" stroke-width="2" />
-            <path d="M16 2v4M8 2v4M3 10h18" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
-          </svg>
-          <span class="nav-label">Calendar</span>
-        </button>
-        <button class="nav-item" id="nav-messages" onclick="goTab('messages')">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          <span class="nav-label">Messages</span>
-        </button>
         <button class="nav-finny" onclick="goTab('finny')">
           <div class="nav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
           <span class="nav-finny-label">Ask Finny</span>
+        </button>
+        <button class="nav-item" id="nav-more" onclick="goTab('more')" style="margin-top:4px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" ry="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1" ry="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1" ry="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1" ry="1"></rect>
+          </svg>
+          <span class="nav-label">More Features</span>
         </button>
         <button class="nav-item" id="nav-profile" onclick="goTab('profile')" style="margin-top:4px">
           <svg viewBox="0 0 24 24" fill="none">
@@ -2184,8 +2217,20 @@
             <img class="topbar-logo" src="./finvio-logo.png" alt="Finvio" />
             <span class="topbar-title">Dashboard</span>
           </div>
-          <button class="finny-topbtn" onclick="goTab('finny')">
-            <img src="./finny-logo.png" alt="Finny" /> Ask Finny
+          <button class="calc-topbtn" onclick="openCalculator()">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <line x1="8" y1="6" x2="16" y2="6"></line>
+              <line x1="16" y1="14" x2="16" y2="14"></line>
+              <line x1="8" y1="10" x2="8" y2="10"></line>
+              <line x1="12" y1="10" x2="12" y2="10"></line>
+              <line x1="16" y1="10" x2="16" y2="10"></line>
+              <line x1="8" y1="14" x2="8" y2="14"></line>
+              <line x1="12" y1="14" x2="12" y2="14"></line>
+              <line x1="8" y1="18" x2="8" y2="18"></line>
+              <line x1="12" y1="18" x2="12" y2="18"></line>
+              <line x1="16" y1="18" x2="16" y2="18"></line>
+            </svg> Calculator
           </button>
         </div>
         <div class="content" id="home-body"></div>
@@ -2328,6 +2373,34 @@
         <div class="chat-ft">Finny · Free tier · Rule-based AI · Premium AI coming soon</div>
       </div>
 
+      <div id="s-more" class="screen">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()"><svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 12h18M3 6h18M3 18h18" stroke="#374151" stroke-width="2" stroke-linecap="round" /></svg></button>
+            <span class="topbar-title">More Features</span>
+          </div>
+        </div>
+        <div class="content">
+          <div class="more-grid">
+            <div class="more-card" onclick="goTab('calendar')">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor"/>
+                <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-linecap="round"/>
+              </svg>
+              <span>Calendar Focus</span>
+              <p>Check daily financial nets dynamically visually matched to your theme.</p>
+            </div>
+            <div class="more-card" onclick="goTab('messages')">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Messaging System</span>
+              <p>Secure peer-to-peer premium encrypted chat interface built natively into Finvio.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="s-profile" class="screen">
         <div class="topbar">
           <div class="topbar-left">
@@ -2403,23 +2476,18 @@
             </svg>
             <span class="bnav-label">Expense</span>
           </button>
-          <button class="bnav-item" id="bnav-calendar" onclick="goTab('calendar')">
-            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="#9ca3af" stroke-width="2" />
-              <path d="M16 2v4M8 2v4M3 10h18" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" />
-            </svg>
-            <span class="bnav-label">Calendar</span>
-          </button>
-          <button class="bnav-item" id="bnav-messages" onclick="goTab('messages')">
-            <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
-              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#9ca3af" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <span class="bnav-label">Messages</span>
-          </button>
           <button class="bnav-finny" onclick="goTab('finny')">
             <div class="bnav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
             <span class="bnav-finny-label">Finny</span>
+          </button>
+          <button class="bnav-item" id="bnav-more" onclick="goTab('more')">
+            <svg viewBox="0 0 24 24" fill="none" width="22" height="22" stroke="#9ca3af" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="1" ry="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1" ry="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1" ry="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1" ry="1"></rect>
+            </svg>
+            <span class="bnav-label">More</span>
           </button>
           <button class="bnav-item" id="bnav-profile" onclick="goTab('profile')">
             <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
@@ -2513,6 +2581,45 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="modal-calc">
+    <div class="modal-box" style="max-width: 340px; padding: 24px 20px;">
+      <h3 style="margin-bottom: 16px; font-size: 18px; color: var(--text);">Quick Calculator</h3>
+      <div class="calc-disp" id="calc-disp">0</div>
+      <div class="calc-grid">
+        <button class="calc-b" style="color:var(--red)" onclick="calcP('C')">C</button>
+        <button class="calc-b" onclick="calcP('±')">±</button>
+        <button class="calc-b" onclick="calcP('%')">%</button>
+        <button class="calc-b op" onclick="calcP('/')">÷</button>
+        <button class="calc-b" onclick="calcP('7')">7</button>
+        <button class="calc-b" onclick="calcP('8')">8</button>
+        <button class="calc-b" onclick="calcP('9')">9</button>
+        <button class="calc-b op" onclick="calcP('*')">×</button>
+        <button class="calc-b" onclick="calcP('4')">4</button>
+        <button class="calc-b" onclick="calcP('5')">5</button>
+        <button class="calc-b" onclick="calcP('6')">6</button>
+        <button class="calc-b op" onclick="calcP('-')">−</button>
+        <button class="calc-b" onclick="calcP('1')">1</button>
+        <button class="calc-b" onclick="calcP('2')">2</button>
+        <button class="calc-b" onclick="calcP('3')">3</button>
+        <button class="calc-b op" onclick="calcP('+')">+</button>
+        <button class="calc-b" onclick="calcP('0')">0</button>
+        <button class="calc-b" onclick="calcP('.')">.</button>
+        <button class="calc-b eq" onclick="calcP('=')">=</button>
+      </div>
+      <div class="calc-act">
+        <button class="calc-act-btn calc-act-inc" onclick="calcAddTo('income')">
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          Income
+        </button>
+        <button class="calc-act-btn calc-act-exp" onclick="calcAddTo('expense')">
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          Expense
+        </button>
+      </div>
+      <button class="btn-cancel" style="width:100%;margin-top:10px" onclick="closeModal('calc')">Close</button>
+    </div>
+  </div>
+
   <script>
     function loadState() {
       try {
@@ -2534,7 +2641,7 @@
       currentTab = id; closeSidebar();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('s-' + id).classList.add('active');
-      ['home', 'income', 'expense', 'calendar', 'messages', 'profile'].forEach(t => {
+      ['home', 'income', 'expense', 'more', 'calendar', 'messages', 'profile'].forEach(t => {
         const active = t === id;
         const n = document.getElementById('nav-' + t);
         const bn = document.getElementById('bnav-' + t);
@@ -2672,6 +2779,49 @@
         </div>
       `;
     }
+
+    let calcVal = '0', calcPrev = null, calcOp = null, calcNewInput = true;
+    function openCalculator() {
+      calcVal = '0'; calcPrev = null; calcOp = null; calcNewInput = true;
+      document.getElementById('calc-disp').innerText = '0';
+      document.getElementById('modal-calc').classList.add('show');
+    }
+    function calcP(btn) {
+      if (['+','-','*','/'].includes(btn)) {
+        if (calcOp && !calcNewInput) calcP('=');
+        calcPrev = calcVal; calcOp = btn; calcNewInput = true;
+      } else if (btn === '=') {
+        if (!calcOp || calcPrev === null) return;
+        let v1 = parseFloat(calcPrev), v2 = parseFloat(calcVal), res = 0;
+        if (calcOp === '+') res = v1 + v2; if (calcOp === '-') res = v1 - v2;
+        if (calcOp === '*') res = v1 * v2; if (calcOp === '/') res = v1 / v2;
+        calcVal = res.toString();
+        if (calcVal.length > 12) calcVal = parseFloat(res.toPrecision(12)).toString();
+        document.getElementById('calc-disp').innerText = calcVal;
+        calcOp = null; calcPrev = null; calcNewInput = true;
+      } else if (btn === 'C') {
+        calcVal = '0'; calcPrev = null; calcOp = null; calcNewInput = true;
+      } else if (btn === '±') {
+        calcVal = (parseFloat(calcVal) * -1).toString();
+      } else if (btn === '%') {
+        calcVal = (parseFloat(calcVal) / 100).toString();
+      } else if (btn === '.') {
+        if (calcNewInput) { calcVal = '0.'; calcNewInput = false; }
+        else if (!calcVal.includes('.')) calcVal += '.';
+      } else {
+        if (calcNewInput) { calcVal = btn; calcNewInput = false; }
+        else calcVal = calcVal === '0' ? btn : calcVal + btn;
+      }
+      if (btn !== '=') document.getElementById('calc-disp').innerText = calcVal;
+    }
+    function calcAddTo(type) {
+      if (parseFloat(calcVal) <= 0) return alert('Calculate a positive amount first!');
+      closeModal('calc');
+      openModal(type, null);
+      if (type === 'income') document.getElementById('inc-amt').value = parseFloat(calcVal);
+      else document.getElementById('exp-amt').value = parseFloat(calcVal);
+    }
+
     function openModal(type, id) {
       if (type === 'income') {
         if (id != null) { const item = state.income.find(i => i.id === id); if (!item) return; document.getElementById('inc-modal-title').textContent = 'Edit income'; document.getElementById('inc-src').value = item.source; document.getElementById('inc-amt').value = item.amount; document.getElementById('inc-pay').value = item.paymethod; document.getElementById('inc-desc').value = item.desc || ''; document.getElementById('inc-edit-id').value = id; }
@@ -2829,6 +2979,19 @@
       if (t.match(/show.*(my )?(income|incomes|earnings)|^(my )?(income|incomes|earnings)$|list.*(income|incomes)/)) {
         if (!state.income.length) return { type: 'plain', text: "No income entries yet. Add some from the Income tab!" };
         return { type: 'show_entries', entryType: 'income', text: `Here are all your income entries (${state.income.length}):`, entries: [...state.income].reverse() };
+      }
+      // --- MATH EVALUATION ---
+      const mathPrefix = /(calculate|what is|how much is|eval|math|solve)\s+/i;
+      const cleanMath = t.replace(mathPrefix, '').replace(/[a-zA-Z\$\,]/g, '').trim();
+      if (mathPrefix.test(t) || /^[0-9+\-*/().\s]+$/.test(t.replace(/[\$\,]/g,'').trim())) {
+        if (cleanMath && /[\+\-\*\/]/.test(cleanMath)) {
+          try {
+            const mathResult = Function('"use strict";return (' + cleanMath + ')')();
+            if (mathResult !== undefined && !isNaN(mathResult)) {
+              return { type: 'plain', text: `Here is your result: **${mathResult}**` };
+            }
+          } catch(e) {}
+        }
       }
       // --- SHOW ONLY EXPENSES ---
       if (t.match(/show.*(my )?(expense|expenses|spending|spendings)|^(my )?(expense|expenses)$|list.*(expense|expenses)/)) {
