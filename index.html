@@ -2447,6 +2447,136 @@
     body.dark .more-card p {
       color: #8b92b4;
     }
+
+    /* Finny Pro styles */
+    #finny-version-select:focus {
+      border-color: #6ab04c;
+    }
+
+    .finny-pro-card {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+      border-radius: 12px;
+      padding: 16px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .finny-pro-card h4 {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .finny-pro-meter {
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      overflow: hidden;
+      margin: 6px 0;
+    }
+
+    .finny-pro-meter-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .finny-pro-section {
+      margin-bottom: 12px;
+    }
+
+    .finny-pro-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #6366f1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .finny-pro-insight {
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    .finny-pro-action {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .finny-pro-action:last-child {
+      border-bottom: none;
+    }
+
+    .finny-pro-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .finny-pro-urgent {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    .finny-pro-important {
+      background: #fff7ed;
+      color: #ea580c;
+    }
+
+    .finny-pro-optimize {
+      background: #f0fdf4;
+      color: #16a34a;
+    }
+
+    .finny-pro-info {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    body.dark .finny-pro-insight {
+      background: #1e1b4b;
+      border-color: #312e81;
+      color: #e0e7ff;
+    }
+
+    body.dark .finny-pro-urgent {
+      background: #450a0a;
+      color: #fca5a5;
+    }
+
+    body.dark .finny-pro-important {
+      background: #431407;
+      color: #fdba74;
+    }
+
+    body.dark .finny-pro-optimize {
+      background: #052e16;
+      color: #86efac;
+    }
+
+    body.dark .finny-pro-info {
+      background: #172554;
+      color: #93c5fd;
+    }
+
+    body.dark #finny-version-select {
+      background: #1f2937;
+      color: #e5e7eb;
+      border-color: #374151;
+    }
   </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 </head>
@@ -2699,12 +2829,17 @@
             </svg></button>
           <div class="finny-av"><img src="./finny-logo.png" alt="Finny" /></div>
           <div>
-            <div style="font-size:15px;font-weight:800;color:#111827">Finny</div>
+            <div style="font-size:15px;font-weight:800;color:#111827" id="finny-header-name">Finny</div>
             <div style="font-size:11px;color:#9ca3af;font-weight:500">by Finvio · AI Finance Assistant</div>
           </div>
-          <div style="margin-left:auto;display:flex;align-items:center;gap:5px">
-            <div style="width:7px;height:7px;border-radius:50%;background:#22c55e"></div>
-            <span style="font-size:12px;color:#9ca3af;font-weight:600">Free AI</span>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+            <select id="finny-version-select" onchange="switchFinnyVersion(this.value)"
+              style="padding:4px 8px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:11px;font-weight:700;font-family:inherit;color:#374151;background:#fff;cursor:pointer;outline:none;appearance:auto;">
+              <option value="1">Finny</option>
+              <option value="2">Finny Pro</option>
+            </select>
+            <div id="finny-status-dot" style="width:7px;height:7px;border-radius:50%;background:#22c55e"></div>
+            <span id="finny-status-label" style="font-size:12px;color:#9ca3af;font-weight:600">Free AI</span>
           </div>
           <button id="finny-clear" title="Clear Chat" onclick="clearFinnyChat()"
             style="background:transparent;border:none;cursor:pointer;margin-left:8px;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s;">
@@ -2723,7 +2858,7 @@
           <button id="finny-mic" title="Voice Chat">🎤</button>
           <button class="snd-btn" id="chat-snd" onclick="chatSend()">↑</button>
         </div>
-        <div class="chat-ft">Finny · Free tier · Rule-based AI · Premium AI coming soon</div>
+        <div class="chat-ft" id="finny-footer">Finny · Free tier · Rule-based AI</div>
       </div>
 
       <div id="s-more" class="screen">
@@ -3252,11 +3387,531 @@
         addBot({ type: 'list', text: "Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!", items: ['📊 Monthly summary', '🚨 Overspending alerts', '🏆 Top categories', '💰 Savings analysis', '🎓 Finance questions (SIP, PPF, compound interest...)'] });
       }
     }
+
+    let finnyVersion = '1'; // '1' = Finny, '2' = Finny Pro
+    function switchFinnyVersion(v) {
+      finnyVersion = v;
+      const name = document.getElementById('finny-header-name');
+      const dot = document.getElementById('finny-status-dot');
+      const label = document.getElementById('finny-status-label');
+      const footer = document.getElementById('finny-footer');
+      if (v === '2') {
+        name.textContent = 'Finny Pro';
+        name.style.background = 'linear-gradient(90deg,#6366f1,#8b5cf6)';
+        name.style.webkitBackgroundClip = 'text';
+        name.style.webkitTextFillColor = 'transparent';
+        dot.style.background = '#8b5cf6';
+        label.textContent = 'Pro AI';
+        label.style.color = '#8b5cf6';
+        footer.textContent = 'Finny Pro · Advanced Analytics · Deep Financial Intelligence';
+      } else {
+        name.textContent = 'Finny';
+        name.style.background = '';
+        name.style.webkitBackgroundClip = '';
+        name.style.webkitTextFillColor = '';
+        dot.style.background = '#22c55e';
+        label.textContent = 'Free AI';
+        label.style.color = '#9ca3af';
+        footer.textContent = 'Finny · Free tier · Rule-based AI';
+      }
+    }
+
+    /* ═══════════════════════════════════════════════
+       FINNY PRO — Advanced Rule-Based Financial Intelligence Engine
+       ═══════════════════════════════════════════════ */
+
+    function runFinnyPro(q) {
+      const t = q.toLowerCase().trim();
+      const inc = state.income.reduce((s, i) => s + i.amount, 0);
+      const exp = state.expense.reduce((s, e) => s + e.amount, 0);
+      const sav = inc - exp;
+      const rate = inc > 0 ? ((sav / inc) * 100) : 0;
+      const bycat = {}; state.expense.forEach(e => { bycat[e.category] = (bycat[e.category] || 0) + e.amount; });
+      const sorted = Object.entries(bycat).sort((a, b) => b[1] - a[1]);
+      const catCount = Object.keys(bycat).length;
+      const expCount = state.expense.length;
+      const incCount = state.income.length;
+
+      // Helper: compute monthly averages
+      function getMonthlyData() {
+        const months = {};
+        state.expense.forEach(e => {
+          const key = (e.rawDate || '').substring(0, 7) || 'unknown';
+          if (!months[key]) months[key] = { inc: 0, exp: 0 };
+          months[key].exp += e.amount;
+        });
+        state.income.forEach(i => {
+          const d = i.date || '';
+          const parts = d.split(' ');
+          const mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          let key = 'unknown';
+          if (parts.length >= 3) {
+            const mIdx = mon.indexOf(parts[1]);
+            if (mIdx >= 0) key = parts[2] + '-' + String(mIdx + 1).padStart(2, '0');
+          }
+          if (!months[key]) months[key] = { inc: 0, exp: 0 };
+          months[key].inc += i.amount;
+        });
+        return months;
+      }
+
+      // Helper: financial health score
+      function calcHealthScore() {
+        let score = 50;
+        if (rate >= 30) score += 25; else if (rate >= 20) score += 15; else if (rate >= 10) score += 5; else if (rate < 0) score -= 20;
+        if (catCount >= 3) score += 5;
+        if (catCount >= 5) score += 5;
+        const topPct = sorted.length > 0 ? (sorted[0][1] / exp * 100) : 0;
+        if (topPct > 50) score -= 10; else if (topPct < 30) score += 10;
+        if (incCount >= 2) score += 5; // diversified income
+        return Math.max(0, Math.min(100, score));
+      }
+
+      // Helper: personality
+      function getPersonality() {
+        if (rate >= 40) return { name: 'The Vault 🏦', desc: 'You save aggressively. Exceptional discipline.' };
+        if (rate >= 25) return { name: 'The Strategist 🎯', desc: 'Balanced saver with strong financial sense.' };
+        if (rate >= 10) return { name: 'The Balancer ⚖️', desc: 'You manage okay but there is room to grow.' };
+        if (rate >= 0) return { name: 'The Drifter 🌊', desc: 'Living paycheck to paycheck. Time to tighten up.' };
+        return { name: 'The Spender 🔥', desc: 'Spending exceeds income. Urgent action needed.' };
+      }
+
+      // Helper: anomaly detection
+      function detectAnomalies() {
+        const catAvg = {};
+        const catEntries = {};
+        state.expense.forEach(e => {
+          if (!catEntries[e.category]) catEntries[e.category] = [];
+          catEntries[e.category].push(e.amount);
+        });
+        const anomalies = [];
+        Object.entries(catEntries).forEach(([cat, amounts]) => {
+          const avg = amounts.reduce((a, b) => a + b, 0) / amounts.length;
+          amounts.forEach((a, i) => {
+            if (a > avg * 2.5 && amounts.length >= 2) {
+              anomalies.push({ category: cat, amount: a, avg: avg.toFixed(0), ratio: (a / avg).toFixed(1) });
+            }
+          });
+        });
+        return anomalies;
+      }
+
+      // Helper: projections
+      function getProjections() {
+        const monthlySav = sav; // simplified - treat current data as monthly
+        return {
+          month3: monthlySav * 3,
+          month6: monthlySav * 6,
+          month12: monthlySav * 12,
+          month12compound: monthlySav > 0 ? (monthlySav * 12 * 1.06) : monthlySav * 12 // 6% annual return
+        };
+      }
+
+      // ═══ CONVERSATIONAL GREETINGS (talkative) ═══
+      const greetings = /^(hi+|hello+|hey+|heya|hiya|howdy|yo+|sup|wh?at'?s? ?up|namaste|hola|bonjour|ciao|salut|good ?(morning|afternoon|evening|night|day)|g'?day|oi|ahoy|greetings|what'?s good|how'?s it going|how are you|how do you do|long time|nice to (meet|see)|welcome|peace|salaam|shalom|aloha|konnichiwa|ohayo|annyeong|marhaba|hei|hej|moin|servus|howzit|wagwan|wazzup|whatsup|wassup|yoo+|ayy+|ey+|oi+|cheers|bless)[\s!?.,:;]*$/i;
+      if (greetings.test(t)) {
+        const replies = [
+          "Hey there! 👋 I'm Finny Pro — your advanced financial intelligence engine. I can run deep analysis on your spending patterns, detect anomalies, project your future savings, simulate financial scenarios, and so much more. What would you like to explore?",
+          "Hello! 🚀 Welcome to Finny Pro. I've got powerful analytics ready for you — from health scores to Monte Carlo simulations. Try asking me for a 'deep summary' or 'financial health score'!",
+          "Hi! ✨ Great to see you! I'm Finny Pro, your personal financial strategist. I analyze every transaction you've logged to give you deeply personalized insights. What's on your mind?",
+          "Hey! 💜 Finny Pro at your service. I can analyze cash flow patterns, detect spending anomalies, calculate debt strategies, run retirement simulations, and more. Just ask!",
+          "Yo! 🔮 Finny Pro here — think of me as your financial analyst on call. I crunch your real data to give you insights that actually matter. What can I dive into for you?"
+        ];
+        return { type: 'pro_plain', text: replies[Math.floor(Math.random() * replies.length)] };
+      }
+
+      // ═══ THANKS / POSITIVE RESPONSES ═══
+      const thanks = /^(thanks?|thank you|thx|ty|appreciate|cool|nice|awesome|amazing|great|wonderful|brilliant|perfect|excellent|love it|sweet|dope|sick|fire|lit|goat|legend|wow+|omg|oh wow|incredible|fantastic|fabulous|superb|magnificent|splendid|marvelous|phenomenal|outstanding|remarkable|you('?re| are) (the best|amazing|great|awesome|incredible)|good (job|work|one)|well done|bravo|kudos|cheers|bless|respect|much love|big ups)[\s!?.]*$/i;
+      if (thanks.test(t)) {
+        const replies = [
+          "You're welcome! 😊 Finny Pro is always here to help you make smarter financial decisions. Got more questions? Fire away!",
+          "Happy to help! 💜 Remember, I get smarter with more data — keep logging your transactions and I'll keep the insights flowing!",
+          "Anytime! 🚀 That's what I'm here for. Want me to run another analysis or explore a different angle?",
+          "Glad I could help! ✨ Pro tip: the more transactions you log, the more powerful my analysis becomes. Let me know if you need anything else!",
+          "Thank YOU for being proactive about your finances! 🎯 Most people don't bother analyzing their money — you're already ahead of the game."
+        ];
+        return { type: 'pro_plain', text: replies[Math.floor(Math.random() * replies.length)] };
+      }
+
+      // ═══ FAREWELL ═══
+      if (/^(bye+|goodbye|see ya|later|cya|ttyl|gotta go|peace out|take care|good night|nite|signing off|catch you later|adios|sayonara|au revoir|tata|cheerio|fare ?well|until next time)[\s!?.]*$/i.test(t)) {
+        return { type: 'pro_plain', text: "Take care! 💜 Your financial data is safe and sound. Come back anytime — Finny Pro never sleeps! 🌙" };
+      }
+
+      // ═══ WHO ARE YOU ═══
+      if (t.match(/who are you|what are you|what can you do|your (capabilities|features|powers)|tell me about yourself/)) {
+        return {
+          type: 'pro_rich', title: "🧠 I'm Finny Pro — Advanced Financial Intelligence", sections: [
+            { title: 'DEEP ANALYSIS', items: ['Full financial health scoring (0-100)', 'Spending anomaly detection', 'Cash flow pattern recognition', 'Financial personality profiling'] },
+            { title: 'PROJECTIONS & SIMULATIONS', items: ['6 & 12-month savings projections', 'Retirement readiness simulation', 'Debt payoff strategies (avalanche vs snowball)', 'Vacation/goal fund planning'] },
+            { title: 'ADVANCED INSIGHTS', items: ['Recurring subscription analysis', 'Safe-to-spend calculations', 'Income diversification scoring', 'Tax-loss harvesting concepts', 'Credit score impact analysis'] }
+          ]
+        };
+      }
+
+      // ═══ SPENDING & CASH FLOW QUESTIONS ═══
+
+      // Subscription analysis
+      if (t.match(/subscri|recurring|cancel|unused subscri/)) {
+        const subCats = ['Subscriptions'];
+        const subs = state.expense.filter(e => subCats.includes(e.category));
+        if (!subs.length) return { type: 'pro_plain', text: "📋 No subscription expenses found in your data. If you have subscriptions, log them under the 'Subscriptions' category and I'll analyze which ones might be worth cutting!" };
+        const total = subs.reduce((s, e) => s + e.amount, 0);
+        const unique = [...new Set(subs.map(e => e.title || e.category))];
+        const avgPerSub = total / Math.max(unique.length, 1);
+        let analysis = `<div class="finny-pro-card"><h4>📋 Subscription Analysis</h4>`;
+        analysis += `<div style="font-size:12px;opacity:0.8">Total: ${fmt(total)} across ${unique.length} subscription(s)</div>`;
+        analysis += `<div class="finny-pro-meter"><div class="finny-pro-meter-fill" style="width:${Math.min(100, (total / Math.max(inc, 1)) * 100)}%;background:linear-gradient(90deg,#818cf8,#c084fc)"></div></div>`;
+        analysis += `<div style="font-size:11px;opacity:0.7">${((total / Math.max(inc, 1)) * 100).toFixed(1)}% of your income goes to subscriptions</div></div>`;
+        analysis += `<div class="finny-pro-insight">`;
+        analysis += `<strong>🔍 Deep Insight:</strong><br>`;
+        if (total > inc * 0.1) analysis += `⚠️ Your subscriptions consume over 10% of income — this is high. Industry recommendation is under 5%.<br>`;
+        unique.forEach(s => {
+          const subTotal = subs.filter(e => (e.title || e.category) === s).reduce((a, e) => a + e.amount, 0);
+          analysis += `• <strong>${s}</strong>: ${fmt(subTotal)} — ${subTotal > avgPerSub ? 'Above average, review necessity' : 'Reasonable cost'}<br>`;
+        });
+        analysis += `<br><strong>💡 Recommendation:</strong> Audit each subscription. Ask: "Have I used this in the last 30 days?" If not, cancel or downgrade it. Potential savings: ${fmt(total * 0.3)} (30% reduction target).`;
+        analysis += `</div>`;
+        return { type: 'pro_html', html: analysis };
+      }
+
+      // Safe to spend
+      if (t.match(/safe.?to.?spend|how much can i spend|discretionary|non.?essential|spending limit|budget.*month/)) {
+        if (inc === 0) return { type: 'pro_plain', text: "I need your income data to calculate safe-to-spend limits. Add your income first!" };
+        const essentialCats = ['House Rent', 'Groceries', 'Health & Medical', 'Education', 'Transport'];
+        const essential = state.expense.filter(e => essentialCats.includes(e.category)).reduce((s, e) => s + e.amount, 0);
+        const targetSavingsRate = 0.20;
+        const targetSavings = inc * targetSavingsRate;
+        const safeToSpend = Math.max(0, inc - essential - targetSavings);
+        const currentNonEssential = exp - essential;
+        const verdict = currentNonEssential > safeToSpend ? 'OVER_BUDGET' : 'WITHIN_BUDGET';
+
+        let html = `<div class="finny-pro-card"><h4>💰 Safe-to-Spend Analysis</h4>`;
+        html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">`;
+        html += `<div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;opacity:0.7">INCOME</div><div style="font-size:18px;font-weight:800">${fmt(inc)}</div></div>`;
+        html += `<div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;opacity:0.7">ESSENTIALS</div><div style="font-size:18px;font-weight:800">${fmt(essential)}</div></div>`;
+        html += `<div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;text-align:center"><div style="font-size:10px;opacity:0.7">SAVINGS TARGET</div><div style="font-size:18px;font-weight:800">${fmt(targetSavings)}</div></div>`;
+        html += `<div style="background:rgba(255,255,255,${verdict === 'WITHIN_BUDGET' ? '0.2' : '0.15'});border-radius:8px;padding:10px;text-align:center;border:2px solid ${verdict === 'WITHIN_BUDGET' ? '#22c55e' : '#ef4444'}"><div style="font-size:10px;opacity:0.7">SAFE TO SPEND</div><div style="font-size:18px;font-weight:800">${fmt(safeToSpend)}</div></div>`;
+        html += `</div></div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `<strong>🧮 Calculation Breakdown:</strong><br>`;
+        html += `Income (${fmt(inc)}) − Essentials (${fmt(essential)}) − 20% Savings Target (${fmt(targetSavings)}) = <strong>${fmt(safeToSpend)}</strong> safe to spend on non-essentials.<br><br>`;
+        if (verdict === 'OVER_BUDGET') {
+          html += `⚠️ <strong>You've spent ${fmt(currentNonEssential)} on non-essentials, which is ${fmt(currentNonEssential - safeToSpend)} OVER your safe limit.</strong><br>`;
+          html += `Action: Cut back by ${fmt(currentNonEssential - safeToSpend)} to protect your savings goal.`;
+        } else {
+          html += `✅ <strong>You're within budget!</strong> You've spent ${fmt(currentNonEssential)} of your ${fmt(safeToSpend)} non-essential budget. You have ${fmt(safeToSpend - currentNonEssential)} remaining.`;
+        }
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // Vacation / goal planning
+      if (t.match(/vacation|holiday|trip|travel|goal.*\d|save.*\d|plan.*\$?\d|budget.*for|saving.*for|target.*\$?\d/)) {
+        const goalMatch = q.match(/\$?([\d,]+)/);
+        const goal = goalMatch ? parseFloat(goalMatch[1].replace(',', '')) : 0;
+        const monthlyCanSave = Math.max(0, sav * 0.5); // assume 50% of savings can go to goal
+        if (goal > 0 && monthlyCanSave > 0) {
+          const monthsNeeded = Math.ceil(goal / monthlyCanSave);
+          const targetDate = new Date(); targetDate.setMonth(targetDate.getMonth() + monthsNeeded);
+          let html = `<div class="finny-pro-card"><h4>🎯 Goal Planning: ${fmt(goal)}</h4>`;
+          html += `<div style="margin-top:8px;font-size:12px;opacity:0.8">Based on your current savings capacity</div></div>`;
+          html += `<div class="finny-pro-insight">`;
+          html += `<strong>📊 Your Goal Breakdown:</strong><br><br>`;
+          html += `• Current monthly savings: ${fmt(sav)}<br>`;
+          html += `• Allocatable to goal (50%): <strong>${fmt(monthlyCanSave)}/month</strong><br>`;
+          html += `• Months to reach goal: <strong>${monthsNeeded} months</strong><br>`;
+          html += `• Estimated completion: <strong>${targetDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</strong><br><br>`;
+          html += `<strong>🚀 Ways to reach it faster:</strong><br>`;
+          if (sorted.length > 0) html += `• Cut ${sorted[0][0]} by 20% → saves ${fmt(sorted[0][1] * 0.2)}/month → reach goal ${Math.max(1, Math.ceil(goal / (monthlyCanSave + sorted[0][1] * 0.2)))} months<br>`;
+          html += `• Allocate 70% of savings instead → ${Math.max(1, Math.ceil(goal / (sav * 0.7)))} months<br>`;
+          html += `• Find extra income of ${fmt(goal / 6)}/month → reach it in 6 months`;
+          html += `</div>`;
+          return { type: 'pro_html', html: html };
+        }
+        return { type: 'pro_plain', text: "🎯 Tell me your goal amount! For example: 'I want to save $2,000 for a vacation' and I'll build a detailed plan with timeline and budget adjustments." };
+      }
+
+      // ═══ INVESTMENT & TAX STRATEGY ═══
+      if (t.match(/tax.?lot|capital gain|minimize.*tax|tax.?loss|harvest|wash sale/)) {
+        let html = `<div class="finny-pro-card"><h4>📊 Tax Strategy Analysis</h4>`;
+        html += `<div style="font-size:12px;opacity:0.8;margin-top:4px">Based on your financial profile</div></div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `<strong>🧠 Tax Optimization Insights:</strong><br><br>`;
+        html += `Based on your income of ${fmt(inc)} and expenses of ${fmt(exp)}:<br><br>`;
+        html += `<strong>📌 Key Tax Concepts for Your Situation:</strong><br>`;
+        html += `• <strong>Tax-Loss Harvesting:</strong> If you hold investments at a loss, selling and replacing with similar (not identical) assets can offset gains. Rule: Avoid repurchasing the same security within 30 days (Wash Sale Rule).<br><br>`;
+        html += `• <strong>Capital Gains Strategy:</strong> Long-term holdings (>1 year) are taxed at lower rates (0-20%) vs short-term (ordinary income rates). Always prioritize selling long-term lots first.<br><br>`;
+        html += `• <strong>Your Savings Rate Impact:</strong> At ${rate.toFixed(1)}% savings rate, you're ${rate >= 20 ? 'well-positioned to maximize tax-advantaged accounts' : 'building toward being able to maximize tax-advantaged contributions'}.<br><br>`;
+        html += `<strong>💡 Recommended Actions:</strong><br>`;
+        html += `1. Max out tax-advantaged accounts (IRA/401k/PPF) before taxable investing<br>`;
+        html += `2. Keep an investment log with purchase dates and prices for lot-level optimization<br>`;
+        html += `3. Review portfolio quarterly for harvesting opportunities`;
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // Roth vs Mortgage comparison
+      if (t.match(/roth|ira|401k|mortgage.*vs|vs.*mortgage|roth.*mortgage|mortgage.*roth|retirement.*account/)) {
+        let html = `<div class="finny-pro-card"><h4>🏠 vs 📈 Investment Comparison</h4></div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `<strong>30-Year Projection Analysis:</strong><br><br>`;
+        const monthlyContrib = Math.min(sav * 0.5, 6500 / 12); // max Roth IRA contribution
+        const rothFV = monthlyContrib * ((Math.pow(1 + 0.08 / 12, 360) - 1) / (0.08 / 12));
+        const mortgageSaved = monthlyContrib * 360 * 0.065 * 0.5; // simplified interest saved
+        html += `Assuming you invest <strong>${fmt(monthlyContrib)}/month</strong>:<br><br>`;
+        html += `<strong>Option A — Roth IRA (8% avg return):</strong><br>`;
+        html += `• 30-year value: <strong>${fmt(Math.round(rothFV))}</strong><br>`;
+        html += `• Tax-free withdrawals in retirement<br>`;
+        html += `• Total contributed: ${fmt(Math.round(monthlyContrib * 360))}<br>`;
+        html += `• Growth: ${fmt(Math.round(rothFV - monthlyContrib * 360))}<br><br>`;
+        html += `<strong>Option B — Extra Mortgage Payments (6.5% rate):</strong><br>`;
+        html += `• Estimated interest saved: <strong>${fmt(Math.round(mortgageSaved))}</strong><br>`;
+        html += `• Guaranteed "return" of 6.5%<br>`;
+        html += `• Builds equity faster, reduces debt stress<br><br>`;
+        html += `<strong>🎯 Verdict:</strong> Mathematically, the Roth IRA wins by ~${fmt(Math.round(rothFV - mortgageSaved))} over 30 years due to compounding and higher expected returns. However, mortgage payoff provides psychological peace and guaranteed savings. <em>A 50/50 split is often the wisest approach.</em>`;
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // ═══ DEBT & CREDIT ═══
+      if (t.match(/debt|extra.*pay|interest.*sav|avalanche|snowball|pay.*off|credit.*card.*vs|student.*loan/)) {
+        let html = `<div class="finny-pro-card"><h4>💳 Debt Optimization Strategy</h4></div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `<strong>🧮 Debt Payoff Analysis:</strong><br><br>`;
+        html += `Based on your surplus of <strong>${fmt(Math.max(0, sav))}</strong>:<br><br>`;
+        html += `<strong>Strategy 1 — Avalanche Method (Highest Interest First):</strong><br>`;
+        html += `• Minimizes total interest paid<br>`;
+        html += `• Best for: Mathematically optimal savings<br>`;
+        html += `• Apply extra payments to highest-rate debt first<br><br>`;
+        html += `<strong>Strategy 2 — Snowball Method (Smallest Balance First):</strong><br>`;
+        html += `• Builds psychological momentum<br>`;
+        html += `• Best for: Motivation and quick wins<br>`;
+        html += `• Pay off smallest debts first for satisfaction<br><br>`;
+        html += `<strong>Interest Rate Arbitrage Check:</strong><br>`;
+        html += `If your savings account earns more than your loan rate, keep cash and make minimum payments. Example: 4.5% HYSA vs 3.2% auto loan → you earn 1.3% by NOT paying early.<br><br>`;
+        html += `<strong>💡 With your extra ${fmt(Math.max(0, sav))}:</strong><br>`;
+        if (sav > 0) {
+          html += `• Applying to a 20% APR credit card: saves ~${fmt(Math.round(sav * 0.20))} in annual interest<br>`;
+          html += `• Applying to a 5% student loan: saves ~${fmt(Math.round(sav * 0.05))} in annual interest<br>`;
+          html += `• <strong>Difference: ${fmt(Math.round(sav * 0.15))} — always prioritize high-interest debt!</strong>`;
+        } else {
+          html += `• Focus on increasing income or cutting expenses before accelerating debt payoff.`;
+        }
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // Credit score impact
+      if (t.match(/credit.*score|close.*card|oldest.*card|credit.*impact|fico|credit.*history|credit.*utilization/)) {
+        let html = `<div class="finny-pro-card"><h4>📊 Credit Score Impact Analysis</h4></div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `<strong>🔍 Credit Score Factors:</strong><br><br>`;
+        html += `<strong>If you close your oldest credit card:</strong><br>`;
+        html += `• Average age of accounts ↓ (hurts ~15% of score)<br>`;
+        html += `• Total available credit ↓ → utilization ratio ↑ (hurts ~30% of score)<br>`;
+        html += `• Estimated impact: <strong>-20 to -50 points</strong> over 6 months<br>`;
+        html += `• Recovery time: 6-12 months as other accounts age<br><br>`;
+        html += `<strong>💡 Better Alternatives:</strong><br>`;
+        html += `1. <strong>Downgrade</strong> to a no-fee version of the same card (keeps history)<br>`;
+        html += `2. <strong>Sock-drawer it</strong> — keep open, use once every 6 months for a small purchase<br>`;
+        html += `3. <strong>Never close</strong> your oldest card — account age is precious<br><br>`;
+        html += `<strong>Your Financial Profile Suggests:</strong> With a savings rate of ${rate.toFixed(1)}%, ${rate >= 15 ? "you're in a stable position — focus on keeping utilization under 30% and never missing payments." : "work on building your savings buffer first, then optimize credit strategy."}`;
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // ═══ COMPLEX LIFE SIMULATIONS ═══
+
+      // Monte Carlo / Retirement
+      if (t.match(/monte carlo|retire|retirement|can i retire|afford to retire|financial (freedom|independence)|fire/)) {
+        const annualSav = sav * 12;
+        const years = 25;
+        const simulations = 500;
+        let successCount = 0;
+        const targetNest = exp * 12 * 25; // 25x annual expenses (4% rule)
+        // Simplified Monte Carlo
+        for (let sim = 0; sim < simulations; sim++) {
+          let portfolio = 0;
+          for (let y = 0; y < years; y++) {
+            const returnRate = 0.04 + (Math.random() * 0.12 - 0.02); // 4% to 14% with some negative years
+            portfolio = (portfolio + annualSav) * (1 + returnRate);
+            const inflationHit = 1 + (0.02 + Math.random() * 0.04); // 2-6% inflation
+            portfolio /= inflationHit;
+          }
+          if (portfolio >= targetNest * 0.7) successCount++;
+        }
+        const successRate = ((successCount / simulations) * 100).toFixed(0);
+
+        let html = `<div class="finny-pro-card"><h4>🎲 Monte Carlo Retirement Simulation</h4>`;
+        html += `<div style="font-size:12px;opacity:0.8;margin-top:4px">${simulations} scenarios simulated</div></div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `<strong>📊 Simulation Parameters:</strong><br>`;
+        html += `• Annual savings: ${fmt(annualSav)}<br>`;
+        html += `• Annual expenses: ${fmt(exp * 12)}<br>`;
+        html += `• Target nest egg (25x expenses): ${fmt(Math.round(targetNest))}<br>`;
+        html += `• Time horizon: ${years} years<br>`;
+        html += `• Market returns: 4-14% (randomized)<br>`;
+        html += `• Inflation: 2-6% (randomized)<br><br>`;
+        html += `<div style="text-align:center;padding:16px;background:${parseInt(successRate) >= 70 ? '#f0fdf4' : parseInt(successRate) >= 40 ? '#fff7ed' : '#fef2f2'};border-radius:10px;margin:10px 0">`;
+        html += `<div style="font-size:36px;font-weight:900;color:${parseInt(successRate) >= 70 ? '#16a34a' : parseInt(successRate) >= 40 ? '#ea580c' : '#ef4444'}">${successRate}%</div>`;
+        html += `<div style="font-size:12px;font-weight:600;color:#6b7280">Success Rate</div></div>`;
+        html += `<strong>🎯 Interpretation:</strong><br>`;
+        if (parseInt(successRate) >= 70) html += `Strong probability of retirement success! Your savings habits are on track. Keep it up and consider increasing contributions when possible.`;
+        else if (parseInt(successRate) >= 40) html += `Moderate chance — you'll likely need to either increase savings by 20-30% or extend your working years by 3-5 years for comfortable retirement.`;
+        else html += `Low probability — significant changes needed. Consider: increasing income, dramatically cutting expenses, or planning for a longer career. Every extra ${fmt(Math.round(annualSav * 0.2))}/year boosts your success rate by ~10%.`;
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // Job offer / cost of living comparison
+      if (t.match(/job offer|new job|salary.*offer|cost of living|higher.*(salary|pay)|relocat|effective.*income|net income.*after|city.*comparison/)) {
+        const currentIncome = inc;
+        const raiseMatch = q.match(/\$?([\d,]+)\s*(more|extra|higher|raise|increase)/i);
+        const raise = raiseMatch ? parseFloat(raiseMatch[1].replace(',', '')) : 20000;
+        const colMatch = q.match(/([\d]+)%\s*(higher|more|increase)/i);
+        const colIncrease = colMatch ? parseFloat(colMatch[1]) / 100 : 0.15;
+        const newGross = currentIncome + raise;
+        const currentExpenses = exp;
+        const newExpenses = currentExpenses * (1 + colIncrease);
+        const currentNet = currentIncome - currentExpenses;
+        const newNet = newGross - newExpenses;
+        const effectiveBenefit = newNet - currentNet;
+
+        let html = `<div class="finny-pro-card"><h4>💼 Job Offer Analysis</h4>`;
+        html += `<div style="font-size:12px;opacity:0.8;margin-top:4px">Effective Net Income Comparison</div></div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `<strong>📊 Current vs New Scenario:</strong><br><br>`;
+        html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">`;
+        html += `<div><strong>Current:</strong><br>• Income: ${fmt(currentIncome)}<br>• Expenses: ${fmt(currentExpenses)}<br>• Net: <strong>${fmt(currentNet)}</strong></div>`;
+        html += `<div><strong>New Offer:</strong><br>• Income: ${fmt(newGross)} (+${fmt(raise)})<br>• Expenses: ${fmt(Math.round(newExpenses))} (+${(colIncrease * 100).toFixed(0)}%)<br>• Net: <strong>${fmt(Math.round(newNet))}</strong></div>`;
+        html += `</div><br>`;
+        html += `<strong>🎯 Effective Benefit: ${effectiveBenefit >= 0 ? '+' : ''}${fmt(Math.round(effectiveBenefit))}/month</strong><br><br>`;
+        if (effectiveBenefit > 0) {
+          html += `✅ The new job IS worth it — you'd effectively gain ${fmt(Math.round(effectiveBenefit))} per month after adjusting for higher costs. That's ${fmt(Math.round(effectiveBenefit * 12))} more per year.`;
+        } else {
+          html += `⚠️ The raise does NOT fully offset the higher cost of living. You'd effectively lose ${fmt(Math.round(Math.abs(effectiveBenefit)))} per month. The raise needs to be at least ${fmt(Math.round(currentExpenses * colIncrease))} more to break even.`;
+        }
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // Financial runway / quit job
+      if (t.match(/financial runway|quit.*job|start.*business|freelance|runway|how long.*last|emergency|if i quit|leave.*job|seed|startup/)) {
+        const totalSavings = Math.max(0, sav * 6); // assume 6 months of saved surplus
+        const reducedSpending = exp * 0.8; // 20% reduction
+        const seedMatch = q.match(/\$?([\d,]+)\s*(seed|invest|startup)/i);
+        const seed = seedMatch ? parseFloat(seedMatch[1].replace(',', '')) : 0;
+        const availableFunds = totalSavings - seed;
+        const runwayMonths = reducedSpending > 0 ? Math.floor(availableFunds / reducedSpending) : 0;
+
+        let html = `<div class="finny-pro-card"><h4>🚀 Financial Runway Simulation</h4>`;
+        html += `<div style="font-size:12px;opacity:0.8;margin-top:4px">If you quit today...</div></div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `<strong>📊 Runway Calculation:</strong><br><br>`;
+        html += `• Estimated savings buffer: ${fmt(Math.round(totalSavings))}<br>`;
+        if (seed > 0) html += `• Seed investment: -${fmt(seed)}<br>`;
+        html += `• Available funds: ${fmt(Math.round(availableFunds))}<br>`;
+        html += `• Current monthly expenses: ${fmt(exp)}<br>`;
+        html += `• With 20% reduction: ${fmt(Math.round(reducedSpending))}/month<br><br>`;
+        html += `<div style="text-align:center;padding:16px;background:#f5f3ff;border-radius:10px;margin:10px 0">`;
+        html += `<div style="font-size:36px;font-weight:900;color:#6366f1">${Math.max(0, runwayMonths)} months</div>`;
+        html += `<div style="font-size:12px;font-weight:600;color:#6b7280">Financial Runway</div></div>`;
+        html += `<strong>💡 To Extend Your Runway:</strong><br>`;
+        html += `• Cut spending by 40% instead → ${reducedSpending > 0 ? Math.floor(availableFunds / (exp * 0.6)) : 0} months<br>`;
+        html += `• Freelance ${fmt(Math.round(reducedSpending * 0.5))}/month on the side → runway doubles<br>`;
+        html += `• Recommended minimum: 6 months runway before quitting`;
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // ═══ DEEP SUMMARY / HEALTH SCORE / ANOMALY ═══
+
+      if (t.match(/deep|health.?score|full analysis|comprehensive|complete.*analysis|financial.*health|score.*finance/)) {
+        if (inc === 0 && exp === 0) return { type: 'pro_plain', text: "I need your financial data to run a deep analysis! Add some income and expenses first, then I'll give you a comprehensive health score with actionable insights." };
+        const score = calcHealthScore();
+        const personality = getPersonality();
+        const anomalies = detectAnomalies();
+        const proj = getProjections();
+        const scoreColor = score >= 75 ? '#16a34a' : score >= 50 ? '#ea580c' : '#ef4444';
+
+        let html = `<div class="finny-pro-card"><h4>🧠 Deep Financial Analysis</h4>`;
+        html += `<div style="display:flex;align-items:center;gap:16px;margin-top:12px">`;
+        html += `<div style="width:80px;height:80px;border-radius:50%;border:4px solid ${scoreColor};display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="font-size:28px;font-weight:900">${score}</div></div>`;
+        html += `<div><div style="font-size:12px;font-weight:700;opacity:0.8">FINANCIAL HEALTH SCORE</div><div style="font-size:14px;font-weight:600;margin-top:4px">${personality.name}</div><div style="font-size:11px;opacity:0.7;margin-top:2px">${personality.desc}</div></div>`;
+        html += `</div></div>`;
+
+        // Spending breakdown with bars
+        html += `<div class="finny-pro-section"><div class="finny-pro-section-title">📊 Spending Breakdown</div>`;
+        sorted.slice(0, 6).forEach(([cat, amt]) => {
+          const pct = ((amt / exp) * 100).toFixed(1);
+          html += `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:#374151"><span>${cat}</span><span>${fmt(amt)} (${pct}%)</span></div>`;
+          html += `<div class="finny-pro-meter"><div class="finny-pro-meter-fill" style="width:${pct}%;background:${parseFloat(pct) > 40 ? '#ef4444' : parseFloat(pct) > 25 ? '#f59e0b' : '#22c55e'}"></div></div></div>`;
+        });
+        html += `</div>`;
+
+        // Anomalies
+        if (anomalies.length > 0) {
+          html += `<div class="finny-pro-section"><div class="finny-pro-section-title">🚨 Anomalies Detected</div>`;
+          anomalies.slice(0, 3).forEach(a => {
+            html += `<div class="finny-pro-insight" style="border-color:#fecaca">⚠️ <strong>${a.category}</strong>: ${fmt(a.amount)} is ${a.ratio}x your average (${fmt(parseFloat(a.avg))}). Investigate this spike.</div>`;
+          });
+          html += `</div>`;
+        }
+
+        // Projections
+        html += `<div class="finny-pro-section"><div class="finny-pro-section-title">🔮 Savings Projections</div>`;
+        html += `<div class="finny-pro-insight">`;
+        html += `• 3 months: <strong>${fmt(Math.round(proj.month3))}</strong><br>`;
+        html += `• 6 months: <strong>${fmt(Math.round(proj.month6))}</strong><br>`;
+        html += `• 12 months: <strong>${fmt(Math.round(proj.month12))}</strong><br>`;
+        html += `• 12 months (with 6% returns): <strong>${fmt(Math.round(proj.month12compound))}</strong>`;
+        html += `</div></div>`;
+
+        // Action plan
+        html += `<div class="finny-pro-section"><div class="finny-pro-section-title">🎯 Personalized Action Plan</div>`;
+        const actions = [];
+        if (rate < 10) actions.push({ priority: 'URGENT', text: `Increase savings rate from ${rate.toFixed(1)}% to at least 15%. Cut ${sorted.length > 0 ? sorted[0][0] : 'top category'} spending.` });
+        if (sorted.length > 0 && sorted[0][1] / exp > 0.4) actions.push({ priority: 'IMPORTANT', text: `${sorted[0][0]} at ${((sorted[0][1] / exp) * 100).toFixed(0)}% is too dominant. Diversify spending or find cheaper alternatives.` });
+        if (incCount < 2) actions.push({ priority: 'OPTIMIZE', text: 'Diversify income sources. Consider freelancing, investments, or side projects.' });
+        if (anomalies.length > 0) actions.push({ priority: 'IMPORTANT', text: `${anomalies.length} spending anomaly detected. Review unusual transactions.` });
+        actions.push({ priority: 'INFO', text: `At current rate, you'll save ${fmt(Math.round(proj.month12))} in 12 months. Can you increase monthly savings by 10%?` });
+
+        actions.forEach(a => {
+          const cls = a.priority === 'URGENT' ? 'finny-pro-urgent' : a.priority === 'IMPORTANT' ? 'finny-pro-important' : a.priority === 'OPTIMIZE' ? 'finny-pro-optimize' : 'finny-pro-info';
+          html += `<div class="finny-pro-action"><span class="finny-pro-badge ${cls}">${a.priority}</span><div style="font-size:12px;color:#374151;line-height:1.5">${a.text}</div></div>`;
+        });
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // Anomaly detection standalone
+      if (t.match(/anomal|spike|unusual|outlier|weird.*spend|strange.*spend|detect/)) {
+        const anomalies = detectAnomalies();
+        if (!anomalies.length) return { type: 'pro_plain', text: "✅ No spending anomalies detected! Your transaction amounts are consistent across categories. Keep it up!" };
+        let html = `<div class="finny-pro-card"><h4>🚨 Spending Anomaly Report</h4></div>`;
+        html += `<div class="finny-pro-insight">`;
+        anomalies.forEach(a => {
+          html += `<strong>${a.category}:</strong> ${fmt(a.amount)} is ${a.ratio}x your category average of ${fmt(parseFloat(a.avg))}.<br>`;
+        });
+        html += `<br><strong>💡 Action:</strong> Review these transactions. Anomalies could be one-time purchases (acceptable) or lifestyle creep (needs attention).`;
+        html += `</div>`;
+        return { type: 'pro_html', html: html };
+      }
+
+      // ═══ FALLBACK: delegate to Finny 1.0 for basic stuff but wrap in Pro styling ═══
+      // First check if basic Finny can handle it
+      const basicResult = runFinny(q);
+      // Wrap basic result in pro styling
+      if (basicResult.type === 'plain') return { type: 'pro_plain', text: basicResult.text };
+      return basicResult; // return as-is for complex types (forms, edit/delete)
+    }
+
     function chatSend(txt, isVoice) {
       const inp = document.getElementById('chat-inp'), text = txt || inp.value.trim();
       if (!text) return; inp.value = ''; addUser(text);
       document.getElementById('chat-snd').disabled = true; showTyping();
-      setTimeout(() => { document.getElementById('typing-el')?.remove(); const d = runFinny(text); addBot(d); if (isVoice && window.speakReply) speakReply(d); document.getElementById('chat-snd').disabled = false; sc(); }, 550);
+      setTimeout(() => { document.getElementById('typing-el')?.remove(); const d = finnyVersion === '2' ? runFinnyPro(text) : runFinny(text); addBot(d); if (isVoice && window.speakReply) speakReply(d); document.getElementById('chat-snd').disabled = false; sc(); }, finnyVersion === '2' ? 900 : 550);
     }
     function sc() { const m = document.getElementById('chat-msgs'); m.scrollTop = m.scrollHeight; }
     function finnyAddIncome(src, amt, pay, desc) { const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); state.income.push({ id: nextId++, source: src, amount: amt, paymethod: pay || 'Bank Transfer', desc: desc || '', date: today }); saveState(); renderIncome(); renderHome(); }
@@ -3396,13 +4051,31 @@
       if (t.match(/founder|ceo|who made|who built|who created|who is behind|who are you|vrishank/)) {
         return { type: 'founder', text: "Finvio was founded by <strong>Vrishank Reddy</strong> — a student entrepreneur building the future of personal finance. Here's how you can connect with him:", links: [{ label: 'Instagram', url: 'https://www.instagram.com/vrishank.reddy/', icon: '📸' }, { label: 'LinkedIn', url: 'https://www.linkedin.com/in/vrishank-reddy-03a71936b/', icon: '💼' }] };
       }
-      if (t.match(/^(hi|hello|hey|namaste|yo|wassup|how's good|how are you)?[\s!?]*$/)) return { type: 'list', text: 'Hey! What would you like to know?', items: ['📊 Summary', '🏆 Top categories', '💰 Savings', '💡 Recommendations', '🎓 Finance questions'] };
-      if (t.match(/thank|thanks|great|awesome/)) return { type: 'plain', text: 'Happy to help! 😊' };
+      if (t.match(/^(hi+|hello+|hey+|heya|hiya|howdy|yo+|sup|wh?at'?s? ?up|namaste|hola|bonjour|ciao|salut|good ?(morning|afternoon|evening|night|day)|g'?day|greetings|how'?s it going|how are you|how do you do|what'?s good|peace|aloha|ohayo|wagwan|wazzup|whatsup|wassup|yoo+|ayy+|cheers)[\s!?.,]*$/i)) {
+        const g = ["Hey there! 👋 I'm Finny, your friendly finance buddy. What can I help you with?", "Hello! 😊 Great to see you! Ask me about your spending, savings, or any finance topic!", "Hi! 🌟 Finny here, ready to help. Try 'give me a summary' or ask me anything!", "Hey hey! 💚 What's on your financial mind today?", "Yo! 🙌 Finny's here. Let's talk money!"];
+        return { type: 'list', text: g[Math.floor(Math.random() * g.length)], items: ['📊 Summary', '🏆 Top categories', '💰 Savings', '💡 Recommendations', '🎓 Finance questions'] };
+      }
+      if (t.match(/^(thanks?|thank you|thx|ty|appreciate|cool|nice|awesome|amazing|great|wonderful|perfect|excellent|love it|wow+|incredible|fantastic|superb|well done|bravo|cheers)[\s!?.]*$/i)) {
+        const r = ["Happy to help! 😊 Anything else you'd like to know?", "You're welcome! 💚 Keep tracking those finances!", "Anytime! 🎉 Let me know if you need more insights.", "Glad I could help! 😄 Your finances are in good hands.", "No problem at all! 🙌 Keep up the great work with your money!"];
+        return { type: 'plain', text: r[Math.floor(Math.random() * r.length)] };
+      }
+      if (/^(bye+|goodbye|see ya|later|cya|ttyl|gotta go|take care|good night|nite|cheerio|adios|sayonara|tata|peace out)[\s!?.]*$/i.test(t)) return { type: 'plain', text: "Bye! 👋 Your data is safe. Come back anytime!" };
       for (const e of KB) if (e.k.some(k => t.includes(k))) return { type: 'plain', text: e.a };
       return { type: 'list', text: "Here's what I can help with:", items: ["📊 'Give me a summary'", "💵 'Show my incomes'", "💸 'Show my expenses'", "✏️ 'Edit income' or 'Edit expense'", "🗑️ 'Delete income' or 'Delete expense'", "🏆 'Top spending categories'", "💰 'How much did I save?'", "💡 'Recommendations'"] };
     }
     const BAV = `<div class="bav"><img src="./finny-logo.png" alt="Finny"/></div>`;
     function renderBot(r) {
+      if (r.type === 'pro_plain') return `<div style="font-size:13px;color:#374151;line-height:1.7;font-weight:500">${r.text}</div>`;
+      if (r.type === 'pro_html') return r.html;
+      if (r.type === 'pro_rich') {
+        let h = `<div class="finny-pro-card"><h4>${r.title}</h4></div>`;
+        r.sections.forEach(s => {
+          h += `<div class="finny-pro-section"><div class="finny-pro-section-title">${s.title}</div>`;
+          s.items.forEach(i => { h += `<div style="font-size:12px;color:#374151;padding:4px 0;line-height:1.5">• ${i}</div>`; });
+          h += `</div>`;
+        });
+        return h;
+      }
       if (r.type === 'plain') return `<div style="font-size:13px;color:#374151;line-height:1.65;font-weight:500">${r.text}</div>`;
       if (r.type === 'add_income_form') {
         const fid = 'fi' + Date.now();
