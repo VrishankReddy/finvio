@@ -3117,45 +3117,36 @@
         </div>
         <div class="content">
           <div class="card" style="display:flex;align-items:center;gap:14px;max-width:500px">
-            <img src="./finvio-logo.png" alt="Finvio"
-              style="width:56px;height:56px;border-radius:16px;object-fit:cover;flex-shrink:0" />
+            <div id="profile-avatar" style="width:56px;height:56px;border-radius:16px;background:var(--green);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff">?</div>
             <div>
-              <div style="font-size:18px;font-weight:800;color:#111827">Your Dashboard</div>
-              <div style="font-size:13px;color:#9ca3af;margin-top:2px">Finvio · Web version · No login required</div>
+              <div id="profile-display-name" style="font-size:18px;font-weight:800;color:#111827">Your Profile</div>
+              <div id="profile-display-sub" style="font-size:13px;color:#9ca3af;margin-top:2px">Update your info below</div>
             </div>
           </div>
           <div class="card" style="max-width:500px">
-            <div style="font-size:13px;color:#6b7280;font-weight:600;margin-bottom:10px">Download the full Finvio app
+            <div class="card-title">Personal Information</div>
+            <div class="field">
+              <label>Full Name</label>
+              <input type="text" id="profile-name" placeholder="Enter your name" oninput="handleProfileInput()" />
             </div>
-            <a href="https://play.google.com/store/apps/details?id=com.finvio" target="_blank"
-              style="display:inline-flex;align-items:center;gap:10px;background:#6ab04c;border-radius:12px;padding:12px 18px;text-decoration:none">
-              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
-                <path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5c.5.28.5 1.22 0 1.5L4.5 21c-.5.33-1.5.33-1.5-.5z"
-                  fill="white" />
-              </svg>
-              <div>
-                <div style="font-size:10px;color:rgba(255,255,255,0.8);font-weight:600">Get it on</div>
-                <div style="font-size:15px;color:#fff;font-weight:800">Google Play Store</div>
-              </div>
-            </a>
-            <div style="font-size:12px;color:#9ca3af;margin-top:10px;font-weight:500">Family codes, full sync & more —
-              exclusively in the app</div>
-          </div>
-          <div class="card" style="max-width:500px;opacity:.5">
-            <div style="display:flex;align-items:center;gap:10px">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"
-                  stroke="#6b7280" stroke-width="2" stroke-linecap="round" />
-              </svg>
-              <div>
-                <div style="font-size:14px;font-weight:700;color:#374151">Family Code</div>
-                <div style="font-size:12px;color:#9ca3af">Connect your family's finances</div>
-              </div>
-              <span
-                style="margin-left:auto;font-size:11px;background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:8px;font-weight:700">App
-                only</span>
+            <div class="field">
+              <label>Email Address</label>
+              <input type="email" id="profile-email" placeholder="Enter your email" oninput="handleProfileInput()" />
             </div>
+            <div class="field">
+              <label>Phone Number</label>
+              <input type="tel" id="profile-phone" placeholder="Enter your phone number" oninput="handleProfileInput()" />
+            </div>
+            <div class="field">
+              <label>Occupation</label>
+              <input type="text" id="profile-occupation" placeholder="e.g. Software Engineer" oninput="handleProfileInput()" />
+            </div>
+            <div class="field">
+              <label>Date of Birth</label>
+              <input type="date" id="profile-birthday" oninput="handleProfileInput()" />
+            </div>
+            <button class="btn-save" style="width:100%;margin-top:6px" onclick="saveProfile()">Save Profile</button>
+            <div id="profile-save-msg" style="display:none;text-align:center;font-size:12px;color:var(--green);font-weight:700;margin-top:8px">Profile saved!</div>
           </div>
         </div>
       </div>
@@ -3336,13 +3327,132 @@
       } catch (e) { return { income: [], expense: [] }; }
     }
     function saveState() {
-      try { localStorage.setItem('finvio_state', JSON.stringify(state)); } catch (e) { }
+      try {
+        localStorage.setItem('finvio_state', JSON.stringify(state));
+        localStorage.setItem('finvio_nextid', String(nextId));
+      } catch (e) { }
     }
-    function loadNextId() {
-      try { return parseInt(localStorage.getItem('finvio_nextid') || '1'); } catch (e) { return 1; }
+    function loadNextId(state) {
+      try {
+        const stored = parseInt(localStorage.getItem('finvio_nextid') || '0');
+        const maxIncome = state.income.reduce((m, i) => Math.max(m, i.id || 0), 0);
+        const maxExpense = state.expense.reduce((m, e) => Math.max(m, e.id || 0), 0);
+        return Math.max(stored, maxIncome, maxExpense) + 1;
+      } catch (e) { return 1; }
     }
     const state = loadState();
-    let nextId = loadNextId(), currentTab = 'home', chatReady = false;
+    // Migrate legacy entries: ensure every income/expense has a unique numeric id
+    (function ensureUniqueIds() {
+      const seen = new Set();
+      let counter = 1;
+      const reassign = (arr) => arr.forEach(item => {
+        if (typeof item.id !== 'number' || seen.has(item.id)) {
+          while (seen.has(counter)) counter++;
+          item.id = counter++;
+        }
+        seen.add(item.id);
+        counter = Math.max(counter, item.id + 1);
+      });
+      reassign(state.income);
+      reassign(state.expense);
+    })();
+    let nextId = loadNextId(state), currentTab = 'home', chatReady = false;
+    saveState();
+
+    function loadProfile() {
+      try { const p = localStorage.getItem('finvio_profile'); return p ? JSON.parse(p) : {}; } catch(e) { return {}; }
+    }
+    function getUserName() {
+      const p = loadProfile(); return p.name ? p.name.split(' ')[0] : '';
+    }
+    function getUserFullProfile() {
+      const p = loadProfile();
+      if (p.birthday) {
+        const dob = new Date(p.birthday);
+        const now = new Date();
+        let age = now.getFullYear() - dob.getFullYear();
+        const m = now.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && now.getDate() < dob.getDate())) age--;
+        const nextBday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
+        if (nextBday < now) nextBday.setFullYear(now.getFullYear() + 1);
+        const daysUntilBday = Math.ceil((nextBday - now) / (1000 * 60 * 60 * 24));
+        p.age = age;
+        p.daysUntilBirthday = daysUntilBday;
+        p.isBirthdayToday = daysUntilBday === 365 || daysUntilBday === 0;
+      }
+      return p;
+    }
+    function collectProfileFormData() {
+      return {
+        name: document.getElementById('profile-name').value.trim(),
+        email: document.getElementById('profile-email').value.trim(),
+        phone: document.getElementById('profile-phone').value.trim(),
+        occupation: document.getElementById('profile-occupation').value.trim(),
+        birthday: document.getElementById('profile-birthday').value
+      };
+    }
+    function persistProfile(profile) {
+      try { localStorage.setItem('finvio_profile', JSON.stringify(profile)); } catch(e) {}
+    }
+    function getFinnyDisplayName(version) {
+      return version === '2' ? 'Finny Pro' : 'Finny';
+    }
+    function refreshFinnyNameUI() {
+      const isPro = finnyVersion === '2';
+      const headerName = document.getElementById('finny-header-name');
+      const btnLabel = document.getElementById('finny-model-btn-label');
+      const footer = document.getElementById('finny-footer');
+      if (btnLabel) btnLabel.textContent = getFinnyDisplayName(isPro ? '2' : '1');
+      if (headerName) headerName.textContent = getFinnyDisplayName(isPro ? '2' : '1');
+      if (footer) footer.textContent = isPro
+        ? 'Finny Pro · Advanced Intelligence · Deep Financial Analysis'
+        : 'Finny · Free tier · Rule-based AI';
+    }
+    function saveProfile() {
+      const profile = collectProfileFormData();
+      persistProfile(profile);
+      updateProfileHeader(profile);
+      refreshFinnyNameUI();
+      const msg = document.getElementById('profile-save-msg');
+      msg.style.display = 'block';
+      setTimeout(() => { msg.style.display = 'none'; }, 2500);
+    }
+    function handleProfileInput() {
+      const profile = collectProfileFormData();
+      persistProfile(profile);
+      previewProfile();
+      refreshFinnyNameUI();
+    }
+    function previewProfile() {
+      updateProfileHeader(collectProfileFormData());
+    }
+    function updateProfileHeader(profile) {
+      const nameEl = document.getElementById('profile-display-name');
+      const subEl = document.getElementById('profile-display-sub');
+      const avatarEl = document.getElementById('profile-avatar');
+      if (profile.name) {
+        nameEl.textContent = profile.name;
+        let sub = [];
+        if (profile.email) sub.push(profile.email);
+        if (profile.occupation) sub.push(profile.occupation);
+        subEl.textContent = sub.length ? sub.join(' · ') : 'Your Profile';
+        avatarEl.textContent = profile.name.charAt(0).toUpperCase();
+      } else {
+        nameEl.textContent = 'Your Profile';
+        subEl.textContent = 'Update your info below';
+        avatarEl.textContent = '?';
+      }
+    }
+    function initProfile() {
+      const profile = loadProfile();
+      if (profile.name) document.getElementById('profile-name').value = profile.name;
+      if (profile.email) document.getElementById('profile-email').value = profile.email;
+      if (profile.phone) document.getElementById('profile-phone').value = profile.phone;
+      if (profile.occupation) document.getElementById('profile-occupation').value = profile.occupation;
+      if (profile.birthday) document.getElementById('profile-birthday').value = profile.birthday;
+      updateProfileHeader(profile);
+      refreshFinnyNameUI();
+    }
     function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('show'); }
     function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
     function goTab(id) {
@@ -3413,10 +3523,7 @@
       <div class="card"><div class="card-title">Income by source</div>${drawPie(incC, inc, IC, 'No income yet')}</div>
     </div>
     ${rec.length ? `<div class="card"><div class="card-title">Recent transactions</div><div>${rec.map(t => t.type === 'income' ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #f3f4f6"><div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:#16a34a;flex-shrink:0"></div><div><div style="font-size:13px;font-weight:700;color:#374151">${t.source}</div><div style="font-size:11px;color:#9ca3af">${t.desc || ''}</div></div></div><div style="font-size:14px;font-weight:700;color:#16a34a">+${fmt(t.amount)}</div></div>` : `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid #f3f4f6"><div style="display:flex;align-items:center;gap:8px"><div style="width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0"></div><div><div style="font-size:13px;font-weight:700;color:#374151">${t.title || t.category}</div><div style="font-size:11px;color:#9ca3af">${t.category}</div></div></div><div style="font-size:14px;font-weight:700;color:#ef4444">-${fmt(t.amount)}</div></div>`).join('')}</div></div>` : ''}
-    <div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <div style="flex:1;min-width:180px"><div style="font-size:13px;font-weight:700;color:#111827;margin-bottom:2px">Get the full Finvio experience</div><div style="font-size:12px;color:#9ca3af">Family codes, sync & more on the app</div></div>
-      <a href="https://play.google.com/store/apps/details?id=com.finvio" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#6ab04c;border-radius:10px;padding:9px 14px;text-decoration:none;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5c.5.28.5 1.22 0 1.5L4.5 21c-.5.33-1.5.33-1.5-.5z" fill="white"/></svg><span style="font-size:13px;color:#fff;font-weight:700">Google Play</span></a>
-    </div>`;
+    `;
     }
     function renderIncome() {
       const ib = document.getElementById('income-body'), tot = state.income.reduce((s, i) => s + i.amount, 0);
@@ -3582,7 +3689,8 @@
     ];
     function saveChatHistory() { try { const msgs = []; document.querySelectorAll('#chat-msgs .bot-row:not(#typing-el), #chat-msgs .user-row').forEach(el => { if (el.classList.contains('user-row')) { msgs.push({ role: 'user', html: el.querySelector('.ub').innerHTML }); } else { msgs.push({ role: 'bot', html: el.querySelector('.bb').innerHTML }); } }); localStorage.setItem('finvio_chat', JSON.stringify(msgs)); } catch (e) { } }
     function loadChatHistory() { try { const raw = localStorage.getItem('finvio_chat'); return raw ? JSON.parse(raw) : []; } catch (e) { return []; } }
-    function clearFinnyChat() { if (confirm("Clear all Finny chat history?")) { document.getElementById('chat-msgs').innerHTML = ''; localStorage.removeItem('finvio_chat'); addBot({ type: 'list', text: "Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!", items: ['📊 Monthly summary', '🚨 Overspending alerts', '🏆 Top categories', '💰 Savings analysis', '🎓 Finance questions (SIP, PPF, compound interest...)'] }); } }
+    function getFinnyWelcome() { const un = getUserName(); const up2 = getUserFullProfile(); const isBday = up2.isBirthdayToday; if (isBday && un) return { type: 'list', text: `🎂 Happy Birthday, ${un}! I'm Finny — your finance buddy. What a great day to check your finances!`, items: ['📊 Monthly summary', '🚨 Overspending alerts', '🏆 Top categories', '💰 Savings analysis', '🎓 Finance questions'] }; if (un) return { type: 'list', text: `Hey ${un}! 👋 I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!`, items: ['📊 Monthly summary', '🚨 Overspending alerts', '🏆 Top categories', '💰 Savings analysis', '🎓 Finance questions (SIP, PPF, compound interest...)'] }; return { type: 'list', text: "Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything! (Tip: add your name in Profile for a personalized experience!)", items: ['📊 Monthly summary', '🚨 Overspending alerts', '🏆 Top categories', '💰 Savings analysis', '🎓 Finance questions (SIP, PPF, compound interest...)'] }; }
+    function clearFinnyChat() { if (confirm("Clear all Finny chat history?")) { document.getElementById('chat-msgs').innerHTML = ''; localStorage.removeItem('finvio_chat'); addBot(getFinnyWelcome()); } }
     function renderChips() {
       const chips = document.getElementById('chat-chips');
       chips.innerHTML = '';
@@ -3603,7 +3711,7 @@
         });
         sc();
       } else {
-        addBot({ type: 'list', text: "Hey! I'm Finny, your Finvio finance assistant. Add some income and expenses, then ask me anything!", items: ['📊 Monthly summary', '🚨 Overspending alerts', '🏆 Top categories', '💰 Savings analysis', '🎓 Finance questions (SIP, PPF, compound interest...)'] });
+        addBot(getFinnyWelcome());
       }
     }
 
@@ -3649,9 +3757,9 @@
       const label = document.getElementById('finny-status-label');
       const footer = document.getElementById('finny-footer');
       if (v === '2') {
-        btnLabel.textContent = 'Finny Pro';
+        btnLabel.textContent = getFinnyDisplayName('2');
         modelBtn.classList.add('pro-active');
-        name.textContent = 'Finny Pro';
+        name.textContent = getFinnyDisplayName('2');
         name.style.background = 'linear-gradient(90deg,#6366f1,#8b5cf6)';
         name.style.webkitBackgroundClip = 'text';
         name.style.webkitTextFillColor = 'transparent';
@@ -3660,9 +3768,9 @@
         label.style.color = '#8b5cf6';
         footer.textContent = 'Finny Pro · Advanced Intelligence · Deep Financial Analysis';
       } else {
-        btnLabel.textContent = 'Finny';
+        btnLabel.textContent = getFinnyDisplayName('1');
         modelBtn.classList.remove('pro-active');
-        name.textContent = 'Finny';
+        name.textContent = getFinnyDisplayName('1');
         name.style.background = '';
         name.style.webkitBackgroundClip = '';
         name.style.webkitTextFillColor = '';
@@ -3681,6 +3789,9 @@
 
     function runFinnyPro(q) {
       const t = q.toLowerCase().trim();
+      const userName = getUserName();
+      const up = getUserFullProfile();
+      const n = userName || 'friend';
       const inc = state.income.reduce((s, i) => s + i.amount, 0);
       const exp = state.expense.reduce((s, e) => s + e.amount, 0);
       const sav = inc - exp;
@@ -3780,15 +3891,29 @@
         };
       }
 
+      // ═══ BIRTHDAY CHECK ═══
+      if (up.isBirthdayToday) {
+        return { type: 'pro_plain', text: `🎂 Happy Birthday, ${n}! What a special day — and here you are thinking about your finances. That's the mark of someone truly ahead of the game. I ran a quick check: you've logged ${state.income.length + state.expense.length} transactions. Here's my birthday gift to you — ask me for a 'deep analysis' and I'll give you a full financial portrait. 🎉` };
+      }
+      if (up.daysUntilBirthday && up.daysUntilBirthday <= 7 && !up.isBirthdayToday) {
+        return { type: 'pro_plain', text: `Almost your birthday, ${n}! 🎂 Just ${up.daysUntilBirthday} day${up.daysUntilBirthday > 1 ? 's' : ''} away. A great time to take stock of where you stand financially. Ask me for your 'financial health score' or 'deep analysis' — consider it a birthday gift to yourself. 🎁` };
+      }
+
       // ═══ CONVERSATIONAL GREETINGS (talkative) ═══
       const greetings = /^(hi+|hello+|hey+|heya|hiya|howdy|yo+|sup|wh?at'?s? ?up|namaste|hola|bonjour|ciao|salut|good ?(morning|afternoon|evening|night|day)|g'?day|oi|ahoy|greetings|what'?s good|how'?s it going|how are you|how do you do|long time|nice to (meet|see)|welcome|peace|salaam|shalom|aloha|konnichiwa|ohayo|annyeong|marhaba|hei|hej|moin|servus|howzit|wagwan|wazzup|whatsup|wassup|yoo+|ayy+|ey+|oi+|cheers|bless)[\s!?.,:;]*$/i;
       if (greetings.test(t)) {
-        const replies = [
-          "Hey! ✦ I'm Finny Pro — your advanced financial intelligence engine. I can analyze spending patterns, run Monte Carlo retirement simulations, model what-if scenarios, track your wealth-building milestones, audit subscriptions, and much more. What would you like to explore?",
-          "Hello! 🚀 Welcome to Finny Pro. I've got powerful analytics ready — from health scores to compound growth simulations. Try: 'deep analysis', '50/30/20 check', 'investment roadmap', or 'what if I earn 500 more'!",
-          "Hi! ✨ Finny Pro here, your personal financial strategist. I analyze every transaction, model future scenarios, and give you insights that turn data into decisions. What's on your financial mind?",
-          "Hey! 💜 Finny Pro at your service. I run burn rate analysis, income diversification scoring, inflation impact modeling, debt strategy optimization, and real-time what-if simulations. Ask me anything.",
-          "Yo! 🔮 Finny Pro — think of me as your CFO on demand. Deep analysis, compound growth projections, retirement simulations, wealth roadmaps. Give me a topic and I'll go deep. What's first?"
+        const txCount = state.income.length + state.expense.length;
+        const hasData = txCount > 0;
+        const replies = userName ? [
+          `Hey ${n}! ✦ I'm Finny Pro — your personal financial intelligence engine. ${hasData ? `I can already see you've logged ${txCount} transaction${txCount > 1 ? 's' : ''} — there's a lot I can analyze for you.` : `Let's get your finances mapped out.`} Try: 'deep analysis', 'financial health score', or 'what if I save 20% more'!`,
+          `Hello ${n}! 🚀 Welcome back to Finny Pro. ${hasData ? `You've got ${txCount} data points for me to work with — I can run health scores, projections, anomaly detection, and more.` : `Start by logging your income and expenses, then I'll run a full analysis for you.`} What would you like to explore?`,
+          `Hi ${n}! ✨ Finny Pro here — your dedicated financial strategist. ${hasData ? `Based on your ${state.expense.length} expense${state.expense.length !== 1 ? 's' : ''} and ${state.income.length} income entr${state.income.length !== 1 ? 'ies' : 'y'}, I have insights ready.` : `Add your first transaction and I'll start building your financial picture.`} What's on your mind?`,
+          `Hey ${n}! 💜 Finny Pro at your service. I run burn rate analysis, income diversification scoring, inflation impact modeling, debt strategy optimization, and real-time what-if simulations. ${hasData ? 'Your data is loaded and ready to analyze.' : 'Start adding transactions and I\'ll get to work.'} Ask me anything!`,
+          `Yo ${n}! 🔮 Finny Pro — think of me as your personal CFO. Deep analysis, compound growth projections, retirement simulations, wealth roadmaps — all tailored for you. ${hasData ? `You've got ${txCount} transaction${txCount > 1 ? 's' : ''} on record.` : `No data yet — add your first entry to get started.`} What's first?`
+        ] : [
+          "Hey! ✦ I'm Finny Pro — your advanced financial intelligence engine. I can analyze spending patterns, run retirement simulations, model what-if scenarios, and much more. Pro tip: add your name in Profile for a personalized experience! What would you like to explore?",
+          "Hello! 🚀 Welcome to Finny Pro. I've got powerful analytics ready — from health scores to compound growth simulations. Try: 'deep analysis', '50/30/20 check', or 'investment roadmap'!",
+          "Hi! ✨ Finny Pro here, your personal financial strategist. I analyze every transaction and give you insights that turn data into decisions. Head to Profile to set your name for a personalized experience!"
         ];
         return { type: 'pro_plain', text: replies[Math.floor(Math.random() * replies.length)] };
       }
@@ -3796,19 +3921,23 @@
       // ═══ THANKS / POSITIVE RESPONSES ═══
       const thanks = /^(thanks?|thank you|thx|ty|appreciate|cool|nice|awesome|amazing|great|wonderful|brilliant|perfect|excellent|love it|sweet|dope|sick|fire|lit|goat|legend|wow+|omg|oh wow|incredible|fantastic|fabulous|superb|magnificent|splendid|marvelous|phenomenal|outstanding|remarkable|you('?re| are) (the best|amazing|great|awesome|incredible)|good (job|work|one)|well done|bravo|kudos|cheers|bless|respect|much love|big ups)[\s!?.]*$/i;
       if (thanks.test(t)) {
-        const replies = [
-          "You're welcome! 😊 Finny Pro is always here to help you make smarter financial decisions. Got more questions? Fire away!",
-          "Happy to help! 💜 Remember, I get smarter with more data — keep logging your transactions and I'll keep the insights flowing!",
-          "Anytime! 🚀 That's what I'm here for. Want me to run another analysis or explore a different angle?",
-          "Glad I could help! ✨ Pro tip: the more transactions you log, the more powerful my analysis becomes. Let me know if you need anything else!",
-          "Thank YOU for being proactive about your finances! 🎯 Most people don't bother analyzing their money — you're already ahead of the game."
+        const replies = userName ? [
+          `You're welcome, ${n}! 😊 Finny Pro is always here. The more you log, the smarter my analysis gets — keep going!`,
+          `Happy to help, ${n}! 💜 Remember, every transaction you log makes my insights more powerful. What else can I analyze for you?`,
+          `Anytime, ${n}! 🚀 That's exactly what I'm here for. Want another deep dive or a different angle?`,
+          `Glad I could help, ${n}! ✨ Pro tip: try 'deep analysis' or 'investment roadmap' for more. I've got a lot ready for you.`,
+          `Thank YOU, ${n}, for being proactive about your money! 🎯 Most people don't bother — the fact that you're here puts you ahead of the game.`
+        ] : [
+          "You're welcome! 😊 Finny Pro is always here. The more you log, the smarter my analysis gets — keep going!",
+          "Happy to help! 💜 Every transaction you log makes my insights more powerful. What else can I analyze?",
+          "Anytime! 🚀 Want another deep dive or a different angle?"
         ];
         return { type: 'pro_plain', text: replies[Math.floor(Math.random() * replies.length)] };
       }
 
       // ═══ FAREWELL ═══
       if (/^(bye+|goodbye|see ya|later|cya|ttyl|gotta go|peace out|take care|good night|nite|signing off|catch you later|adios|sayonara|au revoir|tata|cheerio|fare ?well|until next time)[\s!?.]*$/i.test(t)) {
-        return { type: 'pro_plain', text: "Take care! 💜 Your financial data is safe and sound. Come back anytime — Finny Pro never sleeps! 🌙" };
+        return { type: 'pro_plain', text: userName ? `Take care, ${n}! 💜 Your financial data is safe and sound. Come back anytime — Finny Pro never sleeps! 🌙` : "Take care! 💜 Your financial data is safe. Come back anytime — Finny Pro never sleeps! 🌙" };
       }
 
       // ═══ WHO ARE YOU ═══
@@ -4101,14 +4230,14 @@
       // ═══ DEEP SUMMARY / HEALTH SCORE / ANOMALY ═══
 
       if (t.match(/deep|health.?score|full analysis|comprehensive|complete.*analysis|financial.*health|score.*finance/)) {
-        if (inc === 0 && exp === 0) return { type: 'pro_plain', text: "I need your financial data to run a deep analysis! Add some income and expenses first, then I'll give you a comprehensive health score with actionable insights." };
+        if (inc === 0 && exp === 0) return { type: 'pro_plain', text: userName ? `${n}, I need your financial data to run a deep analysis! Add some income and expenses first, then I'll give you a comprehensive health score with actionable insights.` : "I need your financial data to run a deep analysis! Add some income and expenses first, then I'll give you a comprehensive health score with actionable insights." };
         const score = calcHealthScore();
         const personality = getPersonality();
         const anomalies = detectAnomalies();
         const proj = getProjections();
         const scoreColor = score >= 75 ? '#16a34a' : score >= 50 ? '#ea580c' : '#ef4444';
 
-        let html = `<div class="finny-pro-card"><h4>🧠 Deep Financial Analysis</h4>`;
+        let html = `<div class="finny-pro-card"><h4>🧠 ${userName ? `${n}'s Deep Financial Analysis` : 'Deep Financial Analysis'}</h4><div style="font-size:11px;opacity:0.75;margin-top:3px">${up.occupation ? `${up.occupation} · ` : ''}${up.age ? `Age ${up.age} · ` : ''}Powered by Finny Pro</div>`;
         html += `<div style="display:flex;align-items:center;gap:16px;margin-top:12px">`;
         html += `<div style="width:80px;height:80px;border-radius:50%;border:4px solid ${scoreColor};display:flex;align-items:center;justify-content:center;flex-shrink:0"><div style="font-size:28px;font-weight:900">${score}</div></div>`;
         html += `<div><div style="font-size:12px;font-weight:700;opacity:0.8">FINANCIAL HEALTH SCORE</div><div style="font-size:14px;font-weight:600;margin-top:4px">${personality.name}</div><div style="font-size:11px;opacity:0.7;margin-top:2px">${personality.desc}</div></div>`;
@@ -4142,13 +4271,18 @@
         html += `</div></div>`;
 
         // Action plan
-        html += `<div class="finny-pro-section"><div class="finny-pro-section-title">🎯 Personalized Action Plan</div>`;
+        html += `<div class="finny-pro-section"><div class="finny-pro-section-title">🎯 ${userName ? `${n}'s Personalized Action Plan` : 'Personalized Action Plan'}</div>`;
         const actions = [];
-        if (rate < 10) actions.push({ priority: 'URGENT', text: `Increase savings rate from ${rate.toFixed(1)}% to at least 15%. Cut ${sorted.length > 0 ? sorted[0][0] : 'top category'} spending.` });
-        if (sorted.length > 0 && sorted[0][1] / exp > 0.4) actions.push({ priority: 'IMPORTANT', text: `${sorted[0][0]} at ${((sorted[0][1] / exp) * 100).toFixed(0)}% is too dominant. Diversify spending or find cheaper alternatives.` });
-        if (incCount < 2) actions.push({ priority: 'OPTIMIZE', text: 'Diversify income sources. Consider freelancing, investments, or side projects.' });
-        if (anomalies.length > 0) actions.push({ priority: 'IMPORTANT', text: `${anomalies.length} spending anomaly detected. Review unusual transactions.` });
-        actions.push({ priority: 'INFO', text: `At current rate, you'll save ${fmt(Math.round(proj.month12))} in 12 months. Can you increase monthly savings by 10%?` });
+        if (rate < 10) actions.push({ priority: 'URGENT', text: `${userName ? `${n}, your` : 'Your'} savings rate is ${rate.toFixed(1)}% — below the 15% minimum. Cut ${sorted.length > 0 ? sorted[0][0] : 'top category'} spending immediately.` });
+        if (sorted.length > 0 && sorted[0][1] / exp > 0.4) actions.push({ priority: 'IMPORTANT', text: `${sorted[0][0]} is eating ${((sorted[0][1] / exp) * 100).toFixed(0)}% of ${userName ? `${n}'s` : 'your'} budget. Diversify or find cheaper alternatives.` });
+        if (incCount < 2) actions.push({ priority: 'OPTIMIZE', text: `${userName ? `${n}, consider` : 'Consider'} diversifying income sources — freelancing, investments, or a side project. One income stream is fragile.` });
+        if (anomalies.length > 0) actions.push({ priority: 'IMPORTANT', text: `${anomalies.length} spending anomaly detected in ${userName ? `${n}'s` : 'your'} data. Review unusual transactions now.` });
+        if (up.incomeGoal && parseFloat(up.incomeGoal) > 0) {
+          const goalGap = parseFloat(up.incomeGoal) - inc;
+          if (goalGap > 0) actions.push({ priority: 'INFO', text: `${userName ? `${n}, you're` : "You're"} ${fmt(goalGap)} short of your ${fmt(parseFloat(up.incomeGoal))} income goal. ${Math.round((inc/parseFloat(up.incomeGoal))*100)}% there!` });
+          else actions.push({ priority: 'INFO', text: `${userName ? `${n}, you've` : "You've"} hit your ${fmt(parseFloat(up.incomeGoal))} income goal! 🎯 Time to set a higher one.` });
+        }
+        actions.push({ priority: 'INFO', text: `At current rate, ${userName ? n : 'you'} will save ${fmt(Math.round(proj.month12))} in 12 months. Increasing savings by 10% compounds to ${fmt(Math.round(proj.month12 * 1.1))} — a ${fmt(Math.round(proj.month12 * 0.1))} bonus.` });
 
         actions.forEach(a => {
           const cls = a.priority === 'URGENT' ? 'finny-pro-urgent' : a.priority === 'IMPORTANT' ? 'finny-pro-important' : a.priority === 'OPTIMIZE' ? 'finny-pro-optimize' : 'finny-pro-info';
@@ -4679,6 +4813,9 @@
     function finnyDeleteExpense(id) { state.expense = state.expense.filter(e => e.id !== id); saveState(); renderExpense(); renderHome(); }
     function runFinny(q) {
       const t = q.toLowerCase().trim();
+      const userName = getUserName();
+      const up = getUserFullProfile();
+      const n = userName || 'friend';
       const inc = state.income.reduce((s, i) => s + i.amount, 0), exp = state.expense.reduce((s, e) => s + e.amount, 0), sav = inc - exp, rate = inc > 0 ? ((sav / inc) * 100).toFixed(1) : 0;
       const bycat = {}; state.expense.forEach(e => { bycat[e.category] = (bycat[e.category] || 0) + e.amount; });
       const sorted = Object.entries(bycat).sort((a, b) => b[1] - a[1]);
@@ -4809,14 +4946,37 @@
         return { type: 'founder', text: "Finvio was founded by <strong>Vrishank Reddy</strong> — a student entrepreneur building the future of personal finance. Here's how you can connect with him:", links: [{ label: 'Instagram', url: 'https://www.instagram.com/vrishank.reddy/', icon: '📸' }, { label: 'LinkedIn', url: 'https://www.linkedin.com/in/vrishank-reddy-03a71936b/', icon: '💼' }] };
       }
       if (t.match(/^(hi+|hello+|hey+|heya|hiya|howdy|yo+|sup|wh?at'?s? ?up|namaste|hola|bonjour|ciao|salut|good ?(morning|afternoon|evening|night|day)|g'?day|greetings|how'?s it going|how are you|how do you do|what'?s good|peace|aloha|ohayo|wagwan|wazzup|whatsup|wassup|yoo+|ayy+|cheers)[\s!?.,]*$/i)) {
-        const g = ["Hey there! 👋 I'm Finny, your friendly finance buddy. What can I help you with?", "Hello! 😊 Great to see you! Ask me about your spending, savings, or any finance topic!", "Hi! 🌟 Finny here, ready to help. Try 'give me a summary' or ask me anything!", "Hey hey! 💚 What's on your financial mind today?", "Yo! 🙌 Finny's here. Let's talk money!"];
+        const isBday = up.isBirthdayToday;
+        const g = userName ? [
+          `Hey ${n}! 👋 I'm Finny — your personal finance buddy. ${isBday ? `🎂 Happy Birthday by the way!` : ''} What can I help you with?`,
+          `Hello ${n}! 😊 Great to see you! ${state.income.length + state.expense.length > 0 ? `You've got ${state.income.length + state.expense.length} transactions tracked so far.` : 'Start by adding your income and expenses!'} What's on your mind?`,
+          `Hi ${n}! 🌟 Finny here, ready to help. ${isBday ? `🎂 Hope you're having a great birthday!` : ''} Try 'give me a summary' or ask me anything about your finances!`,
+          `Hey ${n}! 💚 What's on your financial mind today? I can analyze your spending, track savings, and answer finance questions.`,
+          `Yo ${n}! 🙌 Finny's here. ${state.expense.length > 0 ? `I see you've been tracking ${state.expense.length} expense${state.expense.length > 1 ? 's' : ''}.` : 'Let\'s get your finances set up!'} Let's talk money!`
+        ] : [
+          "Hey there! 👋 I'm Finny, your friendly finance buddy. What can I help you with?",
+          "Hello! 😊 Great to see you! Ask me about your spending, savings, or any finance topic!",
+          "Hi! 🌟 Finny here, ready to help. Try 'give me a summary' or ask me anything!",
+          "Hey hey! 💚 What's on your financial mind today?",
+          "Yo! 🙌 Finny's here. Let's talk money!"
+        ];
         return { type: 'list', text: g[Math.floor(Math.random() * g.length)], items: ['📊 Summary', '🏆 Top categories', '💰 Savings', '💡 Recommendations', '🎓 Finance questions'] };
       }
       if (t.match(/^(thanks?|thank you|thx|ty|appreciate|cool|nice|awesome|amazing|great|wonderful|perfect|excellent|love it|wow+|incredible|fantastic|superb|well done|bravo|cheers)[\s!?.]*$/i)) {
-        const r = ["Happy to help! 😊 Anything else you'd like to know?", "You're welcome! 💚 Keep tracking those finances!", "Anytime! 🎉 Let me know if you need more insights.", "Glad I could help! 😄 Your finances are in good hands.", "No problem at all! 🙌 Keep up the great work with your money!"];
+        const r = userName ? [
+          `Happy to help, ${n}! 😊 Anything else you'd like to know?`,
+          `You're welcome, ${n}! 💚 Keep tracking those finances!`,
+          `Anytime, ${n}! 🎉 Let me know if you need more insights.`,
+          `Glad I could help, ${n}! 😄 Your finances are in good hands.`,
+          `No problem at all, ${n}! 🙌 Keep up the great work with your money!`
+        ] : [
+          "Happy to help! 😊 Anything else you'd like to know?",
+          "You're welcome! 💚 Keep tracking those finances!",
+          "Anytime! 🎉 Let me know if you need more insights."
+        ];
         return { type: 'plain', text: r[Math.floor(Math.random() * r.length)] };
       }
-      if (/^(bye+|goodbye|see ya|later|cya|ttyl|gotta go|take care|good night|nite|cheerio|adios|sayonara|tata|peace out)[\s!?.]*$/i.test(t)) return { type: 'plain', text: "Bye! 👋 Your data is safe. Come back anytime!" };
+      if (/^(bye+|goodbye|see ya|later|cya|ttyl|gotta go|take care|good night|nite|cheerio|adios|sayonara|tata|peace out)[\s!?.]*$/i.test(t)) return { type: 'plain', text: userName ? `Bye, ${n}! 👋 Your data is safe. Come back anytime!` : "Bye! 👋 Your data is safe. Come back anytime!" };
       for (const e of KB) if (e.k.some(k => t.includes(k))) return { type: 'plain', text: e.a };
       return { type: 'list', text: "Here's what I can help with:", items: ["📊 'Give me a summary'", "💵 'Show my incomes'", "💸 'Show my expenses'", "✏️ 'Edit income' or 'Edit expense'", "🗑️ 'Delete income' or 'Delete expense'", "🏆 'Top spending categories'", "💰 'How much did I save?'", "💡 'Recommendations'"] };
     }
@@ -5176,7 +5336,7 @@
       if (e.key === 'Enter') { e.preventDefault(); sendMsg(); }
     });
 
-    initTheme(); initCurrency(); renderHome();
+    initTheme(); initCurrency(); renderHome(); initProfile();
   </script>
 </body>
 
