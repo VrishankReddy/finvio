@@ -3588,6 +3588,31 @@
   </div>
 
   <script>
+    /* ═══════════════════════════════════════════════
+       FINNY PRO — Valid Activation Codes
+       Add codes generated from your admin tool below.
+       Each code activates Finny Pro for 1 month (per browser).
+       Once a code is used on a browser, that browser stores it
+       and treats it as already-redeemed (cannot reuse).
+       ═══════════════════════════════════════════════ */
+    const FINNY_PRO_VALID_CODES = [
+      "123456"
+    ];
+
+    function fpro_isCodeUsedLocally(code) {
+      try {
+        const used = JSON.parse(localStorage.getItem('finvio_pro_used_codes') || '[]');
+        return used.includes(code);
+      } catch (e) { return false; }
+    }
+    function fpro_markCodeUsedLocally(code) {
+      try {
+        const used = JSON.parse(localStorage.getItem('finvio_pro_used_codes') || '[]');
+        if (!used.includes(code)) used.push(code);
+        localStorage.setItem('finvio_pro_used_codes', JSON.stringify(used));
+      } catch (e) {}
+    }
+
     function loadState() {
       try {
         const s = localStorage.getItem('finvio_state');
@@ -4098,7 +4123,7 @@
         const el = document.getElementById('fpro-d' + i);
         code += (el ? el.value : '');
       }
-      if (code.length !== 6) {
+      if (!/^\d{6}$/.test(code)) {
         showFproMsg('error', 'Please enter all 6 digits.');
         return;
       }
@@ -4108,32 +4133,38 @@
       const msg = document.getElementById('fpro-code-msg');
       msg.className = 'fpro-msg';
 
-      try {
-        const resp = await fetch('/api/finny-pro/verify-code', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code })
-        });
-        const data = await resp.json();
-        if (data.valid) {
-          localStorage.setItem('finvio_pro', JSON.stringify({ expiresAt: data.expiresAt, activatedAt: new Date().toISOString() }));
+      // Small delay so users see the "Verifying..." state
+      setTimeout(() => {
+        const isValid = FINNY_PRO_VALID_CODES.includes(code);
+        const alreadyUsed = fpro_isCodeUsedLocally(code);
+
+        if (!isValid) {
+          showFproMsg('error', 'Invalid code. Please check and try again.');
+        } else if (alreadyUsed) {
+          showFproMsg('error', 'This code has already been used on this device.');
+        } else {
+          // Activate Finny Pro for 1 month from now
+          const expires = new Date();
+          expires.setMonth(expires.getMonth() + 1);
+          localStorage.setItem('finvio_pro', JSON.stringify({
+            expiresAt: expires.toISOString(),
+            activatedAt: new Date().toISOString(),
+            code: code
+          }));
+          fpro_markCodeUsedLocally(code);
           showFproMsg('success', '✦ Finny Pro activated! Enjoy 1 month of advanced analysis.');
           setTimeout(() => {
             document.getElementById('fpro-code-overlay').classList.remove('show');
             document.getElementById('fpro-payment-overlay').classList.remove('show');
             finnyVersion = '2';
             applyFinnyModelUI('2');
-            renderChips();
-          }, 1800);
-        } else {
-          showFproMsg('error', data.message || 'Invalid or expired code. Please try again.');
+            if (typeof renderChips === 'function') renderChips();
+          }, 1500);
         }
-      } catch(err) {
-        showFproMsg('error', 'Connection error. Please check your internet and try again.');
-      }
 
-      btn.disabled = false;
-      btn.textContent = 'Activate Finny Pro ✦';
+        btn.disabled = false;
+        btn.textContent = 'Activate Finny Pro ✦';
+      }, 500);
     }
 
     function showFproMsg(type, text) {
