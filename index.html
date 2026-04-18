@@ -2648,6 +2648,234 @@
       background: rgba(55,65,81,0.7);
     }
 
+    /* ── Finny Pro Payment Gate Styles ─────────────────────────────── */
+    .fpro-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .fpro-overlay.show { display: flex; }
+    .fpro-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: fadeUp .25s ease;
+    }
+    body.dark .fpro-box { background: #1a1d27; color: #f1f3f9; }
+    .fpro-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(135deg,#6366f1,#8b5cf6);
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      margin-bottom: 14px;
+    }
+    .fpro-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 6px;
+    }
+    body.dark .fpro-title { color: #f1f3f9; }
+    .fpro-desc {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 18px;
+      line-height: 1.55;
+    }
+    body.dark .fpro-desc { color: #8b92b4; }
+    .fpro-qr-wrap {
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1px solid #e5e7eb;
+    }
+    body.dark .fpro-qr-wrap { background: #12151f; border-color: #2d3145; }
+    .fpro-qr-wrap img {
+      width: 180px;
+      height: 180px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .fpro-price {
+      font-size: 28px;
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    body.dark .fpro-price { color: #f1f3f9; }
+    .fpro-price-sub {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+    .fpro-email-note {
+      font-size: 12px;
+      color: #374151;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+      text-align: left;
+    }
+    body.dark .fpro-email-note { background: #0d2818; border-color: #14532d; color: #bbf7d0; }
+    .fpro-have-code-btn {
+      width: 100%;
+      padding: 11px;
+      border-radius: 11px;
+      background: linear-gradient(135deg,#6366f1,#8b5cf6);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: 8px;
+      transition: opacity .2s;
+    }
+    .fpro-have-code-btn:hover { opacity: .9; }
+    .fpro-cancel-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 11px;
+      background: none;
+      color: #9ca3af;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .15s;
+    }
+    body.dark .fpro-cancel-btn { border-color: #2d3145; color: #5c6387; }
+    .fpro-cancel-btn:hover { background: #f9fafb; color: #374151; }
+    body.dark .fpro-cancel-btn:hover { background: #12151f; color: #c8cde0; }
+    /* Code entry panel */
+    .fpro-code-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.2);
+      text-align: center;
+      animation: fadeUp .25s ease;
+    }
+    body.dark .fpro-code-box { background: #1a1d27; }
+    .fpro-code-inputs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 20px 0 16px;
+    }
+    .fpro-digit {
+      width: 44px;
+      height: 54px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 22px;
+      font-weight: 800;
+      text-align: center;
+      color: #111827;
+      background: #f9fafb;
+      font-family: 'Nunito', monospace;
+      transition: border-color .15s;
+      outline: none;
+    }
+    body.dark .fpro-digit {
+      background: #12151f;
+      border-color: #2d3145;
+      color: #f1f3f9;
+    }
+    .fpro-digit:focus { border-color: #8b5cf6; background: #fff; box-shadow: 0 0 0 3px rgba(139,92,246,.15); }
+    body.dark .fpro-digit:focus { background: #0f1117; }
+    .fpro-verify-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 11px;
+      background: linear-gradient(135deg,#6366f1,#8b5cf6);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: 8px;
+      transition: opacity .2s;
+    }
+    .fpro-verify-btn:hover { opacity: .9; }
+    .fpro-verify-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .fpro-back-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 11px;
+      background: none;
+      color: #9ca3af;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .15s;
+    }
+    body.dark .fpro-back-btn { border-color: #2d3145; color: #5c6387; }
+    .fpro-back-btn:hover { background: #f9fafb; color: #374151; }
+    body.dark .fpro-back-btn:hover { background: #12151f; color: #c8cde0; }
+    .fpro-msg {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      padding: 9px 14px;
+      border-radius: 9px;
+      display: none;
+    }
+    .fpro-msg.error { background: #fef2f2; color: #dc2626; display: block; }
+    .fpro-msg.success { background: #f0fdf4; color: #16a34a; display: block; }
+    body.dark .fpro-msg.error { background: #450a0a; color: #fca5a5; }
+    body.dark .fpro-msg.success { background: #052e16; color: #86efac; }
+    /* Active Pro badge in dropdown */
+    .finny-pro-active-badge {
+      display: inline-block;
+      background: linear-gradient(135deg,#6366f1,#8b5cf6);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: .04em;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .fpro-status-banner {
+      font-size: 11px;
+      color: #7c3aed;
+      font-weight: 700;
+      padding: 4px 10px;
+      background: #f5f3ff;
+      border-radius: 8px;
+      margin-top: 3px;
+      display: none;
+    }
+    body.dark .fpro-status-banner { background: #1e1b4b; color: #c4b5fd; }
+
     /* Finny Pro styles */
 
     .finny-pro-card {
@@ -2774,6 +3002,46 @@
 </head>
 
 <body>
+
+  <!-- Finny Pro Payment Modal -->
+  <div class="fpro-overlay" id="fpro-payment-overlay">
+    <div class="fpro-box">
+      <div class="fpro-badge">✦ Finny Pro</div>
+      <div class="fpro-title">Upgrade to Finny Pro</div>
+      <div class="fpro-desc">Scan the QR code to pay ₹49 and unlock Finny Pro for 1 month of advanced AI financial analysis.</div>
+      <div class="fpro-qr-wrap">
+        <img src="/qr-code.png" alt="Payment QR Code" />
+        <div class="fpro-price">₹49</div>
+        <div class="fpro-price-sub"> /month</div>
+      </div>
+      <div class="fpro-email-note">
+        📧 After paying, email us at <strong>finvio.app@gmail.com</strong> with your payment screenshot. We'll send you a 6-digit activation code within a few minutes to hours.
+      </div>
+      <button class="fpro-have-code-btn" onclick="showFinnyProCodeEntry()">I Have a Code ✦</button>
+      <button class="fpro-cancel-btn" onclick="closeFinnyProModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Finny Pro Code Entry Modal -->
+  <div class="fpro-overlay" id="fpro-code-overlay">
+    <div class="fpro-code-box">
+      <div class="fpro-badge">✦ Enter Activation Code</div>
+      <div class="fpro-title">Activate Finny Pro</div>
+      <div class="fpro-desc">Enter the 6-digit code we sent to your email to activate Finny Pro for 1 month.</div>
+      <div class="fpro-msg" id="fpro-code-msg"></div>
+      <div class="fpro-code-inputs" id="fpro-digit-inputs">
+        <input class="fpro-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="fpro-d0" oninput="fpro_onDigit(0)" onkeydown="fpro_onKey(event,0)" />
+        <input class="fpro-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="fpro-d1" oninput="fpro_onDigit(1)" onkeydown="fpro_onKey(event,1)" />
+        <input class="fpro-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="fpro-d2" oninput="fpro_onDigit(2)" onkeydown="fpro_onKey(event,2)" />
+        <input class="fpro-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="fpro-d3" oninput="fpro_onDigit(3)" onkeydown="fpro_onKey(event,3)" />
+        <input class="fpro-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="fpro-d4" oninput="fpro_onDigit(4)" onkeydown="fpro_onKey(event,4)" />
+        <input class="fpro-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="fpro-d5" oninput="fpro_onDigit(5)" onkeydown="fpro_onKey(event,5)" />
+      </div>
+      <button class="fpro-verify-btn" id="fpro-verify-btn" onclick="verifyFinnyProCode()">Activate Finny Pro ✦</button>
+      <button class="fpro-back-btn" onclick="showFinnyProPayment()">← Back to Payment</button>
+    </div>
+  </div>
+
   <div class="layout">
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
     <div class="sidebar" id="sidebar">
@@ -3043,7 +3311,7 @@
                 <div class="finny-model-option" id="finny-opt-2" role="option" onclick="selectFinnyModel('2')">
                   <div class="finny-model-option-icon pro">✦</div>
                   <div class="finny-model-option-info">
-                    <div class="finny-model-option-name">Finny Pro</div>
+                    <div class="finny-model-option-name">Finny Pro <span style="display:inline-block;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:5px;letter-spacing:.03em;vertical-align:middle">₹49/mo</span></div>
                     <div class="finny-model-option-desc">Advanced · Deep analysis · AI-powered</div>
                   </div>
                   <svg class="finny-model-checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -3744,10 +4012,137 @@
       if (dd && !dd.contains(e.target)) closeModelDropdown();
     });
 
-    function selectFinnyModel(v) {
-      closeModelDropdown();
-      finnyVersion = v;
-      renderChips();
+    /* ═══ Finny Pro Payment Gate ════════════════════════════════════ */
+
+    function fpro_isActive() {
+      try {
+        const data = JSON.parse(localStorage.getItem('finvio_pro') || 'null');
+        if (!data || !data.expiresAt) return false;
+        return new Date(data.expiresAt) > new Date();
+      } catch(e) { return false; }
+    }
+
+    function fpro_getExpiry() {
+      try {
+        const data = JSON.parse(localStorage.getItem('finvio_pro') || 'null');
+        if (!data || !data.expiresAt) return null;
+        return new Date(data.expiresAt);
+      } catch(e) { return null; }
+    }
+
+    function fpro_daysLeft() {
+      const exp = fpro_getExpiry();
+      if (!exp) return 0;
+      const diff = exp - new Date();
+      return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+    }
+
+    function fpro_deactivateIfExpired() {
+      if (finnyVersion === '2' && !fpro_isActive()) {
+        finnyVersion = '1';
+        localStorage.removeItem('finvio_pro');
+        applyFinnyModelUI('1');
+      }
+    }
+
+    function showFinnyProPayment() {
+      document.getElementById('fpro-code-overlay').classList.remove('show');
+      document.getElementById('fpro-payment-overlay').classList.add('show');
+    }
+
+    function showFinnyProCodeEntry() {
+      document.getElementById('fpro-payment-overlay').classList.remove('show');
+      document.getElementById('fpro-code-overlay').classList.add('show');
+      const msg = document.getElementById('fpro-code-msg');
+      msg.className = 'fpro-msg';
+      for (let i = 0; i < 6; i++) {
+        const el = document.getElementById('fpro-d' + i);
+        if (el) el.value = '';
+      }
+      setTimeout(() => { const f = document.getElementById('fpro-d0'); if (f) f.focus(); }, 100);
+    }
+
+    function closeFinnyProModal() {
+      document.getElementById('fpro-payment-overlay').classList.remove('show');
+      document.getElementById('fpro-code-overlay').classList.remove('show');
+      if (finnyVersion !== '2' || !fpro_isActive()) {
+        finnyVersion = '1';
+        applyFinnyModelUI('1');
+      }
+    }
+
+    function fpro_onDigit(idx) {
+      const el = document.getElementById('fpro-d' + idx);
+      let val = el.value.replace(/[^0-9]/g, '');
+      el.value = val ? val[val.length - 1] : '';
+      if (el.value && idx < 5) {
+        document.getElementById('fpro-d' + (idx + 1)).focus();
+      }
+    }
+
+    function fpro_onKey(e, idx) {
+      if (e.key === 'Backspace') {
+        const el = document.getElementById('fpro-d' + idx);
+        if (!el.value && idx > 0) {
+          const prev = document.getElementById('fpro-d' + (idx - 1));
+          prev.value = '';
+          prev.focus();
+        }
+      }
+      if (e.key === 'Enter') verifyFinnyProCode();
+    }
+
+    async function verifyFinnyProCode() {
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        const el = document.getElementById('fpro-d' + i);
+        code += (el ? el.value : '');
+      }
+      if (code.length !== 6) {
+        showFproMsg('error', 'Please enter all 6 digits.');
+        return;
+      }
+      const btn = document.getElementById('fpro-verify-btn');
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+      const msg = document.getElementById('fpro-code-msg');
+      msg.className = 'fpro-msg';
+
+      try {
+        const resp = await fetch('/api/finny-pro/verify-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        });
+        const data = await resp.json();
+        if (data.valid) {
+          localStorage.setItem('finvio_pro', JSON.stringify({ expiresAt: data.expiresAt, activatedAt: new Date().toISOString() }));
+          showFproMsg('success', '✦ Finny Pro activated! Enjoy 1 month of advanced analysis.');
+          setTimeout(() => {
+            document.getElementById('fpro-code-overlay').classList.remove('show');
+            document.getElementById('fpro-payment-overlay').classList.remove('show');
+            finnyVersion = '2';
+            applyFinnyModelUI('2');
+            renderChips();
+          }, 1800);
+        } else {
+          showFproMsg('error', data.message || 'Invalid or expired code. Please try again.');
+        }
+      } catch(err) {
+        showFproMsg('error', 'Connection error. Please check your internet and try again.');
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Activate Finny Pro ✦';
+    }
+
+    function showFproMsg(type, text) {
+      const msg = document.getElementById('fpro-code-msg');
+      msg.className = 'fpro-msg ' + type;
+      msg.textContent = text;
+    }
+
+    function applyFinnyModelUI(v) {
       document.getElementById('finny-opt-1').classList.toggle('selected', v === '1');
       document.getElementById('finny-opt-2').classList.toggle('selected', v === '2');
       const btnLabel = document.getElementById('finny-model-btn-label');
@@ -3757,20 +4152,23 @@
       const label = document.getElementById('finny-status-label');
       const footer = document.getElementById('finny-footer');
       if (v === '2') {
-        btnLabel.textContent = getFinnyDisplayName('2');
+        const days = fpro_daysLeft();
+        btnLabel.textContent = 'Finny Pro';
         modelBtn.classList.add('pro-active');
-        name.textContent = getFinnyDisplayName('2');
+        name.textContent = 'Finny Pro';
         name.style.background = 'linear-gradient(90deg,#6366f1,#8b5cf6)';
         name.style.webkitBackgroundClip = 'text';
         name.style.webkitTextFillColor = 'transparent';
         dot.style.background = '#8b5cf6';
-        label.textContent = 'Pro AI';
+        label.textContent = 'Pro AI · ' + days + 'd left';
         label.style.color = '#8b5cf6';
         footer.textContent = 'Finny Pro · Advanced Intelligence · Deep Financial Analysis';
+        const optDesc = document.querySelector('#finny-opt-2 .finny-model-option-desc');
+        if (optDesc) optDesc.textContent = '✦ Active · ' + days + ' days remaining';
       } else {
-        btnLabel.textContent = getFinnyDisplayName('1');
+        btnLabel.textContent = 'Finny';
         modelBtn.classList.remove('pro-active');
-        name.textContent = getFinnyDisplayName('1');
+        name.textContent = 'Finny';
         name.style.background = '';
         name.style.webkitBackgroundClip = '';
         name.style.webkitTextFillColor = '';
@@ -3778,6 +4176,25 @@
         label.textContent = 'Free AI';
         label.style.color = '#9ca3af';
         footer.textContent = 'Finny · Free tier · Rule-based AI';
+        const optDesc = document.querySelector('#finny-opt-2 .finny-model-option-desc');
+        if (optDesc) optDesc.textContent = 'Advanced · Deep analysis · AI-powered';
+      }
+    }
+
+    function selectFinnyModel(v) {
+      closeModelDropdown();
+      if (v === '2') {
+        if (fpro_isActive()) {
+          finnyVersion = '2';
+          applyFinnyModelUI('2');
+          renderChips();
+        } else {
+          showFinnyProPayment();
+        }
+      } else {
+        finnyVersion = '1';
+        applyFinnyModelUI('1');
+        renderChips();
       }
     }
 
@@ -5337,6 +5754,16 @@
     });
 
     initTheme(); initCurrency(); renderHome(); initProfile();
+
+    (function fpro_init() {
+      if (fpro_isActive()) {
+        finnyVersion = '2';
+        applyFinnyModelUI('2');
+      } else {
+        localStorage.removeItem('finvio_pro');
+      }
+      setInterval(fpro_deactivateIfExpired, 60000);
+    })();
   </script>
 </body>
 
