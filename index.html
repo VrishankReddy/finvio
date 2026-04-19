@@ -170,13 +170,17 @@
       margin-top: 6px;
     }
 
-    .nav-finny.active {
-      background: var(--green-light) !important;
-      border: 1px solid var(--green) !important;
-    }
-
     .nav-finny:hover {
       background: var(--green-dark);
+    }
+
+    .nav-finny.active {
+      background: var(--green-dark);
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--green-dark);
+    }
+
+    .nav-finny.active .nav-finny-label {
+      color: #fff;
     }
 
     .nav-finny-icon {
@@ -186,6 +190,9 @@
       overflow: hidden;
       flex-shrink: 0;
       background: var(--green-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .nav-finny-icon img {
@@ -668,6 +675,9 @@
       overflow: hidden;
       flex-shrink: 0;
       background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .finny-av img {
@@ -710,6 +720,9 @@
       flex-shrink: 0;
       margin-top: 1px;
       background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .bav img {
@@ -1042,16 +1055,15 @@
       font-family: 'Inter', sans-serif;
     }
 
-    .bnav-finny.active .bnav-finny-icon {
-      box-shadow: 0 0 0 2px var(--green-light), 0 0 0 4px var(--green);
-    }
-
     .bnav-finny-icon {
       width: 32px;
       height: 32px;
       border-radius: 10px;
       overflow: hidden;
       background: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .bnav-finny-icon img {
@@ -1065,6 +1077,15 @@
       font-size: 9px;
       color: var(--green);
       font-weight: 700;
+    }
+
+    .bnav-finny.active .bnav-finny-icon {
+      background: var(--green-dark);
+      box-shadow: 0 0 0 2px rgba(106, 176, 76, 0.35);
+    }
+
+    .bnav-finny.active .bnav-finny-label {
+      color: var(--green-dark);
     }
 
     .sidebar-overlay {
@@ -3215,10 +3236,11 @@
       width: 32px !important;
       height: 32px !important;
       background: rgba(0,0,0,0.04) !important;
-      border: 1.5px solid rgba(0,0,0,0.15) !important;
+      border: 1.5px solid rgba(106, 176, 76, 0.45) !important;
     }
     #finny-mic:hover, #finny-stop:hover {
       background: rgba(0,0,0,0.08) !important;
+      border-color: rgba(106, 176, 76, 0.75) !important;
     }
 
     /* ══════ DARK MODE OVERRIDES (Apple True Dark/OLED) ══════ */
@@ -3262,14 +3284,13 @@
       border-color: rgba(106, 176, 76, 0.6) !important;
     }
     
-    body.dark #finny-mic { background: rgba(255,255,255,0.1) !important; color: #FFF !important; }
-    body.dark #finny-mic:hover { background: rgba(255,255,255,0.2) !important; }
+    body.dark #finny-mic { background: rgba(255,255,255,0.1) !important; color: #FFF !important; border-color: rgba(255,255,255,0.35) !important; }
+    body.dark #finny-mic:hover { background: rgba(255,255,255,0.2) !important; border-color: rgba(255,255,255,0.55) !important; }
+    body.dark #finny-stop { border-color: rgba(255, 77, 77, 0.55) !important; }
 
 </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <!-- CRITICAL: DO NOT REMOVE/MODIFY THIS COMMENT OR THE SCRIPT BELOW -->
-    <script src="https://blink.new/auto-engineer.js?projectId=finny-chat-ui-ujin5av2" type="module"></script>
-  </head>
+</head>
 
 <body>
 
@@ -3342,7 +3363,7 @@
           </svg>
           <span class="nav-label">Expense</span>
         </button>
-        <button class="nav-finny" id="nav-finny" onclick="goTab('finny')">
+        <button class="nav-finny" onclick="goTab('finny')">
           <div class="nav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
           <span class="nav-finny-label">Ask Finny</span>
         </button>
@@ -3795,7 +3816,7 @@
             </svg>
             <span class="bnav-label">Expense</span>
           </button>
-          <button class="bnav-finny" id="bnav-finny" onclick="goTab('finny')">
+          <button class="bnav-finny" onclick="goTab('finny')">
             <div class="bnav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
             <span class="bnav-finny-label">Finny</span>
           </button>
@@ -4108,13 +4129,18 @@
       currentTab = id; closeSidebar();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('s-' + id).classList.add('active');
-      ['home', 'income', 'expense', 'more', 'calendar', 'messages', 'profile', 'finny'].forEach(t => {
+      ['home', 'income', 'expense', 'more', 'calendar', 'messages', 'profile'].forEach(t => {
         const active = t === id;
         const n = document.getElementById('nav-' + t);
         const bn = document.getElementById('bnav-' + t);
         if (n) { n.classList.toggle('active', active); const l = n.querySelector('.nav-label'); if (l) l.style.color = active ? '#6ab04c' : '#374151'; n.querySelectorAll('path').forEach(p => { if (p.getAttribute('stroke')) p.setAttribute('stroke', active ? '#6ab04c' : '#9ca3af'); }); }
         if (bn) { bn.classList.toggle('active', active); const l = bn.querySelector('.bnav-label'); if (l) l.style.color = active ? '#6ab04c' : '#9ca3af'; bn.querySelectorAll('path').forEach(p => { if (p.getAttribute('stroke')) p.setAttribute('stroke', active ? '#6ab04c' : '#9ca3af'); }); }
       });
+      const finnyActive = id === 'finny';
+      const navFinny = document.querySelector('.nav-finny');
+      if (navFinny) navFinny.classList.toggle('active', finnyActive);
+      const bnavFinny = document.querySelector('.bnav-finny');
+      if (bnavFinny) bnavFinny.classList.toggle('active', finnyActive);
       if (id === 'home') renderHome();
       if (id === 'income') renderIncome();
       if (id === 'expense') renderExpense();
@@ -6444,8 +6470,8 @@
       position: absolute !important;
       bottom: 26px !important;
       right: 74px !important;
-      background: transparent !important;
-      border: none !important;
+      background: rgba(0,0,0,0.04) !important;
+      border: 1.5px solid rgba(106, 176, 76, 0.45) !important;
       box-shadow: none !important;
     }
 
@@ -7034,6 +7060,6 @@
     }
   })();
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9eebedabcd0d70aa',t:'MTc3NjYwMTkwOQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 
 </html>
