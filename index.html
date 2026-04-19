@@ -186,10 +186,10 @@
     .nav-finny-icon {
       width: 28px;
       height: 28px;
-      border-radius: 8px;
+      border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
-      background: var(--green-dark);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -198,7 +198,8 @@
     .nav-finny-icon img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
+      border-radius: 50%;
       display: block;
     }
 
@@ -308,7 +309,7 @@
     .finny-topbtn img {
       width: 20px;
       height: 20px;
-      border-radius: 6px;
+      border-radius: 50%;
       object-fit: cover;
     }
 
@@ -671,10 +672,10 @@
     .finny-av {
       width: 38px;
       height: 38px;
-      border-radius: 11px;
+      border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
-      background: var(--green);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -683,7 +684,8 @@
     .finny-av img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
+      border-radius: 50%;
       display: block;
     }
 
@@ -715,11 +717,11 @@
     .bav {
       width: 28px;
       height: 28px;
-      border-radius: 8px;
+      border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
       margin-top: 1px;
-      background: var(--green);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -728,7 +730,8 @@
     .bav img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
+      border-radius: 50%;
       display: block;
     }
 
@@ -1058,9 +1061,9 @@
     .bnav-finny-icon {
       width: 32px;
       height: 32px;
-      border-radius: 10px;
+      border-radius: 50%;
       overflow: hidden;
-      background: var(--green);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1069,7 +1072,8 @@
     .bnav-finny-icon img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
+      border-radius: 50%;
       display: block;
     }
 
@@ -1080,7 +1084,7 @@
     }
 
     .bnav-finny.active .bnav-finny-icon {
-      background: var(--green-dark);
+      background: transparent;
       box-shadow: 0 0 0 2px rgba(106, 176, 76, 0.35);
     }
 
@@ -3112,9 +3116,13 @@
       transform: scale(1.02);
     }
     .nav-finny-icon {
-      background: linear-gradient(135deg, #6ab04c, #4a8e2e) !important;
-      border-radius: 8px !important;
-      box-shadow: 0 2px 8px rgba(106, 176, 76, 0.4);
+      background: transparent !important;
+      border-radius: 50% !important;
+      box-shadow: none;
+    }
+    .nav-finny-icon img {
+      border-radius: 50% !important;
+      object-fit: cover !important;
     }
     .nav-finny-label {
       color: #1D1D1F !important;
@@ -3159,11 +3167,15 @@
     }
     
     .bav {
-      background: linear-gradient(135deg, var(--green), #4a8e2e) !important;
+      background: transparent !important;
       border-radius: 50% !important;
       width: 30px !important;
       height: 30px !important;
-      box-shadow: 0 2px 6px rgba(106, 176, 76, 0.3);
+      box-shadow: none;
+    }
+    .bav img {
+      border-radius: 50% !important;
+      object-fit: cover !important;
     }
     
     /* Elegant Finny Text */
