@@ -170,6 +170,11 @@
       margin-top: 6px;
     }
 
+    .nav-finny.active {
+      background: var(--green-light) !important;
+      border: 1px solid var(--green) !important;
+    }
+
     .nav-finny:hover {
       background: var(--green-dark);
     }
@@ -184,9 +189,9 @@
     }
 
     .nav-finny-icon img {
-      width: 28px;
-      height: 28px;
-      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       display: block;
     }
 
@@ -666,9 +671,9 @@
     }
 
     .finny-av img {
-      width: 38px;
-      height: 38px;
-      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       display: block;
     }
 
@@ -708,9 +713,9 @@
     }
 
     .bav img {
-      width: 28px;
-      height: 28px;
-      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       display: block;
     }
 
@@ -1037,6 +1042,10 @@
       font-family: 'Inter', sans-serif;
     }
 
+    .bnav-finny.active .bnav-finny-icon {
+      box-shadow: 0 0 0 2px var(--green-light), 0 0 0 4px var(--green);
+    }
+
     .bnav-finny-icon {
       width: 32px;
       height: 32px;
@@ -1046,9 +1055,9 @@
     }
 
     .bnav-finny-icon img {
-      width: 32px;
-      height: 32px;
-      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       display: block;
     }
 
@@ -3206,7 +3215,7 @@
       width: 32px !important;
       height: 32px !important;
       background: rgba(0,0,0,0.04) !important;
-      border: none !important;
+      border: 1.5px solid rgba(0,0,0,0.15) !important;
     }
     #finny-mic:hover, #finny-stop:hover {
       background: rgba(0,0,0,0.08) !important;
@@ -3258,7 +3267,9 @@
 
 </style>
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-</head>
+    <!-- CRITICAL: DO NOT REMOVE/MODIFY THIS COMMENT OR THE SCRIPT BELOW -->
+    <script src="https://blink.new/auto-engineer.js?projectId=finny-chat-ui-ujin5av2" type="module"></script>
+  </head>
 
 <body>
 
@@ -3331,7 +3342,7 @@
           </svg>
           <span class="nav-label">Expense</span>
         </button>
-        <button class="nav-finny" onclick="goTab('finny')">
+        <button class="nav-finny" id="nav-finny" onclick="goTab('finny')">
           <div class="nav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
           <span class="nav-finny-label">Ask Finny</span>
         </button>
@@ -3684,7 +3695,6 @@
           <button id="finny-mic" title="Voice Chat">🎤</button>
           <button class="snd-btn" id="chat-snd" onclick="chatSend()">↑</button>
         </div>
-        <div class="chat-ft" id="finny-footer">Finny · Free tier · Rule-based AI</div>
       </div>
 
       <div id="s-more" class="screen">
@@ -3785,7 +3795,7 @@
             </svg>
             <span class="bnav-label">Expense</span>
           </button>
-          <button class="bnav-finny" onclick="goTab('finny')">
+          <button class="bnav-finny" id="bnav-finny" onclick="goTab('finny')">
             <div class="bnav-finny-icon"><img src="./finny-logo.png" alt="Finny" /></div>
             <span class="bnav-finny-label">Finny</span>
           </button>
@@ -4098,7 +4108,7 @@
       currentTab = id; closeSidebar();
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('s-' + id).classList.add('active');
-      ['home', 'income', 'expense', 'more', 'calendar', 'messages', 'profile'].forEach(t => {
+      ['home', 'income', 'expense', 'more', 'calendar', 'messages', 'profile', 'finny'].forEach(t => {
         const active = t === id;
         const n = document.getElementById('nav-' + t);
         const bn = document.getElementById('bnav-' + t);
