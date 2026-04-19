@@ -3195,6 +3195,51 @@
             </svg>Add Income
           </button>
         </div>
+        <div class="filter-bar" id="income-filter-bar">
+          <button class="filter-btn" id="income-filter-toggle" onclick="toggleFilterPanel('income')">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+            <span>Filters</span>
+            <span class="filter-count" id="income-filter-count" style="display:none">0</span>
+          </button>
+          <div class="filter-chips" id="income-filter-chips"></div>
+          <button class="filter-clear" id="income-filter-clear" onclick="clearFilter('income')" style="display:none">Clear all</button>
+        </div>
+        <div class="filter-panel" id="income-filter-panel">
+          <div class="filter-grid">
+            <div class="filter-field">
+              <label>Source</label>
+              <select id="if-source"><option value="">All sources</option></select>
+            </div>
+            <div class="filter-field">
+              <label>Payment method</label>
+              <select id="if-pay"><option value="">All methods</option></select>
+            </div>
+            <div class="filter-field">
+              <label>Min amount</label>
+              <input type="number" id="if-min" placeholder="0" min="0"/>
+            </div>
+            <div class="filter-field">
+              <label>Max amount</label>
+              <input type="number" id="if-max" placeholder="∞" min="0"/>
+            </div>
+            <div class="filter-field">
+              <label>From date</label>
+              <input type="date" id="if-from"/>
+            </div>
+            <div class="filter-field">
+              <label>To date</label>
+              <input type="date" id="if-to"/>
+            </div>
+            <div class="filter-field">
+              <label>Search description</label>
+              <input type="text" id="if-q" placeholder="Keywords…"/>
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button class="filter-reset" onclick="clearFilter('income')">Reset</button>
+            <button class="filter-apply" onclick="applyFilterFromUI('income')">Apply filters</button>
+          </div>
+        </div>
         <div class="content" id="income-body"></div>
       </div>
 
@@ -3212,6 +3257,47 @@
               <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round" />
             </svg>Add Expense
           </button>
+        </div>
+        <div class="filter-bar" id="expense-filter-bar">
+          <button class="filter-btn" id="expense-filter-toggle" onclick="toggleFilterPanel('expense')">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+            <span>Filters</span>
+            <span class="filter-count" id="expense-filter-count" style="display:none">0</span>
+          </button>
+          <div class="filter-chips" id="expense-filter-chips"></div>
+          <button class="filter-clear" id="expense-filter-clear" onclick="clearFilter('expense')" style="display:none">Clear all</button>
+        </div>
+        <div class="filter-panel" id="expense-filter-panel">
+          <div class="filter-grid">
+            <div class="filter-field">
+              <label>Category</label>
+              <select id="ef-cat"><option value="">All categories</option></select>
+            </div>
+            <div class="filter-field">
+              <label>Min amount</label>
+              <input type="number" id="ef-min" placeholder="0" min="0"/>
+            </div>
+            <div class="filter-field">
+              <label>Max amount</label>
+              <input type="number" id="ef-max" placeholder="∞" min="0"/>
+            </div>
+            <div class="filter-field">
+              <label>From date</label>
+              <input type="date" id="ef-from"/>
+            </div>
+            <div class="filter-field">
+              <label>To date</label>
+              <input type="date" id="ef-to"/>
+            </div>
+            <div class="filter-field">
+              <label>Search title</label>
+              <input type="text" id="ef-q" placeholder="Keywords…"/>
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button class="filter-reset" onclick="clearFilter('expense')">Reset</button>
+            <button class="filter-apply" onclick="applyFilterFromUI('expense')">Apply filters</button>
+          </div>
         </div>
         <div class="content" id="expense-body"></div>
       </div>
@@ -5796,6 +5882,732 @@
       }
       setInterval(fpro_deactivateIfExpired, 60000);
     })();
+  </script>
+  <!-- ════════════════════════════════════════════════════════════════
+       FILTERS + FINNY FILTER-AWARENESS  (added)
+       Self-contained: overrides renderIncome / renderExpense / runFinny / runFinnyPro / renderBot
+       ════════════════════════════════════════════════════════════════ -->
+  <style>
+    .filter-bar {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 10px 16px; background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 12px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--white);
+      font: 600 12px/1 'Nunito', sans-serif; color: var(--text-sub);
+      cursor: pointer; transition: .18s;
+    }
+    .filter-btn:hover { background: #f9fafb; border-color: #d1d5db; }
+    .filter-btn.active { background: var(--green-light); border-color: var(--green); color: var(--green-text); }
+    .filter-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: 9px; background: var(--green); color: #fff;
+      font: 700 10px/1 'Nunito', sans-serif;
+    }
+    .filter-chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 6px 5px 10px; border-radius: 999px;
+      background: var(--green-light); color: var(--green-text);
+      font: 600 11px/1 'Nunito', sans-serif;
+    }
+    .filter-chip button {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(22,101,52,.15); border: none; color: var(--green-text);
+      cursor: pointer; font: 700 11px/1 'Nunito', sans-serif;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .filter-chip button:hover { background: rgba(22,101,52,.3); }
+    .filter-clear {
+      padding: 6px 10px; border-radius: 8px; border: none;
+      background: transparent; color: var(--red);
+      font: 700 11px/1 'Nunito', sans-serif; cursor: pointer;
+    }
+    .filter-clear:hover { background: var(--red-light); }
+    .filter-panel {
+      display: none;
+      padding: 14px 16px; background: #fafbfc;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-panel.open { display: block; }
+    .filter-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+    }
+    .filter-field { display: flex; flex-direction: column; gap: 4px; }
+    .filter-field label {
+      font: 700 10px/1 'Nunito', sans-serif; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .04em;
+    }
+    .filter-field input, .filter-field select {
+      padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px;
+      font: 500 12px/1.2 'Nunito', sans-serif; color: var(--text);
+      background: var(--white); outline: none; transition: .15s;
+    }
+    .filter-field input:focus, .filter-field select:focus {
+      border-color: var(--green); box-shadow: 0 0 0 3px rgba(106,176,76,.15);
+    }
+    .filter-actions {
+      display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;
+    }
+    .filter-reset, .filter-apply {
+      padding: 8px 14px; border-radius: 8px;
+      font: 700 12px/1 'Nunito', sans-serif; cursor: pointer; border: none;
+    }
+    .filter-reset { background: var(--white); border: 1px solid var(--border); color: var(--text-sub); }
+    .filter-reset:hover { background: #f3f4f6; }
+    .filter-apply { background: var(--green); color: #fff; }
+    .filter-apply:hover { background: var(--green-dark); }
+
+    .filter-empty {
+      padding: 30px 16px; text-align: center;
+      color: var(--text-muted); font: 600 13px/1.5 'Nunito', sans-serif;
+    }
+    .filter-empty .filter-empty-sub {
+      display: block; font-weight: 500; font-size: 12px; margin-top: 6px; color: var(--text-faint);
+    }
+
+    /* Finny filter result card */
+    .finny-filter-card {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 1px solid #bbf7d0; border-radius: 12px;
+      padding: 12px; margin-top: 4px;
+    }
+    .finny-filter-card .ffc-head {
+      font: 700 12px/1.3 'Nunito', sans-serif; color: var(--green-text); margin-bottom: 8px;
+    }
+    .finny-filter-card .ffc-criteria {
+      display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px;
+    }
+    .finny-filter-card .ffc-criteria span {
+      background: rgba(255,255,255,.7); padding: 3px 8px; border-radius: 999px;
+      font: 600 10px/1.2 'Nunito', sans-serif; color: var(--green-text);
+    }
+    .finny-filter-card .ffc-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;
+    }
+    .finny-filter-card .ffc-stat {
+      background: #fff; border-radius: 8px; padding: 8px 10px;
+    }
+    .finny-filter-card .ffc-stat-l {
+      font: 700 9px/1 'Nunito', sans-serif; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px;
+    }
+    .finny-filter-card .ffc-stat-v {
+      font: 800 14px/1 'Nunito', sans-serif; color: var(--text);
+    }
+    .finny-filter-card .ffc-list {
+      max-height: 180px; overflow-y: auto; background: #fff;
+      border-radius: 8px; padding: 6px 8px; margin-bottom: 10px;
+    }
+    .finny-filter-card .ffc-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 0; border-bottom: 1px solid #f3f4f6;
+      font: 600 11px/1.3 'Nunito', sans-serif;
+    }
+    .finny-filter-card .ffc-row:last-child { border-bottom: none; }
+    .finny-filter-card .ffc-row .ffc-row-l { color: var(--text-sub); }
+    .finny-filter-card .ffc-row .ffc-row-r { color: var(--text); font-weight: 800; }
+    .finny-filter-card .ffc-open {
+      width: 100%; padding: 9px; border: none; border-radius: 8px;
+      background: var(--green); color: #fff; cursor: pointer;
+      font: 700 12px/1 'Nunito', sans-serif;
+    }
+    .finny-filter-card .ffc-open:hover { background: var(--green-dark); }
+    .finny-filter-card .ffc-empty {
+      background: #fff; border-radius: 8px; padding: 14px;
+      text-align: center; font: 600 12px/1.4 'Nunito', sans-serif;
+      color: var(--text-muted); margin-bottom: 10px;
+    }
+
+    /* Dark theme */
+    body.dark .filter-bar { background: #1f2937; border-bottom-color: #374151; }
+    body.dark .filter-btn { background: #1f2937; border-color: #374151; color: #d1d5db; }
+    body.dark .filter-btn:hover { background: #374151; }
+    body.dark .filter-btn.active { background: rgba(106,176,76,.18); border-color: var(--green); color: #bbf7d0; }
+    body.dark .filter-chip { background: rgba(106,176,76,.18); color: #bbf7d0; }
+    body.dark .filter-chip button { background: rgba(187,247,208,.15); color: #bbf7d0; }
+    body.dark .filter-panel { background: #111827; border-bottom-color: #374151; }
+    body.dark .filter-field input, body.dark .filter-field select {
+      background: #1f2937; border-color: #374151; color: #f3f4f6;
+    }
+    body.dark .filter-field label { color: #9ca3af; }
+    body.dark .filter-reset { background: #1f2937; border-color: #374151; color: #d1d5db; }
+    body.dark .filter-reset:hover { background: #374151; }
+    body.dark .filter-empty { color: #9ca3af; }
+    body.dark .finny-filter-card {
+      background: linear-gradient(135deg, rgba(106,176,76,.12), rgba(106,176,76,.05));
+      border-color: rgba(106,176,76,.3);
+    }
+    body.dark .finny-filter-card .ffc-head { color: #bbf7d0; }
+    body.dark .finny-filter-card .ffc-criteria span { background: rgba(31,41,55,.8); color: #bbf7d0; }
+    body.dark .finny-filter-card .ffc-stat { background: #1f2937; }
+    body.dark .finny-filter-card .ffc-stat-v { color: #f3f4f6; }
+    body.dark .finny-filter-card .ffc-list { background: #1f2937; }
+    body.dark .finny-filter-card .ffc-row { border-bottom-color: #374151; }
+    body.dark .finny-filter-card .ffc-row .ffc-row-l { color: #d1d5db; }
+    body.dark .finny-filter-card .ffc-row .ffc-row-r { color: #f3f4f6; }
+    body.dark .finny-filter-card .ffc-empty { background: #1f2937; color: #9ca3af; }
+
+    @media (max-width: 600px) {
+      .filter-bar { padding: 8px 12px; gap: 6px; }
+      .filter-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ─────────── Filter state ─────────── */
+    const incomeFilter = { source: '', paymethod: '', min: null, max: null, from: '', to: '', q: '' };
+    const expenseFilter = { category: '', min: null, max: null, from: '', to: '', q: '' };
+    window.incomeFilter = incomeFilter;
+    window.expenseFilter = expenseFilter;
+
+    function rowDate(row) {
+      if (row.rawDate) return new Date(row.rawDate);
+      if (row.date) {
+        const d = new Date(row.date);
+        if (!isNaN(d)) return d;
+      }
+      return null;
+    }
+    function inDateRange(row, from, to) {
+      const d = rowDate(row); if (!d) return !from && !to;
+      if (from) { const f = new Date(from); f.setHours(0,0,0,0); if (d < f) return false; }
+      if (to)   { const t = new Date(to);   t.setHours(23,59,59,999); if (d > t) return false; }
+      return true;
+    }
+    function applyIncomeFilter(list) {
+      const f = incomeFilter;
+      return list.filter(i => {
+        if (f.source && i.source !== f.source) return false;
+        if (f.paymethod && i.paymethod !== f.paymethod) return false;
+        if (f.min != null && i.amount < f.min) return false;
+        if (f.max != null && i.amount > f.max) return false;
+        if (!inDateRange(i, f.from, f.to)) return false;
+        if (f.q) {
+          const q = f.q.toLowerCase();
+          const hay = (i.source + ' ' + (i.desc||'') + ' ' + (i.paymethod||'')).toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    }
+    function applyExpenseFilter(list) {
+      const f = expenseFilter;
+      return list.filter(e => {
+        if (f.category && e.category !== f.category) return false;
+        if (f.min != null && e.amount < f.min) return false;
+        if (f.max != null && e.amount > f.max) return false;
+        if (!inDateRange(e, f.from, f.to)) return false;
+        if (f.q) {
+          const q = f.q.toLowerCase();
+          const hay = ((e.title||'') + ' ' + (e.category||'')).toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    }
+    window.applyIncomeFilter = applyIncomeFilter;
+    window.applyExpenseFilter = applyExpenseFilter;
+
+    function activeChips(type) {
+      const f = type === 'income' ? incomeFilter : expenseFilter;
+      const chips = [];
+      if (type === 'income') {
+        if (f.source) chips.push({ key: 'source', label: 'Source: ' + f.source });
+        if (f.paymethod) chips.push({ key: 'paymethod', label: 'Pay: ' + f.paymethod });
+      } else {
+        if (f.category) chips.push({ key: 'category', label: 'Category: ' + f.category });
+      }
+      if (f.min != null) chips.push({ key: 'min', label: '≥ ' + (window.fmt ? window.fmt(f.min) : f.min) });
+      if (f.max != null) chips.push({ key: 'max', label: '≤ ' + (window.fmt ? window.fmt(f.max) : f.max) });
+      if (f.from) chips.push({ key: 'from', label: 'From ' + f.from });
+      if (f.to) chips.push({ key: 'to', label: 'To ' + f.to });
+      if (f.q) chips.push({ key: 'q', label: '“' + f.q + '”' });
+      return chips;
+    }
+    function renderChips(type) {
+      const wrap = document.getElementById(type + '-filter-chips');
+      const cnt = document.getElementById(type + '-filter-count');
+      const clr = document.getElementById(type + '-filter-clear');
+      const tog = document.getElementById(type + '-filter-toggle');
+      if (!wrap) return;
+      const chips = activeChips(type);
+      wrap.innerHTML = chips.map(c =>
+        `<span class="filter-chip">${c.label}<button onclick="clearFilterField('${type}','${c.key}')" aria-label="Remove">×</button></span>`
+      ).join('');
+      if (chips.length) {
+        cnt.style.display = 'inline-flex'; cnt.textContent = chips.length;
+        clr.style.display = 'inline-flex';
+        tog.classList.add('active');
+      } else {
+        cnt.style.display = 'none';
+        clr.style.display = 'none';
+        tog.classList.remove('active');
+      }
+    }
+
+    /* ─────────── Populate dropdowns from existing <option> lists ─────────── */
+    function populateFilterDropdowns() {
+      const srcSel = document.getElementById('if-source');
+      const paySel = document.getElementById('if-pay');
+      const catSel = document.getElementById('ef-cat');
+      const incSrc = document.getElementById('inc-src');
+      const incPay = document.getElementById('inc-pay');
+      const expCat = document.getElementById('exp-cat');
+      function copyOpts(from, to) {
+        if (!from || !to) return;
+        // Clear all but first option
+        while (to.options.length > 1) to.remove(1);
+        Array.from(from.options).forEach(o => {
+          const opt = document.createElement('option');
+          opt.value = o.value || o.textContent;
+          opt.textContent = o.textContent;
+          to.appendChild(opt);
+        });
+      }
+      copyOpts(incSrc, srcSel);
+      copyOpts(incPay, paySel);
+      copyOpts(expCat, catSel);
+    }
+
+    /* ─────────── Toggle / apply / clear ─────────── */
+    window.toggleFilterPanel = function (type) {
+      const p = document.getElementById(type + '-filter-panel');
+      if (!p) return;
+      p.classList.toggle('open');
+    };
+    window.applyFilterFromUI = function (type) {
+      if (type === 'income') {
+        incomeFilter.source = document.getElementById('if-source').value || '';
+        incomeFilter.paymethod = document.getElementById('if-pay').value || '';
+        const mn = document.getElementById('if-min').value, mx = document.getElementById('if-max').value;
+        incomeFilter.min = mn !== '' ? parseFloat(mn) : null;
+        incomeFilter.max = mx !== '' ? parseFloat(mx) : null;
+        incomeFilter.from = document.getElementById('if-from').value || '';
+        incomeFilter.to   = document.getElementById('if-to').value || '';
+        incomeFilter.q    = document.getElementById('if-q').value.trim();
+        renderIncome();
+      } else {
+        expenseFilter.category = document.getElementById('ef-cat').value || '';
+        const mn = document.getElementById('ef-min').value, mx = document.getElementById('ef-max').value;
+        expenseFilter.min = mn !== '' ? parseFloat(mn) : null;
+        expenseFilter.max = mx !== '' ? parseFloat(mx) : null;
+        expenseFilter.from = document.getElementById('ef-from').value || '';
+        expenseFilter.to   = document.getElementById('ef-to').value || '';
+        expenseFilter.q    = document.getElementById('ef-q').value.trim();
+        renderExpense();
+      }
+      // Close panel after apply on mobile-feeling UX
+      document.getElementById(type + '-filter-panel').classList.remove('open');
+    };
+    window.clearFilter = function (type) {
+      if (type === 'income') {
+        Object.assign(incomeFilter, { source: '', paymethod: '', min: null, max: null, from: '', to: '', q: '' });
+        ['if-source','if-pay','if-min','if-max','if-from','if-to','if-q'].forEach(id => {
+          const el = document.getElementById(id); if (el) el.value = '';
+        });
+        renderIncome();
+      } else {
+        Object.assign(expenseFilter, { category: '', min: null, max: null, from: '', to: '', q: '' });
+        ['ef-cat','ef-min','ef-max','ef-from','ef-to','ef-q'].forEach(id => {
+          const el = document.getElementById(id); if (el) el.value = '';
+        });
+        renderExpense();
+      }
+    };
+    window.clearFilterField = function (type, key) {
+      const f = type === 'income' ? incomeFilter : expenseFilter;
+      if (key === 'min' || key === 'max') f[key] = null; else f[key] = '';
+      // Sync input
+      const map = {
+        income: { source: 'if-source', paymethod: 'if-pay', min: 'if-min', max: 'if-max', from: 'if-from', to: 'if-to', q: 'if-q' },
+        expense: { category: 'ef-cat', min: 'ef-min', max: 'ef-max', from: 'ef-from', to: 'ef-to', q: 'ef-q' }
+      };
+      const id = map[type][key]; if (id) { const el = document.getElementById(id); if (el) el.value = ''; }
+      type === 'income' ? renderIncome() : renderExpense();
+    };
+
+    /* ─────────── Override renderIncome / renderExpense ─────────── */
+    const origRenderIncome = window.renderIncome;
+    const origRenderExpense = window.renderExpense;
+
+    window.renderIncome = function () {
+      const ib = document.getElementById('income-body');
+      if (!ib) return;
+      renderChips('income');
+      const all = state.income;
+      const filtered = applyIncomeFilter(all);
+      const tot = filtered.reduce((s, i) => s + i.amount, 0);
+      const hasFilter = activeChips('income').length > 0;
+
+      if (!all.length) {
+        ib.innerHTML = `<div class="empty">No income added yet.<br><span style="font-size:13px;color:#d1d5db">Click "Add Income" to get started</span></div>`;
+        return;
+      }
+      if (!filtered.length) {
+        ib.innerHTML = `<div class="filter-empty">No income matches your filters.<span class="filter-empty-sub">Try adjusting or clearing the filters above.</span></div>`;
+        return;
+      }
+      const countLabel = hasFilter
+        ? `Showing: <span>${filtered.length}</span> of ${all.length} &nbsp;|&nbsp; Filtered total: <span>${fmt(tot)}</span>`
+        : `Total count: <span>${filtered.length}</span> &nbsp;|&nbsp; Total amount: <span>${fmt(tot)}</span>`;
+
+      ib.innerHTML = `<div class="count-row">${countLabel}</div><div class="entry-grid">` +
+        [...filtered].reverse().map(i => `<div class="entry"><div class="entry-tag entry-tag-g">${i.date || 'Today'}</div><div style="padding-top:6px"><div class="entry-row"><span class="entry-key">Source :</span><span class="entry-val">${i.source}</span></div><div class="entry-row"><span class="entry-key">Amount :</span><span class="entry-val g" style="font-weight:700">${fmt(i.amount)}</span></div><div class="entry-row"><span class="entry-key">Payment :</span><span class="entry-val">${i.paymethod}</span></div>${i.desc ? `<div class="entry-row"><span class="entry-key">Description :</span><span class="entry-val">${i.desc}</div>` : ''}</div><div class="entry-btns"><button class="btn-edit" onclick="openModal('income',${i.id})">Edit</button><button class="btn-del" onclick="deleteEntry('income',${i.id})">Delete</button></div></div>`).join('') +
+        `</div>`;
+    };
+
+    window.renderExpense = function () {
+      const eb = document.getElementById('expense-body');
+      if (!eb) return;
+      renderChips('expense');
+      const all = state.expense;
+      const filtered = applyExpenseFilter(all);
+      const tot = filtered.reduce((s, e) => s + e.amount, 0);
+      const hasFilter = activeChips('expense').length > 0;
+
+      if (!all.length) {
+        eb.innerHTML = `<div class="empty">No expenses added yet.<br><span style="font-size:13px;color:#d1d5db">Click "Add Expense" to get started</span></div>`;
+        return;
+      }
+      if (!filtered.length) {
+        eb.innerHTML = `<div class="filter-empty">No expenses match your filters.<span class="filter-empty-sub">Try adjusting or clearing the filters above.</span></div>`;
+        return;
+      }
+      const countLabel = hasFilter
+        ? `Showing: <span>${filtered.length}</span> of ${all.length} &nbsp;|&nbsp; Filtered total: <span>${fmt(tot)}</span>`
+        : `Total count: <span>${filtered.length}</span> &nbsp;|&nbsp; Total amount: <span>${fmt(tot)}</span>`;
+
+      eb.innerHTML = `<div class="count-row">${countLabel}</div><div class="entry-grid">` +
+        [...filtered].reverse().map(e => `<div class="entry"><div class="entry-tag entry-tag-r">${e.date || 'Today'}</div><div style="padding-top:6px"><div class="entry-row"><span class="entry-key">Title :</span><span class="entry-val">${e.title}</span></div><div class="entry-row"><span class="entry-key">Category :</span><span class="entry-val">${e.category}</span></div><div class="entry-row"><span class="entry-key">Amount :</span><span class="entry-val r" style="font-weight:700">-${fmt(e.amount)}</span></div><div class="entry-row"><span class="entry-key">Date :</span><span class="entry-val">${e.date || '—'}</span></div></div><div class="entry-btns"><button class="btn-edit" onclick="openModal('expense',${e.id})">Edit</button><button class="btn-del" onclick="deleteEntry('expense',${e.id})">Delete</button></div></div>`).join('') +
+        `</div>`;
+    };
+
+    /* ─────────── Init dropdowns once DOM is ready ─────────── */
+    function init() {
+      populateFilterDropdowns();
+      // Re-render in case state already loaded
+      if (document.getElementById('income-body')) renderIncome();
+      if (document.getElementById('expense-body')) renderExpense();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+
+    /* ════════════════════════════════════════════════════════════════
+       FINNY FILTER INTENT
+       ════════════════════════════════════════════════════════════════ */
+    function getOptionValues(selectId) {
+      const sel = document.getElementById(selectId);
+      if (!sel) return [];
+      return Array.from(sel.options).map(o => (o.value || o.textContent).trim()).filter(Boolean);
+    }
+
+    // Date helpers
+    function today0() { const d = new Date(); d.setHours(0,0,0,0); return d; }
+    function isoDate(d) { return d.toISOString().slice(0,10); }
+    function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
+    function endOfMonth(d)   { return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+    function startOfYear(d)  { return new Date(d.getFullYear(), 0, 1); }
+    function endOfYear(d)    { return new Date(d.getFullYear(), 11, 31); }
+
+    const MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+
+    function parseDateRange(t) {
+      const now = today0();
+      // Last/past N days
+      let m = t.match(/(?:last|past|previous)\s+(\d+)\s+days?/);
+      if (m) {
+        const n = parseInt(m[1]);
+        const from = new Date(now); from.setDate(from.getDate() - n);
+        return { from: isoDate(from), to: isoDate(now), label: `last ${n} days` };
+      }
+      // last/past N weeks
+      m = t.match(/(?:last|past|previous)\s+(\d+)\s+weeks?/);
+      if (m) {
+        const n = parseInt(m[1]);
+        const from = new Date(now); from.setDate(from.getDate() - n*7);
+        return { from: isoDate(from), to: isoDate(now), label: `last ${n} weeks` };
+      }
+      // last/past N months
+      m = t.match(/(?:last|past|previous)\s+(\d+)\s+months?/);
+      if (m) {
+        const n = parseInt(m[1]);
+        const from = new Date(now); from.setMonth(from.getMonth() - n);
+        return { from: isoDate(from), to: isoDate(now), label: `last ${n} months` };
+      }
+      if (/today/.test(t))      return { from: isoDate(now), to: isoDate(now), label: 'today' };
+      if (/yesterday/.test(t))  { const y = new Date(now); y.setDate(y.getDate()-1); return { from: isoDate(y), to: isoDate(y), label: 'yesterday' }; }
+      if (/this week/.test(t))  { const d = new Date(now); d.setDate(d.getDate() - d.getDay()); return { from: isoDate(d), to: isoDate(now), label: 'this week' }; }
+      if (/last week|past week|previous week/.test(t)) {
+        const end = new Date(now); end.setDate(end.getDate() - end.getDay() - 1);
+        const start = new Date(end); start.setDate(start.getDate() - 6);
+        return { from: isoDate(start), to: isoDate(end), label: 'last week' };
+      }
+      if (/this month|current month/.test(t)) return { from: isoDate(startOfMonth(now)), to: isoDate(endOfMonth(now)), label: 'this month' };
+      if (/last month|past month|previous month/.test(t)) {
+        const ref = new Date(now.getFullYear(), now.getMonth()-1, 1);
+        return { from: isoDate(startOfMonth(ref)), to: isoDate(endOfMonth(ref)), label: 'last month' };
+      }
+      if (/this year|current year/.test(t)) return { from: isoDate(startOfYear(now)), to: isoDate(endOfYear(now)), label: 'this year' };
+      if (/last year|past year|previous year/.test(t)) {
+        const ref = new Date(now.getFullYear()-1, 0, 1);
+        return { from: isoDate(startOfYear(ref)), to: isoDate(endOfYear(ref)), label: 'last year' };
+      }
+      // named month
+      for (let i = 0; i < 12; i++) {
+        if (new RegExp('\\b' + MONTHS[i] + '\\b').test(t)) {
+          const yMatch = t.match(/\b(20\d{2})\b/);
+          const year = yMatch ? parseInt(yMatch[1]) : now.getFullYear();
+          const ref = new Date(year, i, 1);
+          return { from: isoDate(startOfMonth(ref)), to: isoDate(endOfMonth(ref)), label: MONTHS[i] + ' ' + year };
+        }
+      }
+      return null;
+    }
+
+    function parseAmounts(t) {
+      let min = null, max = null;
+      // between X and Y
+      let m = t.match(/between\s+\$?(\d[\d,]*(?:\.\d+)?)\s+(?:and|to|-)\s+\$?(\d[\d,]*(?:\.\d+)?)/);
+      if (m) { min = parseFloat(m[1].replace(/,/g,'')); max = parseFloat(m[2].replace(/,/g,'')); return { min, max }; }
+      // over/above/more than/greater than X / >X
+      m = t.match(/(?:over|above|more than|greater than|>=|>)\s*\$?(\d[\d,]*(?:\.\d+)?)/);
+      if (m) min = parseFloat(m[1].replace(/,/g,''));
+      // under/below/less than/<X
+      m = t.match(/(?:under|below|less than|at most|<=|<)\s*\$?(\d[\d,]*(?:\.\d+)?)/);
+      if (m) max = parseFloat(m[1].replace(/,/g,''));
+      // exactly N -> set both
+      m = t.match(/(?:exactly|equal to|of)\s+\$?(\d[\d,]*(?:\.\d+)?)/);
+      if (m && min == null && max == null) { const v = parseFloat(m[1].replace(/,/g,'')); min = v; max = v; }
+      return (min != null || max != null) ? { min, max } : null;
+    }
+
+    // Words that must NEVER trigger a category/source/payment match
+    const FUZZY_STOPWORDS = new Set([
+      'income','incomes','expense','expenses','spend','spending','spent','spendings',
+      'earning','earnings','transaction','transactions','show','list','find','filter',
+      'between','over','under','above','below','more','less','than','from','to','and',
+      'with','by','via','using','for','of','in','on','my','me','the','a','an','all',
+      'amount','amounts','total','please','today','yesterday','week','month','year',
+      'last','past','previous','this','current','next','date','dates'
+    ]);
+    function tokenizeWords(text) {
+      return (text || '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+    }
+    function fuzzyMatchOption(text, options) {
+      if (!text) return '';
+      const lower = text.toLowerCase();
+      const queryWords = new Set(tokenizeWords(text).filter(w => !FUZZY_STOPWORDS.has(w)));
+      if (!queryWords.size) return '';
+      // longest first to prefer most specific match
+      const sorted = options.slice().sort((a,b)=>b.length-a.length);
+      // 1) full option appears verbatim
+      for (const o of sorted) {
+        if (lower.includes(o.toLowerCase())) return o;
+      }
+      // 2) every meaningful token of option appears as a word in query
+      for (const o of sorted) {
+        const tokens = tokenizeWords(o).filter(t => t.length > 2 && !FUZZY_STOPWORDS.has(t));
+        if (tokens.length && tokens.every(tk => queryWords.has(tk))) return o;
+      }
+      // 3) at least one distinctive option token (>=4 chars, not stopword) matches a query word
+      for (const o of sorted) {
+        const tokens = tokenizeWords(o).filter(t => t.length > 3 && !FUZZY_STOPWORDS.has(t));
+        for (const tk of tokens) if (queryWords.has(tk)) return o;
+      }
+      return '';
+    }
+
+    function isFilterIntent(t) {
+      // Must mention income or expense AND have a constraint signal
+      const mentionsType = /\b(income|incomes|earning|earnings|expense|expenses|spend|spending|spent|spendings|transaction|transactions)\b/.test(t);
+      if (!mentionsType) return false;
+      const filterSignal = /\b(filter|only|just|where|with|by|over|above|under|below|between|more than|less than|greater than|at least|at most|>=|<=|>|<|from|since|after|before|in|on|during|this (week|month|year)|last (week|month|year|\d+ )|past (week|month|year|\d+ )|today|yesterday|via|paid (via|with|by)|using|category|categori|source|payment|method|filter out|show me|find|list)\b/.test(t);
+      return filterSignal;
+    }
+
+    function determineType(t) {
+      const incScore = (t.match(/\b(income|incomes|earning|earnings|salary|wage|wages|received|earned|paid me)\b/g) || []).length;
+      const expScore = (t.match(/\b(expense|expenses|spend|spending|spent|spendings|bought|purchase|paid for|cost|costs)\b/g) || []).length;
+      if (incScore > expScore) return 'income';
+      if (expScore > incScore) return 'expense';
+      // default to expense if ambiguous
+      return 'expense';
+    }
+
+    function parseFinnyFilter(rawText) {
+      const t = rawText.toLowerCase();
+      if (!isFilterIntent(t)) return null;
+      const type = determineType(t);
+      const criteria = {};
+
+      // Date
+      const dr = parseDateRange(t);
+      if (dr) { criteria.from = dr.from; criteria.to = dr.to; criteria._dateLabel = dr.label; }
+
+      // Amount
+      const amt = parseAmounts(t);
+      if (amt) { if (amt.min != null) criteria.min = amt.min; if (amt.max != null) criteria.max = amt.max; }
+
+      if (type === 'income') {
+        const sources = getOptionValues('inc-src');
+        const pays = getOptionValues('inc-pay');
+        // Payment context — require explicit "via/using/paid via|with|by|through"
+        let payText = '';
+        const payCtx = t.match(/(?:via|using|paid\s+(?:via|with|by|through)|payment\s+method[:\s]+|pay(?:ment)?[:\s]+)\s*([^,.!?]{2,40})/);
+        if (payCtx) payText = payCtx[1];
+        // Source context — require explicit "from/source/of source"
+        let srcText = '';
+        const srcCtx = t.match(/(?:source[:\s]+|from\s+(?:source\s+)?)([^,.!?]{2,40})/);
+        if (srcCtx) srcText = srcCtx[1];
+        // Only fuzzy-match within captured context phrases (not the whole query)
+        const pay = fuzzyMatchOption(payText, pays);
+        if (pay) criteria.paymethod = pay;
+        const src = fuzzyMatchOption(srcText, sources);
+        if (src && src !== criteria.paymethod) criteria.source = src;
+      } else {
+        const cats = getOptionValues('exp-cat');
+        let catText = '';
+        const catCtx = t.match(/(?:category[:\s]+|categori[sz]ed\s+as\s+|on\s+|for\s+|in\s+(?:the\s+)?)([^,.!?]{2,40})/);
+        if (catCtx) catText = catCtx[1];
+        const cat = fuzzyMatchOption(catText, cats);
+        if (cat) criteria.category = cat;
+      }
+
+      // If nothing concrete extracted (and no "show all"), abort
+      const hasConcrete = ['source','paymethod','category','min','max','from','to'].some(k => criteria[k] != null && criteria[k] !== '');
+      if (!hasConcrete) return null;
+      return { type, criteria };
+    }
+    window.parseFinnyFilter = parseFinnyFilter;
+
+    function buildFilteredList(type, criteria) {
+      // Stash, apply criteria temporarily for evaluation only
+      const f = type === 'income' ? incomeFilter : expenseFilter;
+      const backup = { ...f };
+      // Reset to a clean baseline so leftover UI filters don't intersect
+      if (type === 'income') {
+        Object.assign(f, { source: '', paymethod: '', min: null, max: null, from: '', to: '', q: '' });
+      } else {
+        Object.assign(f, { category: '', min: null, max: null, from: '', to: '', q: '' });
+      }
+      Object.keys(criteria).forEach(k => { if (k in f) f[k] = criteria[k]; });
+      const list = type === 'income' ? applyIncomeFilter(state.income) : applyExpenseFilter(state.expense);
+      Object.assign(f, backup);
+      return list;
+    }
+
+    window.applyFinnyFilterAndGo = function (type, criteriaJson) {
+      const criteria = JSON.parse(decodeURIComponent(criteriaJson));
+      const f = type === 'income' ? incomeFilter : expenseFilter;
+      // Reset to defaults explicitly per type
+      if (type === 'income') {
+        Object.assign(f, { source: '', paymethod: '', min: null, max: null, from: '', to: '', q: '' });
+      } else {
+        Object.assign(f, { category: '', min: null, max: null, from: '', to: '', q: '' });
+      }
+      // Apply
+      Object.keys(criteria).forEach(k => { if (k in f) f[k] = criteria[k]; });
+      // Sync UI inputs
+      if (type === 'income') {
+        const m = { source:'if-source', paymethod:'if-pay', min:'if-min', max:'if-max', from:'if-from', to:'if-to', q:'if-q' };
+        Object.keys(m).forEach(k => { const el = document.getElementById(m[k]); if (el) el.value = (f[k] != null && f[k] !== '') ? f[k] : ''; });
+      } else {
+        const m = { category:'ef-cat', min:'ef-min', max:'ef-max', from:'ef-from', to:'ef-to', q:'ef-q' };
+        Object.keys(m).forEach(k => { const el = document.getElementById(m[k]); if (el) el.value = (f[k] != null && f[k] !== '') ? f[k] : ''; });
+      }
+      if (typeof goTab === 'function') goTab(type);
+      // Re-render the target tab so chips + list reflect the new filter
+      if (type === 'income' && typeof renderIncome === 'function') renderIncome();
+      if (type === 'expense' && typeof renderExpense === 'function') renderExpense();
+    };
+
+    function criteriaChips(type, criteria) {
+      const out = [];
+      if (criteria.source) out.push('Source: ' + criteria.source);
+      if (criteria.paymethod) out.push('Pay: ' + criteria.paymethod);
+      if (criteria.category) out.push('Category: ' + criteria.category);
+      if (criteria.min != null) out.push('≥ ' + (window.fmt ? window.fmt(criteria.min) : criteria.min));
+      if (criteria.max != null) out.push('≤ ' + (window.fmt ? window.fmt(criteria.max) : criteria.max));
+      if (criteria._dateLabel) out.push('📅 ' + criteria._dateLabel);
+      else if (criteria.from || criteria.to) out.push('📅 ' + (criteria.from || '…') + ' → ' + (criteria.to || '…'));
+      return out;
+    }
+
+    /* ─────────── Wrap runFinny / runFinnyPro ─────────── */
+    function makeFilterReply(rawText) {
+      const parsed = parseFinnyFilter(rawText);
+      if (!parsed) return null;
+      const { type, criteria } = parsed;
+      const cleanCriteria = { ...criteria }; delete cleanCriteria._dateLabel;
+      const list = buildFilteredList(type, cleanCriteria);
+      const total = list.reduce((s, x) => s + x.amount, 0);
+      const avg = list.length ? total / list.length : 0;
+      const chips = criteriaChips(type, criteria);
+      const enc = encodeURIComponent(JSON.stringify(cleanCriteria));
+      const typeLabel = type === 'income' ? 'Income' : 'Expense';
+      const fmtFn = window.fmt || (x => x);
+
+      let inner;
+      if (!list.length) {
+        inner = `<div class="ffc-empty">No ${type} entries match these filters.</div>`;
+      } else {
+        const rows = list.slice(0, 8).map(x => {
+          const left = type === 'income'
+            ? `${x.source}<span style="color:#9ca3af;font-weight:500"> · ${x.paymethod || ''}</span>`
+            : `${x.title || x.category}<span style="color:#9ca3af;font-weight:500"> · ${x.category}</span>`;
+          return `<div class="ffc-row"><span class="ffc-row-l">${left}<br><span style="font-size:10px;color:#9ca3af;font-weight:600">${x.date || ''}</span></span><span class="ffc-row-r" style="color:${type==='income'?'#16a34a':'#ef4444'}">${type==='expense'?'-':''}${fmtFn(x.amount)}</span></div>`;
+        }).join('');
+        const more = list.length > 8 ? `<div class="ffc-row" style="justify-content:center;color:#9ca3af;font-style:italic">+ ${list.length - 8} more…</div>` : '';
+        inner = `<div class="ffc-list">${rows}${more}</div>`;
+      }
+
+      const html = `<div class="finny-filter-card">
+        <div class="ffc-head">🔎 Filtered ${typeLabel} results</div>
+        ${chips.length ? `<div class="ffc-criteria">${chips.map(c => `<span>${c}</span>`).join('')}</div>` : ''}
+        <div class="ffc-stats">
+          <div class="ffc-stat"><div class="ffc-stat-l">Matches</div><div class="ffc-stat-v">${list.length}</div></div>
+          <div class="ffc-stat"><div class="ffc-stat-l">${list.length ? 'Total' : '—'}</div><div class="ffc-stat-v">${fmtFn(total)}</div></div>
+        </div>
+        ${inner}
+        ${list.length ? `<button class="ffc-open" onclick="applyFinnyFilterAndGo('${type}','${enc}')">Open in ${typeLabel} tab →</button>` : ''}
+      </div>`;
+      return { type: 'filter_result', html };
+    }
+
+    // Wrap renderBot to handle our new type
+    const origRenderBot = window.renderBot;
+    window.renderBot = function (r) {
+      if (r && r.type === 'filter_result') return r.html;
+      return origRenderBot ? origRenderBot(r) : '';
+    };
+
+    // Wrap runFinny
+    const origRunFinny = window.runFinny;
+    window.runFinny = function (q) {
+      const reply = makeFilterReply(q);
+      if (reply) return reply;
+      return origRunFinny ? origRunFinny(q) : { type: 'plain', text: '' };
+    };
+
+    // Wrap runFinnyPro
+    const origRunFinnyPro = window.runFinnyPro;
+    if (typeof origRunFinnyPro === 'function') {
+      window.runFinnyPro = function (q) {
+        const reply = makeFilterReply(q);
+        if (reply) return reply;
+        return origRunFinnyPro(q);
+      };
+    }
+  })();
   </script>
 </body>
 
